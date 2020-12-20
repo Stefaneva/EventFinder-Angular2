@@ -1,0 +1,116 @@
+.card__class {
+  /*max-width: 600px;*/
+  /*width: 300px;*/
+  width: 20vw;
+  margin-right: 2vw;
+  margin-left: 2vw;
+  height: 84vh;
+  /*margin-right: 10px;*/
+}
+
+.custom__container {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row wrap;
+  align-items: flex-start !important;
+}
+
+.location__paragraph {
+  padding-bottom: 0;
+}
+
+.viewAddButton {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
+}
+
+.myPaginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.ads__title {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.example-container {
+  background-color: white;
+}
+
+.sidenav {
+  width: 500px;
+  height: 100%;
+}
+
+.numar__anunturi {
+  width: 80%;
+  margin-left: 40px;
+  border: 1px solid;
+  color: black;
+  background-color: white;
+  margin-bottom: 30px;
+}
+
+.form__field__input {
+  margin-left: 20px;
+}
+
+.notification {
+  margin-right: 200px;
+}
+
+.search__filter__container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: -5vh;
+  margin-left: 3vw;
+  margin-right: 3vw;
+}
+
+.options {
+  margin-bottom: 4.5vh;
+  height: 0.2vh;
+  background-color: lightgray;
+}
+
+.filter__button {
+  color: white;
+  background-color: royalblue;
+}
+
+.search__icon {
+  margin-right: 8vw;
+}
+
+@media only screen and (max-width: 600px) {
+
+  .card__class {
+    /*width: 300px;*/
+    /*margin-right: 10px;*/
+    width: 90%;
+    height: auto;
+    margin-left: 20px;
+  }
+
+  .search__filter__container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -3vh;
+    margin-left: 3vw;
+    margin-right: 3vw;
+  }
+
+  .search__icon {
+    margin-right: 29vw;
+  }
+
+  .button__responsive {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+}

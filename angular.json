@@ -25,9 +25,20 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/font-awesome/css/font-awesome.css",
+              // "./node_modules/ngx-intl-tel-input/resource/intl-tel-input.css",
+              // "./node_modules/owl.carousel/dist/assets/owl.carousel.css",
+              // "./node_modules/owl.carousel/dist/assets/owl.theme.default.css",
+              "./node_modules/ng-snotify/styles/material.scss",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/popper.js/dist/umd/popper.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              // "./node_modules/chart.js/dist/Chart.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {

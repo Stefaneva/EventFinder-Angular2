@@ -1,0 +1,53 @@
+<ng4-loading-spinner></ng4-loading-spinner>
+<ng-snotify></ng-snotify>
+<h1 class="ads__title">Anunțuri </h1>
+<div class="body__container">
+  <div class="search__filter__container">
+    <form>
+      <mat-form-field class="search__field">
+        <input type="text" name="search" matInput placeholder="Caută anunț..." [(ngModel)]="userService.term" autocomplete="off">
+        <mat-icon matSuffix class="search__icon">mode_search</mat-icon>
+      </mat-form-field>
+    </form>
+    <div class="button__responsive">
+      <button mat-raised-button mat-button (click)="userService.sidenav.toggle()" class="filter__button">Filtreaz&#259; anun&#539;uri</button>
+    </div>
+  </div>
+  <hr class="options">
+    <!-- <div class="custom__container">
+      <div *ngFor="let ad of userService.ads | filter : userService.term : 'title' :
+      userService.adItemType : 'adItemType' : userService.priceMin : userService.priceMax : 'price' :
+      userService.rentCheckbox: userService.saleCheckbox : 'adType' : userService.surfaceMin : userService.surfaceMax : 'surface' :
+      userService.areaSurfaceMin : userService.areaSurfaceMax : 'areaSurface' : userService.roomsMin : userService.roomsMax : 'rooms' :
+      userService.partitioning: 'partitioning' : userService.yearBuiltMin : userService.yearBuiltMax : 'yearBuilt' : userService.comfort : 'comfort' :
+      userService.floorLevelMin : userService.floorLevelMax : 'floorLevel' : userService.furnished : 'furnished' :
+      userService.searchLat : userService.searchLng
+      | paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
+        <mat-card class="card__class">
+          <mat-card-header>
+            <mat-card-title>{{ ad.title}}</mat-card-title>
+            <mat-card-subtitle>{{ ad.adType }} - {{ad.adItemType}}</mat-card-subtitle>
+            <img src="../../assets/casa.jpg" *ngIf="ad.adItemType == 'Casa'" mat-card-avatar>
+            <img src="../../assets/bloc.jpg" *ngIf="ad.adItemType == 'Apartament'" mat-card-avatar>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Preț: {{ ad.price }} <span class="fa fa-euro"></span></p>
+            <p>An construcție: {{ad.yearBuilt}}</p>
+          </mat-card-content>
+          <img mat-card-image height="270px"  [src]="ad.image">
+          <div class="location__paragraph">Locație: {{ad.location}}</div>
+          <mat-card-actions class="viewAddButton">
+            <button mat-raised-button mat-button color="primary" (click)="viewAdDetails(ad)">Detalii anunț</button>
+            <button *ngIf="userService.currentUser.type === 'ADMIN'"
+                    mat-raised-button mat-button color="warn" (click)="deleteAd(ad)">Șterge anunțul!</button>
+          </mat-card-actions>
+        </mat-card><br>
+      </div>
+    </div> -->
+    <div class="myPaginationContainer">
+      <pagination-controls class="myPagination" (pageChange)="userService.page = $event"
+                           previousLabel="Înapoi"
+                           nextLabel="Înainte" maxSize="5">
+      </pagination-controls>
+    </div>
+</div>

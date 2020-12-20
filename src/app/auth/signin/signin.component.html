@@ -1,0 +1,21 @@
+<div class="enrollForm">
+  <div class="row">
+    <div class="col-md-4 col-sm-4 col-xs-12"></div>
+    <div class="col-md-4 col-sm-4 col-xs-12">
+      <h2>Login</h2><span *ngIf="isLoginError" class="help-block">Email-ul sau parola sunt greșite!</span>
+                    <span *ngIf="isLoginError2" class="help-block">Contul a fost blocat!</span>
+      <form id="loginForm" role="form" (ngSubmit)="onLogin(f)" #f="ngForm" autocomplete="off" >
+        <div class="form-group">
+          <label for="username">E-mail utilizator: </label>
+          <input placeholder="E-mail" type="email" id="username" name="username" required ngModel class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password">Parola: </label>
+          <input placeholder="Parola" type="password" id="password" name="password" required ngModel class="form-control">
+        </div>
+        <button [disabled]="!f.valid" class="btn btn-success form-control custom__button" type="submit">Login</button>
+      </form>
+    <div class="col-md-4 col-sm-4 col-xs-12"></div>
+    </div>
+  </div>
+</div>

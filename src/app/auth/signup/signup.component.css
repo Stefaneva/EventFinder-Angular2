@@ -1,0 +1,57 @@
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+div.container {
+  width: 40vw;
+  height: auto;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+.container > * {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.container form {
+  width: 100%;
+}
+
+.custom__button__position{
+  display: flex;
+  justify-content: center;
+}
+
+.custom__button {
+  width: 70%;
+}
+
+.enrollForm{
+  width: 60vw;
+  padding: 30px 25px;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 600px) {
+  div.container {
+    width: 70vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+}

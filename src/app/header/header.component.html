@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-md bg-primary navbar-dark">
+  <!--<div class="colapse__container">-->
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse_target">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapse_target">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/">EventFinder</a>
+
+    <!-- Links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <button class="btn btn-success home__button" type="button" (click)="redirectHome()">Acasă <mat-icon>home</mat-icon></button>
+        <!--<a class="nav-link" routerLink="/home"><span class="fa fa-home"></span>Home</a>-->
+      </li>
+      <li class="nav-item">
+        <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type !== 'ADMIN'"
+                (click)="addNewAd()">Adaug&#259; anun&#539;</button>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/userList">
+          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type === 'ADMIN'"
+                  >Utilizatori</button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/statistics">
+          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type === 'ADMIN'"
+                  >Date anunțuri</button>
+        </a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <div class="user__options">
+          <li class="nav-item dropdown" *ngIf="userService.currentUser.token && userService.currentUser.type != 'ADMIN'">
+            <button class="btn btn-warning dropdown-toggle sign__up" data-toggle="dropdown">Contul meu</button>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a routerLink="/myAds" class="dropdown-item">
+                <button class="btn btn-success option sign__up" type="button">Anunțurile Mele</button>
+              </a>
+              <div class="dropdown-item">
+                <button class="btn btn-warning option sign__up" (click)="openEdit()">Editează date cont</button>
+              </div>
+              <a routerLink="/favorites" class="dropdown-item">
+                <button class="btn btn-danger option sign__up" type="button">Favorite</button>
+              </a>
+              <a routerLink="/calendar" class="dropdown-item">
+                <button class="btn btn-info option sign__up" type="button">Programări</button>
+              </a>
+            </div>
+          </li>
+        </div>
+        <li class="nav-item">
+          <button *ngIf="!userService.currentUser.token" class="btn btn-outline-warning sign__up" type="button" (click)="openRegister()">Sign Up</button>
+        </li>
+        <li class="nav-item login__logout">
+            <div *ngIf="!userService.currentUser.token">
+              <button class="btn btn-outline-warning sign__in" type="button" (click)="openLogin()">Sign In</button>
+            </div>
+            <div *ngIf="userService.currentUser.token">
+              <button class="btn btn-outline-warning sign__out" type="button" (click)="logout()">Sign Out</button>
+            </div>
+        </li>
+    </ul>
+    </div>
+  <!--</div>-->
+</nav>
+<br>
