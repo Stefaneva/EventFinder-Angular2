@@ -2,7 +2,8 @@ export class User {
   email: string;
   name: string;
   type: string;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   phone: number;
   enabled: boolean;
   lastLoginDate: string;

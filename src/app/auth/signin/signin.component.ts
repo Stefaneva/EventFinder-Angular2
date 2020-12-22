@@ -30,14 +30,17 @@ export class SigninComponent implements OnInit {
 
   onLogin(form: NgForm) {
     // this.userService.userEvent = true;
-    const username = form.value.username;
+    const email = form.value.email;
     const password = form.value.password;
     // this.spinnerService.show();
-    this.authService.login(username, password).subscribe(
+    this.authService.login(email, password).subscribe(
       (data: any) => {
         this.userService.currentUser = new User;
-        this.userService.currentUser.email = username;
-        this.userService.currentUser.token = data.token;
+        this.userService.currentUser.email = email;
+        this.userService.currentUser.accessToken = data.accessToken;
+        this.userService.currentUser.refreshToken = data.refreshToken;
+        console.log(this.userService.currentUser.accessToken);
+        console.log(this.userService.currentUser.refreshToken);
     //     this.userService.postUserData().subscribe(
     //       result => {
     //         this.userService.currentUser.name = result.name;
@@ -47,9 +50,9 @@ export class SigninComponent implements OnInit {
     //         this.userService.currentUser.enabled = result.enabled;
     //         this.userService.currentUser.notification = result.notification;
     //         if (this.userService.currentUser.enabled) {
-    //           form.resetForm();
+              form.resetForm();
     //           console.log(this.userService.currentUser.email + ' ' + this.userService.currentUser.name);
-    //           this.userService.closeDialog.emit(true);
+              this.userService.closeDialog.emit(true);
     //           console.log(this.userService.currentUser.notification);
     //           if (!this.userService.currentUser.notification) {
     //             this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});

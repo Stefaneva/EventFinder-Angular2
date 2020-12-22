@@ -38,17 +38,17 @@ export class FilterPipe implements PipeTransform {
   }
 
   searchLocation(searchLat: number, searchLng: number, item: any) {
-    // if (searchLng && searchLat) {
-    //   const locationLatLng = new google.maps.LatLng(searchLat, searchLng);
-    //   const adLocation = new google.maps.LatLng(item['lat'], item['lng']);
-    //   const distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(locationLatLng, adLocation) / 1000;
-    //   if (distanceInKm <= 1.0) {
-    //     return true;
-    //   }
-    // } else {
-    //   return true;
-    // }
-    // return false;
+    if (searchLng && searchLat) {
+      const locationLatLng = new google.maps.LatLng(searchLat, searchLng);
+      const adLocation = new google.maps.LatLng(item['lat'], item['lng']);
+      const distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(locationLatLng, adLocation) / 1000;
+      if (distanceInKm <= 1.0) {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
   }
 
   transform(value: any, term: any, propName: string, adItemType: any, adItemTypeProp: string, priceMin: number,

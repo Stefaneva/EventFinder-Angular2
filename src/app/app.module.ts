@@ -31,6 +31,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserService } from './user.service';
+import { AgmCoreModule } from '@agm/core';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -72,7 +73,11 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgxPaginationModule,
     RouterModule.forRoot(appRoutes),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production },
+    AgmCoreModule.forRoot(  {
+      apiKey: 'AIzaSyCP6Jh0CirrZAf-IDtdktCuhKPtIgh94_0',
+      libraries: ['places', 'geometry']
+    })
   ],
   providers: [UserService, AuthService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

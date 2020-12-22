@@ -15,6 +15,7 @@ export class UserService {
 
   // private _BASE_URL = 'https://home--finder.herokuapp.com';
   private _BASE_URL = 'http://localhost:8080';
+  private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
 
   data: Object;
   page: number;
@@ -69,6 +70,8 @@ export class UserService {
 
     }
 
-
+  getUserEmails(): Observable<string[]> {
+    return this.http.get<string[]>(this._GET_USER_EMAILS);
+  }
 
 }

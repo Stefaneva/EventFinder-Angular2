@@ -14,25 +14,25 @@
         <!--<a class="nav-link" routerLink="/home"><span class="fa fa-home"></span>Home</a>-->
       </li>
       <li class="nav-item">
-        <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type !== 'ADMIN'"
+        <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type !== 'ADMIN'"
                 (click)="addNewAd()">Adaug&#259; anun&#539;</button>
       </li>
       <li class="nav-item">
         <a routerLink="/userList">
-          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type === 'ADMIN'"
+          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type === 'ADMIN'"
                   >Utilizatori</button>
         </a>
       </li>
       <li class="nav-item">
         <a routerLink="/statistics">
-          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.token && userService.currentUser.type === 'ADMIN'"
+          <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type === 'ADMIN'"
                   >Date anunțuri</button>
         </a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <div class="user__options">
-          <li class="nav-item dropdown" *ngIf="userService.currentUser.token && userService.currentUser.type != 'ADMIN'">
+          <li class="nav-item dropdown" *ngIf="userService.currentUser.accessToken && userService.currentUser.type != 'ADMIN'">
             <button class="btn btn-warning dropdown-toggle sign__up" data-toggle="dropdown">Contul meu</button>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a routerLink="/myAds" class="dropdown-item">
@@ -51,13 +51,13 @@
           </li>
         </div>
         <li class="nav-item">
-          <button *ngIf="!userService.currentUser.token" class="btn btn-outline-warning sign__up" type="button" (click)="openRegister()">Sign Up</button>
+          <button *ngIf="!userService.currentUser.accessToken" class="btn btn-outline-warning sign__up" type="button" (click)="openRegister()">Sign Up</button>
         </li>
         <li class="nav-item login__logout">
-            <div *ngIf="!userService.currentUser.token">
+            <div *ngIf="!userService.currentUser.accessToken">
               <button class="btn btn-outline-warning sign__in" type="button" (click)="openLogin()">Sign In</button>
             </div>
-            <div *ngIf="userService.currentUser.token">
+            <div *ngIf="userService.currentUser.accessToken">
               <button class="btn btn-outline-warning sign__out" type="button" (click)="logout()">Sign Out</button>
             </div>
         </li>

@@ -6,8 +6,8 @@
                     <span *ngIf="isLoginError2" class="help-block">Contul a fost blocat!</span>
       <form id="loginForm" role="form" (ngSubmit)="onLogin(f)" #f="ngForm" autocomplete="off" >
         <div class="form-group">
-          <label for="username">E-mail utilizator: </label>
-          <input placeholder="E-mail" type="email" id="username" name="username" required ngModel class="form-control">
+          <label for="email">E-mail utilizator: </label>
+          <input placeholder="E-mail" type="email" id="email" name="email" required ngModel class="form-control">
         </div>
         <div class="form-group">
           <label for="password">Parola: </label>

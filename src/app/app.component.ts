@@ -2,7 +2,7 @@ import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {UserService} from './user.service';
 import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl, FormGroup} from '@angular/forms';
-// import {MapsAPILoader} from '@agm/core';
+import { MapsAPILoader } from '@agm/core';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   searchElementRef: ElementRef;
 
   constructor(public userService: UserService,
-              // private mapsAPILoader: MapsAPILoader
+              private mapsAPILoader: MapsAPILoader,
               private ngZone: NgZone
               ) {
   }
@@ -34,26 +34,26 @@ export class AppComponent implements OnInit {
     this.userService.searchLocation = new FormGroup({
       'searchControl' : new FormControl(null)
     });
-  //   this.mapsAPILoader.load().then(() => {
-  //     const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-  //       // types: ['address']
-  //     });
-  //     autocomplete.addListener('place_changed', () => {
-  //       this.ngZone.run(() => {
+    this.mapsAPILoader.load().then(() => {
+      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        // types: ['address']
+      });
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
 
-  //         // get the place result
-  //         const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-  //         // verify result
-  //         if (place.geometry === undefined || place.geometry === null) {
-  //           return;
-  //         }
-  //         // set latitude, longitude and zoom
-  //         this.userService.searchLat = place.geometry.location.lat();
-  //         this.userService.searchLng = place.geometry.location.lng();
-  //         console.log(place + ' ' + this.userService.searchLat + ' ' + this.userService.searchLng);
-  //       });
-  //     });
-  //   });
+          // get the place result
+          const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          // verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          // set latitude, longitude and zoom
+          this.userService.searchLat = place.geometry.location.lat();
+          this.userService.searchLng = place.geometry.location.lng();
+          console.log(place + ' ' + this.userService.searchLat + ' ' + this.userService.searchLng);
+        });
+      });
+    });
   }
 
   resetFilters() {

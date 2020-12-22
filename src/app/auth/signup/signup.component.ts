@@ -40,45 +40,36 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-  //   this.spinnerService.show();
-  //   const data: SignupResponse = new SignupResponse;
-  //   data.username = this.signupForm.value.username;
-  //   data.password = this.signupForm.value.password;
-  //   data.email = this.signupForm.value.email;
-  //   data.phoneNumber = this.signupForm.value.phone;
-  //   // data.userType = this.signupForm.value.user_type;
-  //   data.userType = 'Cumparator/Chirias';
-  //   this.authService.register(data).subscribe(
-  //     (response) => {
-  //       this.spinnerService.hide();
-  //       console.log(response);
-  //       this.signupForm.reset();
-  //       this.userService.closeDialog.emit(true);
-  //     },
-  //         (error) => {
-  //           console.log(error);
-  //         }
-  //   );
+    // this.spinnerService.show();
+    const data: SignupResponse = new SignupResponse;
+    data.username = this.signupForm.value.username;
+    data.password = this.signupForm.value.password;
+    data.email = this.signupForm.value.email;
+    data.phoneNumber = this.signupForm.value.phone;
+    // data.userType = this.signupForm.value.user_type;
+    // data.userType = 'Cumparator/Chirias';
+    this.authService.register(data).subscribe(
+      (response) => {
+        // this.spinnerService.hide();
+        console.log(response);
+        this.signupForm.reset();
+        this.userService.closeDialog.emit(true);
+      },
+          (error) => {
+            console.log(error);
+          }
+    );
   }
 
   confirmPassword(control: FormGroup): {[s: string]: boolean} {
-  //   if (control.value !== this.password) {
-  //     return {'differentPasswords': false};
-  //   }
+    if (control.value !== this.password) {
+      return {'differentPasswords': false};
+    }
     return null;
   }
 
   keyPress(event: any) {
-  //   this.password = event.target.value;
-  // }
-
-  // checkMail(control: FormGroup): {[s: string]: boolean} {
-  //   for (let i = 0; i < this.userEmails.length; i++) {
-  //     if (control.value === this.userEmails[i]) {
-  //       return {'mailUsed': false};
-  //     }
-  //   }
-  //   return null;
+    this.password = event.target.value;
   }
 
   checkMail(control: FormGroup): {[s: string]: boolean} {

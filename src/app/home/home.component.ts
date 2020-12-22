@@ -4,7 +4,7 @@ import {UserService} from '../user.service';
 // import {AdDto} from '../add/adDto';
 // import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 import {Router} from '@angular/router';
-// import {MapsAPILoader} from '@agm/core';
+import {MapsAPILoader} from '@agm/core';
 // import {ModalAgreementComponent} from '../modal-agreement/modal-agreement.component';
 import {MatDialog} from '@angular/material/dialog';
 import {SnotifyService} from 'ng-snotify';
@@ -22,14 +22,14 @@ export class HomeComponent implements OnInit {
   places: string[] = [];
 
   constructor(private authService: AuthService,
-              // private mapsAPILoader: MapsAPILoader,
+              private mapsAPILoader: MapsAPILoader,
               public userService: UserService,
               // private spinnerService: Ng4LoadingSpinnerService,
               private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
-    // this.mapsAPILoader.load();
+    this.mapsAPILoader.load();
     // this.spinnerService.show();
     // this.userService.getAdsWithImages().subscribe(
     //   (response) => {

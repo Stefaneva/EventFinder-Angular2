@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.userService.currentUser.name = null;
     this.userService.currentUser.email = null;
-    this.userService.currentUser.token = null;
+    this.userService.currentUser.accessToken = null;
     this.userService.currentUser.lastLoginDate = null;
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;

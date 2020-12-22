@@ -11,15 +11,14 @@ export class AuthService {
 
   register(data: Object) {
     console.log(data);
-    return this.http.post(this._BASE_URL + '/signup', data);
-    // return this.http.post(this.local + '/signup', data);
+    return this.http.post(this._BASE_URL + '/api/signup', data);
   }
 
-  login(Username: string, Password: string) {
+  login(Email: string, Password: string) {
     const headerPost = new HttpHeaders({'Content-Type': 'application/json'});
-    const data = JSON.stringify({username: Username, password: Password});
+    const data = JSON.stringify({email: Email, password: Password});
 
-    return this.http.post(this._BASE_URL + '/auth', data, {headers: headerPost});
+    return this.http.post(this._BASE_URL + '/api/login', data, {headers: headerPost});
   }
 
 }
