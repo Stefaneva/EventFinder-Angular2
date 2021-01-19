@@ -51,15 +51,15 @@ export class FilterPipe implements PipeTransform {
     return false;
   }
 
-  transform(value: any, term: any, propName: string, adItemType: any, adItemTypeProp: string, priceMin: number,
-            priceMax: number, priceProp: string, rent: boolean, sale: boolean, adTypeProp: string,
+  transform(value: any, term: any, propName: string, eventItemType: any, eventItemTypeProp: string, priceMin: number,
+            priceMax: number, priceProp: string, rent: boolean, sale: boolean, eventTypeProp: string,
             surfaceMin: number, surfaceMax: number, surfaceProp: string, areaSurfaceMin: number, areaSurfaceMax: number,
             areaSurfaceProp: string, roomsMin: number, roomsMax: number, roomsProp: string,
             partitioning: string, partitioningProp: string, yearBuiltMin: number, yearBuiltMax: number, yearBuiltProp: string,
             comfort: number, comfortProp: string, floorLevelMin: number, floorLevelMax: number, floorLevelProp: string,
             furnished: string, furnishedProp: string, lat: number, lng: number): any {
 
-    if ((term === undefined || term === '' || term === 0) && (adItemType === undefined || adItemType === ' ' || adItemType === 'Toate') &&
+    if ((term === undefined || term === '' || term === 0) && (eventItemType === undefined || eventItemType === ' ' || eventItemType === 'Toate') &&
         !priceMin && !priceMax && !rent && !sale && !surfaceMin && !surfaceMax && !areaSurfaceMin && !areaSurfaceMax &&
         !roomsMin && !roomsMax && !partitioning && !yearBuiltMin && !yearBuiltMax && !comfort && !floorLevelMin &&
         !floorLevelMax && !furnished && !lat && !lng) {

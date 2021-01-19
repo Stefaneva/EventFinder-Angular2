@@ -3,7 +3,7 @@ import {UserService} from '../user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {SigninComponent} from '../auth/signin/signin.component';
 import {SignupComponent} from '../auth/signup/signup.component';
-// import {AddComponent} from '../add/add.component';
+import {EventComponent} from '../event/event.component';
 import {Router} from '@angular/router';
 // import {EditUserComponent} from '../edit-user/edit-user.component';
 
@@ -45,16 +45,16 @@ export class HeaderComponent implements OnInit {
       this.router.navigateByUrl('/home');
     }
     this.userService.isFavourite = false;
-    this.userService.userReviewedAd = false;
+    this.userService.userReviewedEvent = false;
   }
 
-  // addNewAd(): void {
-  //   this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
-  //   const dialogRef = this.dialog.open(AddComponent, {
-  //     height: '75vh',
-  //     width: '50vw',
-  //   });
-  // }
+  addNewEvent(): void {
+    this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
+    const dialogRef = this.dialog.open(EventComponent, {
+      height: '75vh',
+      width: '55vw',
+    });
+  }
 
   // openEdit() {
   //   this.userService.closeDialog.subscribe(result => this.dialog.closeAll());

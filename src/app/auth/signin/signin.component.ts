@@ -7,6 +7,8 @@ import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 // import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 import {SnotifyService} from 'ng-snotify';
+import { Observable, timer, Subscription, Subject, interval } from 'rxjs';
+import { switchMap, tap, share, retry, takeUntil, take, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signin',
@@ -33,7 +35,9 @@ export class SigninComponent implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
     // this.spinnerService.show();
-    this.authService.login(email, password).subscribe(
+    
+    // timer(1000,10000).pipe(switchMap(x => this.authService.login(email, password)), take(2)).subscribe(
+      this.authService.login(email, password).subscribe(
       (data: any) => {
         this.userService.currentUser = new User;
         this.userService.currentUser.email = email;
@@ -41,6 +45,12 @@ export class SigninComponent implements OnInit {
         this.userService.currentUser.refreshToken = data.refreshToken;
         console.log(this.userService.currentUser.accessToken);
         console.log(this.userService.currentUser.refreshToken);
+        console.log('timer value: ' + this.userService.currentUser.timer);
+        timer(7200000).subscribe(val => {
+          this.logout();
+          this.userService.currentUser.timer = false;
+          console.log('timer value: ' + this.userService.currentUser.timer);
+        });
     //     this.userService.postUserData().subscribe(
     //       result => {
     //         this.userService.currentUser.name = result.name;
@@ -83,7 +93,7 @@ export class SigninComponent implements OnInit {
     //               if (this.userService.reviews.length > 0) {
     //                 for (const review1 of this.userService.reviews) {
     //                   if (review1.mail === this.userService.currentUser.email) {
-    //                     this.userService.userReviewedAd = true;
+    //                     this.userService.userReviewedEvent = true;
     //                     return;
     //                   }
     //                 }
@@ -110,5 +120,23 @@ export class SigninComponent implements OnInit {
     //     }
       }
     );
+  }
+
+
+  logout() {
+    this.userService.currentUser.name = null;
+    this.userService.currentUser.email = null;
+    this.userService.currentUser.accessToken = null;
+    this.userService.currentUser.lastLoginDate = null;
+    this.userService.currentUser.enabled = null;
+    this.userService.currentUser.phone = null;
+    this.userService.currentUser.type = null;
+    if (this.router.url === '/calendar' || this.router.url === '/statistics'
+        || this.router.url === '/myAds' || this.router.url === '/favorites'
+        || this.router.url === '/userList' || this.router.url === 'statistics') {
+      this.router.navigateByUrl('/home');
+    }
+    this.userService.isFavourite = false;
+    this.userService.userReviewedEvent = false;
   }
 }

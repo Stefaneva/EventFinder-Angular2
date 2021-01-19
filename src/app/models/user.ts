@@ -8,4 +8,5 @@ export class User {
   enabled: boolean;
   lastLoginDate: string;
   notification: number;
+  timer: boolean;
 }

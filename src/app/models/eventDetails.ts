@@ -1,14 +1,14 @@
 import {UserDto} from './userDto';
 
-export class AdDetailsDto {
+export class eventDetailsDto {
   id: number;
   title: string;
-  adType: string;
+  eventType: string;
   description: string;
   price: number;
   surface: number;
   rooms: number;
-  adItemType: string;
+  eventItemType: string;
   lat: number;
   lng: number;
   userDetails: UserDto;
@@ -18,5 +18,5 @@ export class AdDetailsDto {
   floorLevel: string;
   areaSurface: number;
   yearBuilt: number;
-  avgAdReview: number;
+  avgEventReview: number;
 }

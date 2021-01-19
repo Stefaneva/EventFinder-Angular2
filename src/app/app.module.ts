@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {SignupComponent} from './auth/signup/signup.component';
 import {SigninComponent} from './auth/signin/signin.component';
 import {AuthService} from './auth/auth.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -20,6 +21,7 @@ import {FilterPipe} from './home/FilterPipe';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker'
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -32,6 +34,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserService } from './user.service';
 import { AgmCoreModule } from '@agm/core';
+import { EventComponent } from './event/event.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -47,6 +53,7 @@ const appRoutes: Routes = [
     SigninComponent,
     HeaderComponent,
     HomeComponent,
+    EventComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
@@ -56,15 +63,19 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    NgxMatTimepickerModule,
+    NgxMatDatetimePickerModule,
     MatFormFieldModule,
     MatDialogModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule ,
+    NgxMatMomentModule,
     MatIconModule,
     MatCheckboxModule,
     MatSidenavModule,
     MatCardModule,
     MatButtonModule,
-    MatFormFieldModule,
     MatRadioModule,
     MatSelectModule,
     MatSnackBarModule,
@@ -81,6 +92,7 @@ const appRoutes: Routes = [
   ],
   providers: [UserService, AuthService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     SnotifyService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

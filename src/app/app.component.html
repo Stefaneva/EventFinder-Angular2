@@ -2,16 +2,16 @@
   <mat-sidenav #sidenav class="sidenav">
     <div class="options__container">
       <div class="sidenav__buttons">
-        <button mat-button mat-raised-button color="warn" (click)="sidenav.toggle()">Închide</button>
-        <button mat-button mat-raised-button color="accent" (click)="resetFilters()">Resetează</button>
+        <button mat-button mat-raised-button color="warn" (click)="sidenav.toggle()">Close</button>
+        <button mat-button mat-raised-button color="accent" (click)="resetFilters()">Reset Filters</button>
       </div>
-    <div class="ad__number__option">
-    <h4>Anunțuri pe pagină</h4>
+    <div class="event__number__option">
+    <h4>Events on page</h4>
       <mat-select [(value)]="userService.itemsOnPage" class="numar__anunturi">
         <mat-option *ngFor="let option of userService.itemsPerPageOptions" [value]="option">{{ option }}</mat-option>
       </mat-select>
     </div>
-    <mat-radio-group [(ngModel)]="userService.adItemType" class="adItemType__options">
+    <mat-radio-group [(ngModel)]="userService.eventItemType" class="eventItemType__options">
       <mat-radio-button value="Casa">Casă</mat-radio-button>
       <mat-radio-button value="Apartament">Apartament</mat-radio-button>
       <mat-radio-button value='Toate'>Toate</mat-radio-button>
@@ -61,7 +61,7 @@
         <mat-option value="Nemobilata">Nemobilată</mat-option>
       </mat-select>
     </mat-form-field>
-    <div *ngIf="userService.adItemType === 'Apartament'">
+    <div *ngIf="userService.eventItemType === 'Apartament'">
       <div class="form__options">
         <mat-form-field>
           <input type="text" pattern="(^Parter$)|(^Demisol$)|(^[0-9]{1,3}$)"  placeholder="Etaj minim..." matInput [(ngModel)]="userService.floorLevelMin" autocomplete="off">
@@ -85,7 +85,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div *ngIf="userService.adItemType === 'Casa'">
+    <div *ngIf="userService.eventItemType === 'Casa'">
       <div class="form__options">
         <mat-form-field>
           <input type="number" placeholder="Suprafața utilă minim..." matInput [(ngModel)]="userService.areaSurfaceMin" autocomplete="off">
@@ -104,11 +104,6 @@
     </div>
     </div>
   </mat-sidenav>
-
-
-<!-- <mat-sidenav-container class="example-container" fullscreen>
-<mat-sidenav #sidenav class="sidenav"> -->
-<!-- </mat-sidenav> -->
 <mat-sidenav-content>
   <app-header></app-header>
   <router-outlet></router-outlet>

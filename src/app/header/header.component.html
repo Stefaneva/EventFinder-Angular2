@@ -1,51 +1,51 @@
-<nav class="navbar navbar-expand-md bg-primary navbar-dark">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <!--<div class="colapse__container">-->
     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse_target">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapse_target">
     <!-- Brand -->
-    <a class="navbar-brand" href="/">EventFinder</a>
+    <a class="navbar-brand brand__logo" href="/">EventFinder</a>
 
     <!-- Links -->
     <ul class="navbar-nav">
       <li class="nav-item">
-        <button class="btn btn-success home__button" type="button" (click)="redirectHome()">Acasă <mat-icon>home</mat-icon></button>
+        <button class="btn btn-success home__button" type="button" (click)="redirectHome()">Home <mat-icon>home</mat-icon></button>
         <!--<a class="nav-link" routerLink="/home"><span class="fa fa-home"></span>Home</a>-->
       </li>
       <li class="nav-item">
         <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type !== 'ADMIN'"
-                (click)="addNewAd()">Adaug&#259; anun&#539;</button>
+                (click)="addNewEvent()">Add Event</button>
       </li>
       <li class="nav-item">
         <a routerLink="/userList">
           <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type === 'ADMIN'"
-                  >Utilizatori</button>
+                  >User Management</button>
         </a>
       </li>
       <li class="nav-item">
         <a routerLink="/statistics">
           <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type === 'ADMIN'"
-                  >Date anunțuri</button>
+                  >Event details</button>
         </a>
       </li>
     </ul>
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ms-auto">
         <div class="user__options">
           <li class="nav-item dropdown" *ngIf="userService.currentUser.accessToken && userService.currentUser.type != 'ADMIN'">
-            <button class="btn btn-warning dropdown-toggle sign__up" data-toggle="dropdown">Contul meu</button>
+            <button class="btn btn-warning dropdown-toggle sign__up" data-toggle="dropdown">My account</button>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a routerLink="/myAds" class="dropdown-item">
-                <button class="btn btn-success option sign__up" type="button">Anunțurile Mele</button>
+                <button class="btn btn-success option sign__up" type="button">My events</button>
               </a>
               <div class="dropdown-item">
-                <button class="btn btn-warning option sign__up" (click)="openEdit()">Editează date cont</button>
+                <button class="btn btn-warning option sign__up" (click)="openEdit()">Edit account data</button>
               </div>
               <a routerLink="/favorites" class="dropdown-item">
-                <button class="btn btn-danger option sign__up" type="button">Favorite</button>
+                <button class="btn btn-danger option sign__up" type="button">Favourites</button>
               </a>
               <a routerLink="/calendar" class="dropdown-item">
-                <button class="btn btn-info option sign__up" type="button">Programări</button>
+                <button class="btn btn-info option sign__up" type="button">Schedules</button>
               </a>
             </div>
           </li>

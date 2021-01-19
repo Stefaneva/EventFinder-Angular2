@@ -14,7 +14,7 @@
     /*margin-bottom: 30px;*/
   }
   
-  .ad__number__option {
+  .event__number__option {
     padding-bottom: 2vh;
   }
   
@@ -34,7 +34,7 @@
     margin-right: 1vw;
   }
   
-  .adItemType__options {
+  .eventItemType__options {
     display: flex;
     justify-content: space-around;
   }

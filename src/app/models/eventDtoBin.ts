@@ -1,12 +1,12 @@
-export class AdDtoBin {
+export class EventDtoBin {
   id: number;
   title: string;
-  adType: string;
+  eventType: string;
   description: string;
   price: number;
   surface: number;
   rooms: number;
-  adItemType: string;
+  eventItemType: string;
   lat: number;
   lng: number;
   userEmail: string;

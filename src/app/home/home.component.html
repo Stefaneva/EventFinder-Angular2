@@ -1,16 +1,18 @@
 <ng4-loading-spinner></ng4-loading-spinner>
 <ng-snotify></ng-snotify>
-<h1 class="ads__title">Anunțuri </h1>
+<h1 class="ads__title">Events </h1>
 <div class="body__container">
   <div class="search__filter__container">
     <form>
       <mat-form-field class="search__field">
-        <input type="text" name="search" matInput placeholder="Caută anunț..." [(ngModel)]="userService.term" autocomplete="off">
-        <mat-icon matSuffix class="search__icon">mode_search</mat-icon>
+        <input type="text" name="search" matInput placeholder="Search events..." [(ngModel)]="userService.term" autocomplete="off">
+        <mat-icon matSuffix class="search__icon">search</mat-icon>
       </mat-form-field>
     </form>
     <div class="button__responsive">
-      <button mat-raised-button mat-button (click)="userService.sidenav.toggle()" class="filter__button">Filtreaz&#259; anun&#539;uri</button>
+      <button mat-raised-button mat-button (click)="userService.sidenav.toggle()" class="filter__button">Filter events 
+        <mat-icon matSuffix>filter_alt</mat-icon>
+      </button>
     </div>
   </div>
   <hr class="options">

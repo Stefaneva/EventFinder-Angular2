@@ -1,0 +1,44 @@
+div.container {
+  width: 40vw;
+  height: auto;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.suggested__price {
+  /*margin-top: 20px;*/
+  margin-top: 5vh;
+  display: flex;
+  justify-content: space-around;
+  /*size: 7px;*/
+  size: 3vw;
+}
+
+.container > * {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.container form {
+  width: 100%;
+}
+
+.custom__button {
+  margin-top: 3vh;
+}
+
+.eventType {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+}
+
+.agm-map {
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+}

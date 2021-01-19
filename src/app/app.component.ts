@@ -3,6 +3,8 @@ import {UserService} from './user.service';
 import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl, FormGroup} from '@angular/forms';
 import { MapsAPILoader } from '@agm/core';
+import { timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,12 +26,10 @@ export class AppComponent implements OnInit {
 
   ngAfterViewInit() {
     this.userService.sidenav = this.mySidenav;
-    console.log(this.userService.sidenav + " and " + this.mySidenav );
   }
 
   ngOnInit(): void {
     this.userService.sidenav = this.mySidenav;
-    console.log(this.userService.sidenav + " and " + this.mySidenav );
     this.userService.searchElementRef = this.searchElementRef;
     this.userService.searchLocation = new FormGroup({
       'searchControl' : new FormControl(null)
@@ -77,6 +77,6 @@ export class AppComponent implements OnInit {
   //   this.userService.areaSurfaceMax = null;
   //   this.userService.searchLat = null;
   //   this.userService.searchLng = null;
-  //   this.userService.searchLocation.get('searchControl').setValue(null);
+    this.userService.searchLocation.get('searchControl').setValue(null);
   }
 }
