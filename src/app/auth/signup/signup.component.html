@@ -1,0 +1,36 @@
+<!-- <ng4-loading-spinner></ng4-loading-spinner> -->
+<mat-dialog-content>
+<div class="container">
+  <h1 class="title"><i class="fa fa-user"></i> Creare cont: </h1>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field class="form__field">
+        <input type="text" matInput placeholder="Username..." formControlName="username">
+        <mat-error *ngIf="!signupForm.get('username').valid && signupForm.get('username').touched">Please create a username!</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input placeholder="E-mail..." type="email" matInput formControlName="email">
+        <mat-error *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched">E-mail is not valid!</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input placeholder="Password..." matInput type="password" formControlName="password" (keyup)="keyPress($event)">
+        <mat-error *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched">Introduceți o parola!</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input placeholder="Confirm password..." matInput type="password" formControlName="confirm_password">
+        <mat-error *ngIf="!signupForm.get('confirm_password').valid && signupForm.get('confirm_password').touched">Password introduced does not match!</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input placeholder="Telephone..." matInput type="tel" formControlName="phone">
+        <mat-error *ngIf="!signupForm.get('phone').valid && signupForm.get('phone').touched">Please introduce a valid telephone number!</mat-error>
+      </mat-form-field>
+      <!--<mat-form-field>-->
+        <!--<mat-select matInput formControlName="user_type">-->
+          <!--<mat-option *ngFor="let t of user_types" [value]="t">{{ t }}</mat-option>-->
+        <!--</mat-select>-->
+      <!--</mat-form-field>-->
+      <div class="custom__button__position">
+        <button [disabled]="!signupForm.valid" class="btn btn-success custom__button" type="submit">Sign Up</button>
+      </div>
+    </form>
+</div>
+</mat-dialog-content>

@@ -1,20 +1,113 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<mat-sidenav-container class="example-container" fullscreen>
+  <mat-sidenav #sidenav class="sidenav">
+    <div class="options__container">
+      <div class="sidenav__buttons">
+        <button mat-button mat-raised-button color="warn" (click)="sidenav.toggle()">Close</button>
+        <button mat-button mat-raised-button color="accent" (click)="resetFilters()">Reset Filters</button>
+      </div>
+    <div class="event__number__option">
+    <h4>Events on page</h4>
+      <mat-select [(value)]="userService.itemsOnPage" class="numar__anunturi">
+        <mat-option *ngFor="let option of userService.itemsPerPageOptions" [value]="option">{{ option }}</mat-option>
+      </mat-select>
+    </div>
+    <mat-radio-group [(ngModel)]="userService.eventItemType" class="eventItemType__options">
+      <mat-radio-button value="Casa">Casă</mat-radio-button>
+      <mat-radio-button value="Apartament">Apartament</mat-radio-button>
+      <mat-radio-button value='Toate'>Toate</mat-radio-button>
+    </mat-radio-group>
+    <div class="form__options">
+      <mat-form-field class="form__field__input" appearance="outline">
+        <input type="number" matInput placeholder="Preț minim..." [(ngModel)]="userService.priceMin" autocomplete="off">
+        <mat-icon matSuffix>euro_symbol</mat-icon>
+      </mat-form-field>
+      <mat-form-field class="form__field__input" appearance="outline">
+        <input type="number" matInput placeholder="Preț maxim..." [(ngModel)]="userService.priceMax" autocomplete="off">
+        <mat-icon matSuffix>euro_symbol</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="checkbox__options">
+      <mat-checkbox [(ngModel)]="userService.saleCheckbox">Vânzare</mat-checkbox>
+      <mat-checkbox [(ngModel)]="userService.rentCheckbox">Închiriere</mat-checkbox>
+    </div>
+    <div class="form__options">
+      <mat-form-field>
+        <input type="number" placeholder="Suprafața minimă..." matInput [(ngModel)]="userService.surfaceMin" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="number" placeholder="Suprafața maximă..." matInput [(ngModel)]="userService.surfaceMax" autocomplete="off">
+      </mat-form-field>
+    </div>
+    <div class="form__options">
+      <mat-form-field>
+        <input type="number" placeholder="Numar minim de camere..." matInput [(ngModel)]="userService.roomsMin" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="number" placeholder="Numar maxim de camere..." matInput [(ngModel)]="userService.roomsMax" autocomplete="off">
+      </mat-form-field>
+    </div>
+    <div class="form__options">
+      <mat-form-field>
+        <input type="number" matInput placeholder="An construcție minim..." [(ngModel)]="userService.yearBuiltMin" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="number" matInput placeholder="An construcție maxim..." [(ngModel)]="userService.yearBuiltMax" autocomplete="off">
+      </mat-form-field>
+    </div>
+    <mat-form-field class="furnished">
+      <mat-select placeholder="Tip locuință..." [(value)]="userService.furnished">
+        <mat-option value="Mobilata">Mobilată</mat-option>
+        <mat-option value="Mobilata Partial">Mobilată parțial</mat-option>
+        <mat-option value="Nemobilata">Nemobilată</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="userService.eventItemType === 'Apartament'">
+      <div class="form__options">
+        <mat-form-field>
+          <input type="text" pattern="(^Parter$)|(^Demisol$)|(^[0-9]{1,3}$)"  placeholder="Etaj minim..." matInput [(ngModel)]="userService.floorLevelMin" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field>
+          <input type="text" pattern="(^Parter$)|(^Demisol$)|(^[0-9]{1,3}$)"  placeholder="Etaj maxim..." matInput [(ngModel)]="userService.floorLevelMax" autocomplete="off">
+        </mat-form-field>
+      </div>
+      <div class="form__options">
+        <mat-form-field>
+          <input type="number" placeholder="Confort..." matInput [(ngModel)]="userService.comfort" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Compartimentare..." [(value)]="userService.partitioning">
+            <mat-option value="Decomandat">Decomandat</mat-option>
+            <mat-option value="Semidecomandat">Semidecomandat</mat-option>
+            <mat-option value="Necomandat">Necomandat</mat-option>
+            <mat-option value="Vagon">Vagon</mat-option>
+            <mat-option value="Circular">Circular</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div *ngIf="userService.eventItemType === 'Casa'">
+      <div class="form__options">
+        <mat-form-field>
+          <input type="number" placeholder="Suprafața utilă minim..." matInput [(ngModel)]="userService.areaSurfaceMin" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field>
+          <input type="number" placeholder="Suprafața utilă maxim..." matInput [(ngModel)]="userService.areaSurfaceMax" autocomplete="off">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="location__search__field">
+      <form [formGroup]="userService.searchLocation">
+        <div class="form-group search__location">
+          <input placeholder="Localizare..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text" class="form-control" #search formControlName="searchControl">
+        </div>
+      </form>
+    </div>
+    </div>
+  </mat-sidenav>
+<mat-sidenav-content>
+  <app-header></app-header>
+  <router-outlet></router-outlet>
+</mat-sidenav-content>
+</mat-sidenav-container>
+  
+  

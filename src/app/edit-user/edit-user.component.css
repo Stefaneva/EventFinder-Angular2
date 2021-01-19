@@ -1,0 +1,10 @@
+.edit__user__form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.custom__button__position {
+  display: flex;
+  justify-content: center;
+}

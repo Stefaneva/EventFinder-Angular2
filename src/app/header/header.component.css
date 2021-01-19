@@ -1,0 +1,63 @@
+.nav-item {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.brand__logo {
+  margin-left: 2vw;
+}
+
+.user__options {
+  display: flex;
+  flex-direction: column;
+}
+
+.option {
+  width: 160px;
+}
+
+.login__logout {
+  padding-right: 100px;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.home__button {
+  height: 5.2vh;
+  width: 6.5vw;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0;
+  padding-top: 10;
+}
+
+@media only screen and (max-width: 600px) {
+  .home__button {
+    height: 7vh;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .sign__up {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .sign__in {
+    width: 100%;
+  }
+
+  .sign__out {
+    width: 100%;
+  }
+
+  .login__logout {
+    padding: 0;
+  }
+
+  /* .signup__dialog {
+
+  } */
+}
