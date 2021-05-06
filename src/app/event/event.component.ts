@@ -41,7 +41,7 @@ export class EventComponent implements OnInit {
     this.eventNewForm = new FormGroup({
       'title' : new FormControl(null, Validators.required),
       'eventType' : new FormControl('Free', Validators.required),
-      'eventItemType' : new FormControl(null, Validators.required),
+      'feeType' : new FormControl(null, Validators.required),
       'price' : new FormControl(null, Validators.required),
       'seats_total' : new FormControl(null, Validators.required),
       'description' : new FormControl(null, Validators.required),
@@ -122,7 +122,7 @@ export class EventComponent implements OnInit {
     }
     this.eventDto.title = this.eventNewForm.value.title;
     this.eventDto.description = this.eventNewForm.value.description;
-    this.eventDto.eventItemType = this.eventNewForm.value.eventItemType;
+    this.eventDto.feeType = this.eventNewForm.value.feeType;
     this.eventDto.eventType = this.eventNewForm.value.eventType;
     this.eventDto.price = this.eventNewForm.value.price;
     this.eventDto.category = this.eventNewForm.value.category;
@@ -134,10 +134,10 @@ export class EventComponent implements OnInit {
     // this.userService.events.splice(0, 0 , this.eventdDto);
     frmData.append('title', this.eventNewForm.value.title);
     frmData.append('description', this.eventNewForm.value.description);
-    frmData.append('eventItemType', this.eventNewForm.value.eventItemType);
+    frmData.append('feeType', this.eventNewForm.value.feeType);
     frmData.append('eventType', this.eventNewForm.value.eventType);
     frmData.append('category', this.eventNewForm.value.category);
-    if (this.eventNewForm.value.eventItemType === 'Free') {
+    if (this.eventNewForm.value.feeType === 'Free') {
       this.eventNewForm.get('price').setValue(0);
       this.eventNewForm.get('seats_total').setValue(0);
     }
@@ -155,18 +155,18 @@ export class EventComponent implements OnInit {
     //   console.log(value);
     // }
     this.userService.postNewEventImages(frmData).subscribe(
-      // (response) => {
-      //   console.log(response);
-      //   // this.spinnerService.show();
-      //   this.userService.getEventsWithImages().subscribe(
-      //     (response1) => {console.log(response1);
-      //     this.userService.events = response1;
-      //     // this.spinnerService.hide();
-      //     this.userService.events.forEach( event => event.image = this.imageType + event.image);
-      //     }
-      //   );
-      // },
-      //     (error) => console.log(error)
+      (response) => {
+        console.log(response);
+        // this.spinnerService.show();
+        this.userService.getEvents().subscribe(
+          (response1) => {console.log(response1);
+          this.userService.events = response1;
+          // this.spinnerService.hide();
+          this.userService.events.forEach( event => event.image = this.imageType + event.image);
+          }
+        );
+      },
+          (error) => console.log(error)
     );
   }
 
@@ -226,20 +226,17 @@ export class EventComponent implements OnInit {
   }
 
   validForm(): boolean {
-    // if (this.eventNewForm.get('eventItemType').value === 'Apartament') {
-    //   return !(!this.eventNewForm.get('price').valid || !this.eventNewForm.get('title').valid
-    //     || !this.eventNewForm.get('description').valid ||
-    //     !this.eventNewForm.get('eventType').valid || !this.eventNewForm.get('rooms').valid || !this.eventNewForm.get('surface').valid &&
-    //     !this.eventNewForm.get('partitioning').valid || !this.eventNewForm.get('comfort').valid ||
-    //     !this.eventNewForm.get('floorLevel').valid || !this.eventNewForm.get('yearBuilt').valid);
-    // }
-    // if (this.eventNewForm.get('eventItemType').value === 'Casa') {
-    //   return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
-    //     !this.eventNewForm.get('eventType').valid ||
-    //     !this.eventNewForm.get('rooms').valid || !this.eventNewForm.get('surface').valid ||
-    //     !this.eventNewForm.get('yearBuilt').valid || !this.eventNewForm.get('areaSurface').valid ||
-    //     !this.eventNewForm.get('furnished').valid || !this.eventNewForm.get('price').valid);
-    // }
+    if (this.eventNewForm.get('feeType').value === 'Online') {
+      return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
+        !this.eventNewForm.get('eventType').valid ||
+        !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid);
+    }
+    if (this.eventNewForm.get('feeType').value === 'Paid') {
+      return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
+        !this.eventNewForm.get('eventType').valid ||
+        !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid ||
+        !this.eventNewForm.get('seats_total').valid || !this.eventNewForm.get('price').valid);
+    }
     return true;
   }
 }

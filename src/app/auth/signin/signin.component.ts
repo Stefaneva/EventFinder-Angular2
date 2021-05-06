@@ -9,6 +9,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {SnotifyService} from 'ng-snotify';
 import { Observable, timer, Subscription, Subject, interval } from 'rxjs';
 import { switchMap, tap, share, retry, takeUntil, take, map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-signin',
@@ -24,7 +25,7 @@ export class SigninComponent implements OnInit {
   constructor(private authService: AuthService,
               private userService: UserService,
               private router: Router,
-              // private spinnerService: Ng4LoadingSpinnerService,
+              private spinner: NgxSpinnerService,
               private snotifyService: SnotifyService) { }
 
   ngOnInit() {
@@ -34,7 +35,7 @@ export class SigninComponent implements OnInit {
     // this.userService.userEvent = true;
     const email = form.value.email;
     const password = form.value.password;
-    // this.spinnerService.show();
+    this.spinner.show();
     
     // timer(1000,10000).pipe(switchMap(x => this.authService.login(email, password)), take(2)).subscribe(
       this.authService.login(email, password).subscribe(
@@ -43,6 +44,8 @@ export class SigninComponent implements OnInit {
         this.userService.currentUser.email = email;
         this.userService.currentUser.accessToken = data.accessToken;
         this.userService.currentUser.refreshToken = data.refreshToken;
+        this.userService.currentUser.phone = data.phone;
+        this.userService.currentUser.enabled = data.enabled;
         console.log(this.userService.currentUser.accessToken);
         console.log(this.userService.currentUser.refreshToken);
         console.log('timer value: ' + this.userService.currentUser.timer);
@@ -60,9 +63,11 @@ export class SigninComponent implements OnInit {
     //         this.userService.currentUser.enabled = result.enabled;
     //         this.userService.currentUser.notification = result.notification;
     //         if (this.userService.currentUser.enabled) {
-              form.resetForm();
-    //           console.log(this.userService.currentUser.email + ' ' + this.userService.currentUser.name);
-              this.userService.closeDialog.emit(true);
+                setTimeout(() => {
+                  this.spinner.hide();
+                  form.resetForm();
+                  this.userService.closeDialog.emit(true);
+                }, 2000);          
     //           console.log(this.userService.currentUser.notification);
     //           if (!this.userService.currentUser.notification) {
     //             this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
@@ -118,6 +123,13 @@ export class SigninComponent implements OnInit {
     //     } else {
     //       this.isLoginError2 = true;
     //     }
+      },
+      (error) => {
+        if (error.status == 401) {
+          this.isLoginError = true;
+        }
+        this.spinner.hide();
+        form.resetForm();
       }
     );
   }
@@ -132,8 +144,8 @@ export class SigninComponent implements OnInit {
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
     if (this.router.url === '/calendar' || this.router.url === '/statistics'
-        || this.router.url === '/myAds' || this.router.url === '/favorites'
-        || this.router.url === '/userList' || this.router.url === 'statistics') {
+        || this.router.url === '/myEvents' || this.router.url === '/favorites'
+        || this.router.url === '/userList' || this.router.url === '/statistics') {
       this.router.navigateByUrl('/home');
     }
     this.userService.isFavourite = false;

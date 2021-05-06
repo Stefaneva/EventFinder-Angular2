@@ -5,7 +5,7 @@ import {SigninComponent} from '../auth/signin/signin.component';
 import {SignupComponent} from '../auth/signup/signup.component';
 import {EventComponent} from '../event/event.component';
 import {Router} from '@angular/router';
-// import {EditUserComponent} from '../edit-user/edit-user.component';
+import { EditUserComponent } from '../edit-user/edit-user.component';
 
 @Component({
   selector: 'app-header',
@@ -56,10 +56,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  // openEdit() {
-  //   this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
-  //   const dialogRef = this.dialog.open(EditUserComponent, {});
-  // }
+  openEdit() {
+    this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
+    const dialogRef = this.dialog.open(EditUserComponent, {});
+  }
 
   redirectHome() {
     this.router.navigateByUrl('/home');

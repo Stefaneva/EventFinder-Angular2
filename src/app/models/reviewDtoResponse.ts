@@ -4,5 +4,5 @@ export class ReviewDtoResponse {
   rating: number;
   like: number;
   mail: string;
-  adId: number;
+  eventId: number;
 }

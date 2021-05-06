@@ -5,100 +5,74 @@
         <button mat-button mat-raised-button color="warn" (click)="sidenav.toggle()">Close</button>
         <button mat-button mat-raised-button color="accent" (click)="resetFilters()">Reset Filters</button>
       </div>
-    <div class="event__number__option">
-    <h4>Events on page</h4>
-      <mat-select [(value)]="userService.itemsOnPage" class="numar__anunturi">
+    <h4>Events on page</h4>  
+    <div class="event__number__div">
+      <mat-select placeholder="Category..." [(value)]="userService.itemsOnPage" class="event__number">
         <mat-option *ngFor="let option of userService.itemsPerPageOptions" [value]="option">{{ option }}</mat-option>
       </mat-select>
     </div>
-    <mat-radio-group [(ngModel)]="userService.eventItemType" class="eventItemType__options">
-      <mat-radio-button value="Casa">Casă</mat-radio-button>
-      <mat-radio-button value="Apartament">Apartament</mat-radio-button>
-      <mat-radio-button value='Toate'>Toate</mat-radio-button>
+    <mat-radio-group [(ngModel)]="userService.eventType" class="feeType__options">
+      <mat-radio-button value='All'>All</mat-radio-button>
+      <mat-radio-button value="Online">Online</mat-radio-button>
+      <mat-radio-button value="OnSite">On site</mat-radio-button>
     </mat-radio-group>
-    <div class="form__options">
-      <mat-form-field class="form__field__input" appearance="outline">
-        <input type="number" matInput placeholder="Preț minim..." [(ngModel)]="userService.priceMin" autocomplete="off">
-        <mat-icon matSuffix>euro_symbol</mat-icon>
-      </mat-form-field>
-      <mat-form-field class="form__field__input" appearance="outline">
-        <input type="number" matInput placeholder="Preț maxim..." [(ngModel)]="userService.priceMax" autocomplete="off">
-        <mat-icon matSuffix>euro_symbol</mat-icon>
-      </mat-form-field>
-    </div>
     <div class="checkbox__options">
-      <mat-checkbox [(ngModel)]="userService.saleCheckbox">Vânzare</mat-checkbox>
-      <mat-checkbox [(ngModel)]="userService.rentCheckbox">Închiriere</mat-checkbox>
+      <mat-checkbox [(ngModel)]="userService.freeCheckbox">Free</mat-checkbox>
+      <mat-checkbox [(ngModel)]="userService.paidCheckbox">Paid</mat-checkbox>
+    </div>
+    <div *ngIf="userService.paidCheckbox">
+      <div class="form__options">
+        <mat-form-field class="form__field__input" appearance="outline">
+          <mat-label>Minimum price</mat-label>
+          <input type="number" pattern="(\b[1-9][0-9]{0,9})" matInput placeholder="Minimum price..." [(ngModel)]="userService.priceMin" autocomplete="off">
+          <mat-icon matSuffix>euro_symbol</mat-icon>
+        </mat-form-field>
+        <mat-form-field class="form__field__input" appearance="outline">
+          <mat-label>Maximum price</mat-label>
+          <input type="number" pattern="(\b[1-9][0-9]{0,9})" matInput placeholder="Maximum price..." [(ngModel)]="userService.priceMax" autocomplete="off">
+          <mat-icon matSuffix>euro_symbol</mat-icon>
+        </mat-form-field>
+      </div>
     </div>
     <div class="form__options">
-      <mat-form-field>
-        <input type="number" placeholder="Suprafața minimă..." matInput [(ngModel)]="userService.surfaceMin" autocomplete="off">
-      </mat-form-field>
-      <mat-form-field>
-        <input type="number" placeholder="Suprafața maximă..." matInput [(ngModel)]="userService.surfaceMax" autocomplete="off">
+      <mat-form-field appearance="outline">
+        <mat-label>Available seats</mat-label>
+        <input type="number" pattern="(\b[1-9][0-9]{0,4})"  placeholder="Available seats..." matInput [(ngModel)]="userService.availableSeats" autocomplete="off">
       </mat-form-field>
     </div>
     <div class="form__options">
-      <mat-form-field>
-        <input type="number" placeholder="Numar minim de camere..." matInput [(ngModel)]="userService.roomsMin" autocomplete="off">
+      <!-- <mat-form-field>
+        <input type="number" matInput placeholder="Event from..." [(ngModel)]="userService.yearBuiltMin" autocomplete="off">
       </mat-form-field>
       <mat-form-field>
-        <input type="number" placeholder="Numar maxim de camere..." matInput [(ngModel)]="userService.roomsMax" autocomplete="off">
+        <input type="number" matInput placeholder="Event until..." [(ngModel)]="userService.yearBuiltMax" autocomplete="off">
+      </mat-form-field> -->
+      <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [formGroup]="userService.range" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Start date">
+          <input matEndDate formControlName="end" placeholder="End date">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker touchUi #picker></mat-date-range-picker>
+        <mat-error *ngIf="userService.range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+        <mat-error *ngIf="userService.range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
       </mat-form-field>
     </div>
-    <div class="form__options">
-      <mat-form-field>
-        <input type="number" matInput placeholder="An construcție minim..." [(ngModel)]="userService.yearBuiltMin" autocomplete="off">
-      </mat-form-field>
-      <mat-form-field>
-        <input type="number" matInput placeholder="An construcție maxim..." [(ngModel)]="userService.yearBuiltMax" autocomplete="off">
-      </mat-form-field>
-    </div>
-    <mat-form-field class="furnished">
-      <mat-select placeholder="Tip locuință..." [(value)]="userService.furnished">
-        <mat-option value="Mobilata">Mobilată</mat-option>
-        <mat-option value="Mobilata Partial">Mobilată parțial</mat-option>
-        <mat-option value="Nemobilata">Nemobilată</mat-option>
+    <mat-form-field class="event__category">
+      <mat-select placeholder="Category..." [(value)]="userService.category">
+        <mat-option value="Workshop">Workshop</mat-option>
+        <mat-option value="Soft Skills">Soft Skills</mat-option>
+        <mat-option value="Technical">Technical</mat-option>
+        <mat-option value="Social">Social</mat-option>
+        <mat-option value="Marketing">Marketing</mat-option>
+        <mat-option value="Recruiting">Recruiting</mat-option>
       </mat-select>
     </mat-form-field>
-    <div *ngIf="userService.eventItemType === 'Apartament'">
-      <div class="form__options">
-        <mat-form-field>
-          <input type="text" pattern="(^Parter$)|(^Demisol$)|(^[0-9]{1,3}$)"  placeholder="Etaj minim..." matInput [(ngModel)]="userService.floorLevelMin" autocomplete="off">
-        </mat-form-field>
-        <mat-form-field>
-          <input type="text" pattern="(^Parter$)|(^Demisol$)|(^[0-9]{1,3}$)"  placeholder="Etaj maxim..." matInput [(ngModel)]="userService.floorLevelMax" autocomplete="off">
-        </mat-form-field>
-      </div>
-      <div class="form__options">
-        <mat-form-field>
-          <input type="number" placeholder="Confort..." matInput [(ngModel)]="userService.comfort" autocomplete="off">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-select placeholder="Compartimentare..." [(value)]="userService.partitioning">
-            <mat-option value="Decomandat">Decomandat</mat-option>
-            <mat-option value="Semidecomandat">Semidecomandat</mat-option>
-            <mat-option value="Necomandat">Necomandat</mat-option>
-            <mat-option value="Vagon">Vagon</mat-option>
-            <mat-option value="Circular">Circular</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div *ngIf="userService.eventItemType === 'Casa'">
-      <div class="form__options">
-        <mat-form-field>
-          <input type="number" placeholder="Suprafața utilă minim..." matInput [(ngModel)]="userService.areaSurfaceMin" autocomplete="off">
-        </mat-form-field>
-        <mat-form-field>
-          <input type="number" placeholder="Suprafața utilă maxim..." matInput [(ngModel)]="userService.areaSurfaceMax" autocomplete="off">
-        </mat-form-field>
-      </div>
-    </div>
     <div class="location__search__field">
       <form [formGroup]="userService.searchLocation">
         <div class="form-group search__location">
-          <input placeholder="Localizare..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text" class="form-control" #search formControlName="searchControl">
+          <input placeholder="Location..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text" class="form-control" #search formControlName="searchControl">
         </div>
       </form>
     </div>

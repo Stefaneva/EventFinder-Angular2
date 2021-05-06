@@ -9,6 +9,8 @@ import {MapsAPILoader} from '@agm/core';
 import {MatDialog} from '@angular/material/dialog';
 import {SnotifyService} from 'ng-snotify';
 import { from } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { EventDto } from '../event/eventDto';
 
 @Component({
   selector: 'app-home',
@@ -24,20 +26,22 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthService,
               private mapsAPILoader: MapsAPILoader,
               public userService: UserService,
-              // private spinnerService: Ng4LoadingSpinnerService,
+              private spinner: NgxSpinnerService,
               private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
     this.mapsAPILoader.load();
     // this.spinnerService.show();
-    // this.userService.getAdsWithImages().subscribe(
-    //   (response) => {
-    //     this.userService.ads = response;
-    //     this.userService.ads.forEach(
-    //       ad => {
-    //         ad.image = this.imageType + ad.image;
-    //       });
+    this.userService.getEvents().subscribe(
+      (response) => {
+        console.log(response);
+        this.userService.events = response;
+        this.userService.events.forEach(
+          event => {
+            event.image = this.imageType + event.image;
+            event.eventDate = event.eventDate.slice(0,-5);
+          });
         // const geocoder = new google.maps.Geocoder();
         // for (let i = 0; i < this.userService.ads.length; i++) {
         //   const latlng = new google.maps.LatLng(this.userService.ads[i].lat, this.userService.ads[i].lng);
@@ -60,16 +64,16 @@ export class HomeComponent implements OnInit {
         // }
         // this.spinnerService.hide();
         // this.userService.snotifyService.success('Body content', { position: 'rightTop'});
-    //   }
-    // );
+      }
+    );
   }
 
-  // viewAdDetails(ad: AdDto) {
-  //   this.userService.adDetails = ad;
-  //   const url = '/AdDetails/' + ad.id;
-  //   // this.router.navigateByUrl('/AdDetails');
-  //   this.router.navigate(['/AdDetails', ad.id]);
-  // }
+  viewAdDetails(event: EventDto) {
+    this.userService.eventDetails = event;
+    const url = '/EventDetails/' + event.id;
+    // this.router.navigateByUrl('/AdDetails');
+    this.router.navigate(['/EventDetails', event.id]);
+  }
 
   // deleteAd(ad: AdDto) {
   //   this.userService.adDeletedAdmin = ad;

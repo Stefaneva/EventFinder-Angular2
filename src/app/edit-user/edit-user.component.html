@@ -3,19 +3,19 @@
     <h1 class="title"><i class="fa fa-user"></i>Edit account details: </h1>
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="edit__user__form">
       <mat-form-field>
-        <input placeholder="Parola noua..." matInput type="password" formControlName="password" (keyup)="keyPress($event)">
-        <mat-error *ngIf="!editForm.get('password').valid && editForm.get('password').touched">New Password...</mat-error>
+        <input placeholder="Enter new password..." matInput type="password" formControlName="password" (keyup)="keyPress($event)">
+        <mat-error *ngIf="!editForm.get('password').valid && editForm.get('password').touched">Set up a new password...</mat-error>
       </mat-form-field>
       <mat-form-field>
-        <input placeholder="Confirmare parola..." matInput type="password" formControlName="confirm_password">
+        <input placeholder="Confirm password..." matInput type="password" formControlName="confirm_password">
         <mat-error *ngIf="!editForm.get('confirm_password').valid && editForm.get('confirm_password').touched">Password introduced does not match!</mat-error>
       </mat-form-field>
       <mat-form-field>
-        <input placeholder="Telefon nou..." matInput type="tel" formControlName="phone">
-        <mat-error *ngIf="!editForm.get('phone').valid && editForm.get('phone').touched">Introduceti un numar de telefon valid!</mat-error>
+        <input placeholder="Enter new phone number..." matInput type="tel" formControlName="phone">
+        <mat-error *ngIf="!editForm.get('phone').valid && editForm.get('phone').touched">Phone number is not valid!</mat-error>
       </mat-form-field>
       <div class="custom__button__position">
-        <button [disabled]="!editForm.valid" class="btn btn-success custom__button" type="submit">Salveaza modificarile!</button>
+        <button [disabled]="!editForm.valid" class="btn btn-success custom__button" type="submit">Save changes!</button>
       </div>
     </form>
   </div>

@@ -35,9 +35,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { UserService } from './user.service';
 import { AgmCoreModule } from '@agm/core';
 import { EventComponent } from './event/event.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { EditUserComponent } from './edit-user/edit-user.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import {MatMomentDateModule} from '@angular/material-moment-adapter'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -54,6 +57,7 @@ const appRoutes: Routes = [
     HeaderComponent,
     HomeComponent,
     EventComponent,
+    EditUserComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
@@ -61,6 +65,7 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     AppRoutingModule,
     NgxMatTimepickerModule,
@@ -83,6 +88,8 @@ const appRoutes: Routes = [
     MatExpansionModule,
     HttpClientModule,
     NgxPaginationModule,
+    MatNativeDateModule,
+    MatMomentDateModule,
     RouterModule.forRoot(appRoutes),
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production },
     AgmCoreModule.forRoot(  {
@@ -93,6 +100,7 @@ const appRoutes: Routes = [
   providers: [UserService, AuthService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {provide: MAT_DATE_LOCALE, useValue: 'fr'},
     SnotifyService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

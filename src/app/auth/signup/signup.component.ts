@@ -4,7 +4,7 @@ import {SignupResponse} from './signup.response';
 import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
 import {UserService} from '../../user.service';
-// import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-signup',
@@ -21,7 +21,7 @@ export class SignupComponent implements OnInit {
 
   constructor(private authService: AuthService,
               public userService: UserService,
-              // private spinnerService: Ng4LoadingSpinnerService,
+              private spinner: NgxSpinnerService,
               private router: Router
               ) { }
 
@@ -40,7 +40,7 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.spinnerService.show();
+    this.spinner.show();
     const data: SignupResponse = new SignupResponse;
     data.username = this.signupForm.value.username;
     data.password = this.signupForm.value.password;
@@ -50,7 +50,7 @@ export class SignupComponent implements OnInit {
     // data.userType = 'Cumparator/Chirias';
     this.authService.register(data).subscribe(
       (response) => {
-        // this.spinnerService.hide();
+        this.spinner.hide();
         console.log(response);
         this.signupForm.reset();
         this.userService.closeDialog.emit(true);

@@ -1,6 +1,6 @@
 import {UserDto} from './userDto';
 
-export class eventDetailsDto {
+export class EventDetailsDto {
   id: number;
   title: string;
   eventType: string;
@@ -8,7 +8,7 @@ export class eventDetailsDto {
   price: number;
   surface: number;
   rooms: number;
-  eventItemType: string;
+  feeType: string;
   lat: number;
   lng: number;
   userDetails: UserDto;

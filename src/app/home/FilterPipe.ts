@@ -51,7 +51,7 @@ export class FilterPipe implements PipeTransform {
     return false;
   }
 
-  transform(value: any, term: any, propName: string, eventItemType: any, eventItemTypeProp: string, priceMin: number,
+  transform(value: any, term: any, propName: string, feeType: any, feeTypeProp: string, priceMin: number,
             priceMax: number, priceProp: string, rent: boolean, sale: boolean, eventTypeProp: string,
             surfaceMin: number, surfaceMax: number, surfaceProp: string, areaSurfaceMin: number, areaSurfaceMax: number,
             areaSurfaceProp: string, roomsMin: number, roomsMax: number, roomsProp: string,
@@ -59,7 +59,7 @@ export class FilterPipe implements PipeTransform {
             comfort: number, comfortProp: string, floorLevelMin: number, floorLevelMax: number, floorLevelProp: string,
             furnished: string, furnishedProp: string, lat: number, lng: number): any {
 
-    if ((term === undefined || term === '' || term === 0) && (eventItemType === undefined || eventItemType === ' ' || eventItemType === 'Toate') &&
+    if ((term === undefined || term === '' || term === 0) && (feeType === undefined || feeType === ' ' || feeType === 'Toate') &&
         !priceMin && !priceMax && !rent && !sale && !surfaceMin && !surfaceMax && !areaSurfaceMin && !areaSurfaceMax &&
         !roomsMin && !roomsMax && !partitioning && !yearBuiltMin && !yearBuiltMax && !comfort && !floorLevelMin &&
         !floorLevelMax && !furnished && !lat && !lng) {

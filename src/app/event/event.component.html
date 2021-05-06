@@ -12,11 +12,11 @@
         <mat-option value="OnSite">On Site</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-radio-group matInput formControlName="eventItemType" class="eventType">
+    <mat-radio-group matInput formControlName="feeType" class="eventType">
       <mat-radio-button value="Free">Free</mat-radio-button>
       <mat-radio-button value="Paid">Paid</mat-radio-button>
     </mat-radio-group>
-    <div *ngIf="eventNewForm.get('eventItemType').value === 'Paid'">
+    <div *ngIf="eventNewForm.get('feeType').value === 'Paid'">
       <mat-form-field>
         <input type="number" placeholder="Price(euro)..." matInput formControlName="price" autocomplete="off">
       </mat-form-field>
