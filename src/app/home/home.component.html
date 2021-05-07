@@ -17,7 +17,14 @@
   </div>
   <hr class="options">
     <div class="custom__container">
-      <div *ngFor="let event of userService.events | filter : userService.term : 'title' 
+      <div *ngFor="let event of userService.events | filter : userService.term : 'title' :
+       userService.freeCheckbox : userService.paidCheckbox : 'feeType' :
+       userService.eventType : 'eventType' : 
+       userService.priceMin : userService.priceMax : 'price' :
+       userService.availableSeats : 'availableSeats' :
+       userService.category : 'category' :
+       userService.range : 'eventDate' : userService.range.value.start : userService.range.value.end :
+       userService.searchLat : userService.searchLng
        | paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
         <mat-card class="card__class">
           <mat-card-header>

@@ -100,7 +100,7 @@ const appRoutes: Routes = [
   providers: [UserService, AuthService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    {provide: MAT_DATE_LOCALE, useValue: 'fr'},
+    {provide: MAT_DATE_LOCALE, useValue: 'en-DE'},
     SnotifyService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

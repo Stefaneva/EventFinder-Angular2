@@ -58,25 +58,20 @@ export class AppComponent implements OnInit {
   }
 
   resetFilters() {
-    this.userService.term = null;
     this.userService.eventType = null;
     this.userService.freeCheckbox = false;
     this.userService.paidCheckbox = false;
+    this.userService.feeType = null;
     this.userService.priceMin = null;
     this.userService.priceMax = null;
+    this.userService.itemsPerPageOptions = [5, 7, 10];
+    // console.log(this.userService.range.value);
+    // console.log(this.userService.range.value.start._i);
     // console.log(this.userService.range.get('start').value._i);
     this.userService.range.get('start').setValue(new FormControl());
     this.userService.range.get('end').setValue(new FormControl());
     this.userService.availableSeats = null;
     this.userService.category = null;
-    this.userService.yearBuiltMin = null;
-    this.userService.yearBuiltMax = null;
-    this.userService.partitioning = null;
-    this.userService.comfort = null;
-    this.userService.floorLevelMin = null;
-    this.userService.floorLevelMax = null;
-    this.userService.areaSurfaceMin = null;
-    this.userService.areaSurfaceMax = null;
     this.userService.searchLat = null;
     this.userService.searchLng = null;
     this.userService.searchLocation.get('searchControl').setValue(null);

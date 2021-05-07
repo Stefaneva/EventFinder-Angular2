@@ -46,23 +46,13 @@ export class UserService {
   freeCheckbox = false;
   paidCheckbox = false;
   feeType: string;
-  surfaceMin: number;
-  surfaceMax: number;
   availableSeats: number;
   range = new FormGroup({
     start: new FormControl(),
     end: new FormControl()
   });
-  itemsPerPageOptions = [3, 5, 7, 10];
+  itemsPerPageOptions = [5, 7, 10];
   category: string;
-  yearBuiltMin: number;
-  yearBuiltMax: number;
-  partitioning: string;
-  comfort: number;
-  floorLevelMin: number;
-  floorLevelMax: number;
-  areaSurfaceMin: number;
-  areaSurfaceMax: number;
   sidenav: MatSidenav;
   searchLocation: FormGroup;
   searchElementRef: ElementRef;

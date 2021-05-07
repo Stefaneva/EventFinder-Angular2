@@ -1,4 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { FormControl, FormGroup, FormGroupName } from '@angular/forms';
+import * as moment from 'moment';
+
+
 @Pipe({
   name: 'filter'
 })
@@ -42,7 +46,7 @@ export class FilterPipe implements PipeTransform {
       const locationLatLng = new google.maps.LatLng(searchLat, searchLng);
       const adLocation = new google.maps.LatLng(item['lat'], item['lng']);
       const distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(locationLatLng, adLocation) / 1000;
-      if (distanceInKm <= 1.0) {
+      if (distanceInKm <= 5.0) {
         return true;
       }
     } else {
@@ -51,62 +55,99 @@ export class FilterPipe implements PipeTransform {
     return false;
   }
 
-  transform(value: any, term: any, propName: string, feeType: any, feeTypeProp: string, priceMin: number,
-            priceMax: number, priceProp: string, rent: boolean, sale: boolean, eventTypeProp: string,
-            surfaceMin: number, surfaceMax: number, surfaceProp: string, areaSurfaceMin: number, areaSurfaceMax: number,
-            areaSurfaceProp: string, roomsMin: number, roomsMax: number, roomsProp: string,
-            partitioning: string, partitioningProp: string, yearBuiltMin: number, yearBuiltMax: number, yearBuiltProp: string,
-            comfort: number, comfortProp: string, floorLevelMin: number, floorLevelMax: number, floorLevelProp: string,
-            furnished: string, furnishedProp: string, lat: number, lng: number): any {
+  checkStartDate(startDate: any, eventDate: any) {
+    var startCompareDate;
 
-    if ((term === undefined || term === '' || term === 0) && (feeType === undefined || feeType === ' ' || feeType === 'Toate') &&
-        !priceMin && !priceMax && !rent && !sale && !surfaceMin && !surfaceMax && !areaSurfaceMin && !areaSurfaceMax &&
-        !roomsMin && !roomsMax && !partitioning && !yearBuiltMin && !yearBuiltMax && !comfort && !floorLevelMin &&
-        !floorLevelMax && !furnished && !lat && !lng) {
+    if (startDate === undefined || startDate === null) {
+      return true;
+    }
+    startDate = startDate._i;
+    startCompareDate = startDate;
+
+    if (startDate.year === undefined) {
+      startCompareDate = startDate.replaceAll("/", "-");
+    }
+
+    return moment(startCompareDate).isBefore(eventDate) || moment(startCompareDate).isSame(eventDate);
+  }
+
+  checkEndDate(endDate: any, eventDate: any) {
+    var endCompareDate;
+
+    if (endDate === undefined || endDate === null) {
+      return true;
+    }
+
+    endDate = endDate._i;
+    endCompareDate = endDate;
+
+    if (endDate === undefined) {
+      endCompareDate = endDate.replaceAll("/", "-");
+    }
+
+    console.log(moment(eventDate).isBefore(eventDate));
+
+    return moment(eventDate).isBefore(endCompareDate) || moment(eventDate).isSame(endCompareDate);
+  }
+
+  transform(value: any, term:any, propName: string, freeEvent: boolean, paidEvent: boolean, feeTypeProp: string,
+            eventType: any, eventTypeProp: string, priceMin: number, priceMax: number, priceProp: string,
+            availableSeats: number, availableSeatsProp: string,
+            category: string, categoryProp: string, 
+            range: FormGroup, eventDateProperty: string, startDate: FormControl, endDate: FormControl,
+            lat: number, lng: number) {
+
+    if ((term === undefined || term === '' || term === 0) &&
+        (eventType === undefined || eventType === ' ' || eventType === 'All') &&
+        !freeEvent && !paidEvent &&
+        !priceMin && !priceMax && !availableSeats && !range.value.start && !range.value.end &&
+        !category && !lat && !lng) {
       return value;
     }
+
     const filteredItems = [];
     for (const item of value) {
-      // if (this.searchLocation(lat, lng, item)) {
-      //   console.log('Yes');
+      // console.log(startDate);
+
+      // var startDateString;
+
+      // if (range.value.start) {
+      //   startDateString = range.value.start._i;
       // }
-      // if (adItemType === 'Toate' || !adItemType) {
-      //   if (this.check(priceMin, priceMax, item[priceProp]) && this.check(surfaceMin, surfaceMax, item[surfaceProp]) &&
-      //     this.check(roomsMin, roomsMax, item[roomsProp]) && this.check(yearBuiltMin, yearBuiltMax, item[yearBuiltProp]) &&
-      //     this.checkSingleProp(furnished, item[furnishedProp]) && this.searchLocation(lat, lng, item) &&
-      //     this.checkPropertyBoolean(rent, sale, item[adTypeProp], 'Inchiriere', 'Vanzare')) {
-      //       if (term && item[propName].toLowerCase().includes(term.toLowerCase())) {
-      //         filteredItems.push(item);
-      //       } else if (!term) {
-      //         filteredItems.push(item);
-      //       }
-      //   }
-      // } else if (adItemType === 'Casa') {
-      //   if (this.check(priceMin, priceMax, item[priceProp]) && this.check(surfaceMin, surfaceMax, item[surfaceProp]) &&
-      //     this.check(roomsMin, roomsMax, item[roomsProp]) && this.check(yearBuiltMin, yearBuiltMax, item[yearBuiltProp]) &&
-      //     this.checkSingleProp(furnished, item[furnishedProp]) && this.checkSingleProp(adItemType, item[adItemTypeProp]) &&
-      //     this.checkPropertyBoolean(rent, sale, item[adTypeProp], 'Inchiriere', 'Vanzare') &&
-      //     this.check(areaSurfaceMin, areaSurfaceMax, item[areaSurfaceProp]) && this.searchLocation(lat, lng, item)) {
-      //     if (term && item[propName].toLowerCase().includes(term.toLowerCase())) {
-      //       filteredItems.push(item);
-      //     } else if (!term) {
-      //       filteredItems.push(item);
-      //     }
-      //   }
-      // } else if (adItemType === 'Apartament') {
-      //   if (this.check(priceMin, priceMax, item[priceProp]) && this.check(surfaceMin, surfaceMax, item[surfaceProp]) &&
-      //     this.check(roomsMin, roomsMax, item[roomsProp]) && this.check(yearBuiltMin, yearBuiltMax, item[yearBuiltProp]) &&
-      //     this.checkSingleProp(furnished, item[furnishedProp]) && this.checkSingleProp(adItemType, item[adItemTypeProp]) &&
-      //     this.checkPropertyBoolean(rent, sale, item[adTypeProp], 'Inchiriere', 'Vanzare') &&
-      //     this.checkSingleProp(comfort, item[comfortProp]) && this.check(floorLevelMin, floorLevelMax, item[floorLevelProp]) &&
-      //     this.checkSingleProp(partitioning, item[partitioningProp]) && this.searchLocation(lat, lng, item)) {
-      //     if (term && item[propName].toLowerCase().includes(term.toLowerCase())) {
-      //       filteredItems.push(item);
-      //     } else if (!term) {
-      //       filteredItems.push(item);
-      // //     }
-      //   }
-      // }
+
+      // console.log(startDateString);
+
+      if (!paidEvent && eventType !== 'All') {
+        console.log("Check function return value: " + this.checkStartDate(endDate, item[eventDateProperty].slice(0, -5)));
+        if  (this.checkSingleProp(availableSeats, item[availableSeatsProp]) &&
+          this.checkSingleProp(category, item[categoryProp]) &&
+          this.searchLocation(lat, lng, item) &&
+          this.checkSingleProp(eventType, item[eventTypeProp]) &&
+          // this.checkStartDate(range.value.start, item[eventDateProperty].slice(0, -5)) &&
+          // this.checkEndDate(range.value.end, item[eventDateProperty].slice(0, -5))) { 
+          this.checkStartDate(startDate, item[eventDateProperty].slice(0, -5)) &&
+          this.checkEndDate(endDate, item[eventDateProperty].slice(0, -5))) {   
+            if (term && item[propName].toLowerCase().includes(term.toLowerCase())) {
+              filteredItems.push(item);
+          } else if (!term) {
+            filteredItems.push(item);
+          }
+        }
+      }
+
+      if (paidEvent && eventType !== 'All') {
+        if (this.check(priceMin, priceMax, item[priceProp]) &&
+            this.checkSingleProp(availableSeats, item[availableSeatsProp]) &&
+            this.checkSingleProp(category, item[categoryProp]) &&
+            this.searchLocation(lat, lng, item) &&
+            this.checkSingleProp(eventType, item[eventTypeProp]) &&
+            this.checkStartDate(range.value.start, item[eventDateProperty].slice(0, -5)) &&
+            this.checkEndDate(range.value.end, item[eventDateProperty].slice(0, -5))) {
+              filteredItems.push(item);
+          } else if (!term) {
+            filteredItems.push(item);
+          }
+        }
     }
     return filteredItems;
   }
