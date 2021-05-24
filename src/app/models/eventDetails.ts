@@ -6,17 +6,16 @@ export class EventDetailsDto {
   eventType: string;
   description: string;
   price: number;
-  surface: number;
-  rooms: number;
   feeType: string;
+  seatsTotal: number;
+  seatsOccupied: number;
   lat: number;
   lng: number;
+  userEmail: string;
   userDetails: UserDto;
-  partitioning: string;
-  comfort: number;
-  furnished: string;
-  floorLevel: string;
-  areaSurface: number;
-  yearBuilt: number;
   avgEventReview: number;
+  location: string;
+  category: string;
+  eventDate: string;
+  eventLink: string;
 }

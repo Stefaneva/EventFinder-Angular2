@@ -19,6 +19,11 @@
   padding-bottom: 0;
 }
 
+.link__div {
+  display: flex;
+  justify-content: center;
+}
+
 .viewAddButton {
   margin-top: 2vh;
   display: flex;

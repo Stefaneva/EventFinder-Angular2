@@ -9,22 +9,27 @@
 }
 
 .hr__line {
-  width: 80%;
+  width: 100%;
 }
 
 .my__carousel {
-  /*display: flex;*/
-  /*justify-content: flex-start;*/
-  /*margin-left: 50px;*/
-  margin-left: 5vw;
+  /* display: flex;
+  justify-content: flex-start; */
+  /* margin-left: 50px; */
+  /* margin-left: 5vw; */
+  width: 40vw;
+  height: 57vh;
+  /* border:1px solid black; */
+  /* margin-top: 10vh; */
 }
 
 
 .carousel__item {
   /*width: 700px;*/
   /*height: 500px;*/
-  width: 50vw;
-  height: 70vh;
+  width: 40vw;
+  height: 57vh;
+  margin-top: 3vh;
 }
 
 agm-map {
@@ -47,11 +52,19 @@ agm-map {
   size: 5vw;
 }
 
+.link__label {
+  display: flex;
+  justify-content: center;
+  margin-left: 43vw;
+  width: 12vw;
+}
+
 .img__label__container {
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
-  margin-top: 3vh;
+  margin-top: 5vh;
+  margin-left: -6vw;
 }
 
 .text__label {
@@ -116,6 +129,15 @@ agm-map {
 
 .favourite {
   margin-top: 3vh;
+  padding-top: 2vh;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+}
+
+.book__button {
+  margin-top: 3vh;
+  padding-top: 2vh;
   height: 7vh;
   display: flex;
   justify-content: center;
@@ -155,6 +177,7 @@ agm-map {
 .search__location__formGroup {
   display: flex;
   justify-content: center;
+  margin-bottom: 2vh;
 }
 
 .map__buttons {
@@ -216,6 +239,10 @@ input[type="file"] {
   justify-content: space-between;
 }
 
+.cancel__button {
+  margin-left: 3vw;
+}
+
 .add__review__button {
   /*margin-left: 7vw;*/
   display: flex;
@@ -227,4 +254,28 @@ input[type="file"] {
   display: flex;
   justify-content: center;
   font-size: 1.7vw;
+}
+
+
+/* Rating values */
+/* .filled{
+  color: rgb(255, 208, 0);
+}
+
+.notfilled{
+  color:#6e6a6a;
+} */
+
+.defaultStar{
+  position: relative;
+  display: inline-block;
+  color:gray;
+  font-size: 50px;
+}
+
+.paintedStar{
+  position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: rgb(255, 208, 0);;
 }

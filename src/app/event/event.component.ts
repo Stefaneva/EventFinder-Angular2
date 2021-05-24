@@ -1,7 +1,7 @@
 import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../user.service';
 import {AuthService} from '../auth/auth.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {MapsAPILoader} from '@agm/core';
 import {EventDto} from './eventDto';
 // import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
@@ -47,6 +47,7 @@ export class EventComponent implements OnInit {
       'description' : new FormControl(null, Validators.required),
       'category' : new FormControl(null, Validators.required),
       'eventDate' : new FormControl(null, Validators.required),
+      'eventLink' : new FormControl(null, [Validators.required, EventComponent.urlValidator]),
       'searchControl' : new FormControl(null)
     });
 
@@ -103,6 +104,15 @@ export class EventComponent implements OnInit {
     // );
   }
 
+  private static urlValidator({value}: AbstractControl): null | ValidationErrors {
+    try {
+       new URL(value);
+       return null;
+    } catch {
+       return {pattern: true};
+    }
+  }
+
   private setCurrentPosition() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -115,6 +125,7 @@ export class EventComponent implements OnInit {
 
   onSubmit() {
     console.log(this.eventNewForm);
+    console.log(this.eventNewForm.value.eventLink);
     // this.userService.closeDialog.emit(true);
     const frmData = new FormData();
     for (let i = 0; i < this.myFiles.length; i++) {
@@ -131,6 +142,7 @@ export class EventComponent implements OnInit {
     this.eventDto.lat = this.lat;
     this.eventDto.lng = this.lng;
     this.eventDto.userEmail = this.userService.currentUser.email;
+    this.eventDto.eventLink = this.eventNewForm.value.eventLink;
     // this.userService.events.splice(0, 0 , this.eventdDto);
     frmData.append('title', this.eventNewForm.value.title);
     frmData.append('description', this.eventNewForm.value.description);
@@ -139,7 +151,6 @@ export class EventComponent implements OnInit {
     frmData.append('category', this.eventNewForm.value.category);
     if (this.eventNewForm.value.feeType === 'Free') {
       this.eventNewForm.get('price').setValue(0);
-      this.eventNewForm.get('seats_total').setValue(0);
     }
     frmData.append('price', this.eventNewForm.value.price);
     frmData.append('seats_total', this.eventNewForm.value.seats_total);
@@ -148,6 +159,7 @@ export class EventComponent implements OnInit {
     frmData.append('location', this.eventDto.location);
     frmData.append('userEmail', this.userService.currentUser.email);
     frmData.append('eventDate', this.eventNewForm.value.eventDate);
+    frmData.append('eventLink', this.eventNewForm.value.eventLink);
     console.log(frmData.getAll('fileUpload'));
     console.log(frmData.get('location'));
     console.log("FormData is: ");
@@ -238,5 +250,12 @@ export class EventComponent implements OnInit {
         !this.eventNewForm.get('seats_total').valid || !this.eventNewForm.get('price').valid);
     }
     return true;
+  }
+
+  checkEventType(): boolean {
+    if (this.eventNewForm.get('eventType').value === 'On Site') {
+      return true;
+    }
+    return false;
   }
 }

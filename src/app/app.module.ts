@@ -41,12 +41,23 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {MatMomentDateModule} from '@angular/material-moment-adapter'
+import { EventDetailsComponent } from './event-details/event-details.component';
+import {RatingModule} from 'ngx-rating';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { SlideshowModule } from 'ng-simple-slideshow';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { CarouselModule } from 'ngx-owl-carousel-2';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FavoritesComponent } from './favorites/favorites.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
   { path: 'home', component: HomeComponent},
   { path: 'signup' , component: SignupComponent},
-  { path: 'signin' , component: SigninComponent}
+  { path: 'signin' , component: SigninComponent},
+  { path: 'EventDetails/:id', component: EventDetailsComponent},
+  { path: 'favorites', component: FavoritesComponent }
 ];
 
 @NgModule({
@@ -58,6 +69,8 @@ const appRoutes: Routes = [
     HomeComponent,
     EventComponent,
     EditUserComponent,
+    EventDetailsComponent,
+    FavoritesComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
@@ -90,12 +103,18 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     MatNativeDateModule,
     MatMomentDateModule,
+    CarouselModule,
+    NgImageSliderModule,
+    FontAwesomeModule,
+    MatCarouselModule.forRoot(),
+    SlideshowModule,
     RouterModule.forRoot(appRoutes),
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production },
     AgmCoreModule.forRoot(  {
       apiKey: 'AIzaSyCP6Jh0CirrZAf-IDtdktCuhKPtIgh94_0',
       libraries: ['places', 'geometry']
-    })
+    }),
+    NgbModule
   ],
   providers: [UserService, AuthService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

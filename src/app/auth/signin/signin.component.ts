@@ -78,33 +78,34 @@ export class SigninComponent implements OnInit {
     //           } else {
     //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
     //           }
-    //           this.userService.getFavoriteAds().subscribe(
-    //             response => {
-    //               this.userService.favoriteAds = response;
-    //               this.userService.favoriteAds.forEach( ad => ad.image = this.imageType + ad.image);
-    //               console.log(response);
-    //               // Favourite Button Check
-    //               if (this.userService.favoriteAds.length > 0 && this.userService.adDetails) {
-    //                 this.userService.favoriteAds.forEach(
-    //                   ad => {
-    //                     console.log(ad.id);
-    //                     console.log(this.userService.adDetails.id);
-    //                     if (ad.id === this.userService.adDetails.id) {
-    //                       this.userService.isFavourite = true;
-    //                     }
-    //                   }
-    //                 );
-    //               }
-    //               if (this.userService.reviews.length > 0) {
-    //                 for (const review1 of this.userService.reviews) {
-    //                   if (review1.mail === this.userService.currentUser.email) {
-    //                     this.userService.userReviewedEvent = true;
-    //                     return;
-    //                   }
-    //                 }
-    //               }
-    //             }
-    //           );
+              this.userService.getFavoriteEvents().subscribe(
+                response => {
+                  this.userService.favoriteEvents = response;
+                  this.userService.favoriteEvents.forEach( ad => ad.image = this.imageType + ad.image);
+                  console.log(response);
+                  // Favourite Button Check
+                  if (this.userService.favoriteEvents.length > 0 && this.userService.eventDetails) {
+                    this.userService.favoriteEvents.forEach(
+                      ad => {
+                        console.log(ad.id);
+                        console.log(this.userService.eventDetails.id);
+                        if (ad.id === this.userService.eventDetails.id) {
+                          this.userService.isFavourite = true;
+                        }
+                      }
+                    );
+                  }
+                  if (this.userService.reviews.length > 0) {
+                    for (const review1 of this.userService.reviews) {
+                      if (review1.mail === this.userService.currentUser.email) {
+                        this.userService.userReviewedEvent = true;
+                        console.log("this.userService.userReviewedEvent is: " + this.userService.userReviewedEvent)
+                        return;
+                      }
+                    }
+                  }
+                }
+              );
     //           this.spinnerService.hide();
     //         } else {
     //           this.isLoginError2 = true;

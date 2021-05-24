@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  viewAdDetails(event: EventDto) {
+  viewEventDetails(event: EventDto) {
     this.userService.eventDetails = event;
     const url = '/EventDetails/' + event.id;
     // this.router.navigateByUrl('/AdDetails');

@@ -13,6 +13,8 @@ import { EventDto } from './event/eventDto';
 import { ReviewDtoRequest } from './models/reviewDtoRequest';
 import { EventDetailsDto } from './models/eventDetails';
 import * as moment from 'moment';
+import { FavoriteDto } from './models/favoriteDto';
+import { ReviewDtoResponse } from './models/reviewDtoResponse';
 
 @Injectable()
 export class UserService {
@@ -25,7 +27,13 @@ export class UserService {
   private _UPDATE_USER_DATA = this._BASE_URL_TOKEN_GENERATOR + '/api/updateUserData';
   private _GET_EVENTS_WITH_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEvents';
   private _NEW_EVENT_URL_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/newEvent';
-  private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/eventInfo';
+  private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/getEventInfo';
+  private _GET_EVENT_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEventImages';
+  private _SAVE_FAVORITE_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveFavorite';
+  private _GET_FAVORITE_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getFavoriteEvents';
+  private _UPDATE_EVENT_INFO = this._BASE_URL_TOKEN_MANAGER + '/updateEventInfo';
+  private _SAVE_EVENT_REVIEW =  this._BASE_URL_TOKEN_MANAGER + '/saveEventReview';
+  private _GET_EVENT_REVIEWS = this._BASE_URL_TOKEN_MANAGER + '/getEventReviews';
 
   data: Object;
   page: number;
@@ -95,5 +103,29 @@ export class UserService {
 
   getEventInfo(adId: number): Observable<EventDetailsDto> {
     return this.http.post<EventDetailsDto>(this._GET_EVENT_DETAILS, adId);
+  }
+
+  getEventImages(adId: number): Observable<string[]> {
+    return this.http.post<string[]>(this._GET_EVENT_IMAGES, adId);
+  }
+
+  saveFavorite(favoriteDto: FavoriteDto): Observable<void> {
+    return this.http.post<void>(this._SAVE_FAVORITE_EVENT, favoriteDto);
+  }
+
+  getFavoriteEvents(): Observable<EventDto[]> {
+    return this.http.post<EventDto[]>(this._GET_FAVORITE_EVENTS, {email: this.currentUser.email});
+  }
+
+  updateEventInfo(data: EventDto): Observable<void> {
+    return this.http.post<void>(this._UPDATE_EVENT_INFO, data);
+  }
+
+  getReviews(eventId: number): Observable<ReviewDtoRequest[]> {
+    return this.http.post<ReviewDtoRequest[]>(this._GET_EVENT_REVIEWS, eventId);
+  }
+
+  saveReview(review: ReviewDtoResponse): Observable<number> {
+    return this.http.post<number>(this._SAVE_EVENT_REVIEW, review);
   }
 }

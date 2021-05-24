@@ -3,23 +3,30 @@ import {UserService} from '../user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EventDto} from '../event/eventDto';
 import {MapsAPILoader} from '@agm/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import * as FileSaver from 'file-saver';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FavoriteDto} from '../models/favoriteDto';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ReviewDtoRequest} from '../models/reviewDtoRequest';
 import {ReviewDtoResponse} from '../models/reviewDtoResponse';
+import { MatCarouselSlide, MatCarouselSlideComponent } from '@ngbmodule/material-carousel';
+import { SlideImage } from '../models/SlideImage';
+import { SliderCustomImageComponent } from 'ng-image-slider/lib/slider-custom-image/slider-custom-image.component';
+import { OwlOptions } from 'ngx-owl-carousel-2';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-event-details',
   templateUrl: './event-details.component.html',
   styleUrls: ['./event-details.component.css']
 })
+
 export class EventDetailsComponent implements OnInit {
 
   images: string[] = [];
   imgBase64: string[] = [];
+  imageObject: Array<object> = [];
   private readonly imageType: string = 'data:image/PNG;base64,';
   lat = 0;
   lng = 0;
@@ -31,21 +38,53 @@ export class EventDetailsComponent implements OnInit {
   step = 0;
   eventDetailsChanges: EventDto = new EventDto();
   changeLocation = false;
+  changeEventLink = false;
   newLocation: FormGroup;
+  newLink: FormGroup;
   hidden = true;
+  hiddenNewLink = true;
   // adUserPhone: number;
   eventDto: EventDto = new EventDto();
   myFiles: File [] = [];
-  // reviews: ReviewDtoRequest[] = [];
+  reviews: ReviewDtoRequest[] = [];
   rating = 0;
   comment: string;
   reviewsDates: Date[] = [];
   editReview = false;
   reviewChanges: ReviewDtoRequest;
-  // userReviewedAd: boolean;
+  userReviewedAd: boolean;
+  // Carousel Options:
+  customOptions: OwlOptions = {
+    loop: true,
+    items: 1,
+    mouseDrag: false,
+    touchDrag: false,
+    pullDrag: false,
+    dots: true,
+    navSpeed: 700,
+    navText: ['', ''],
+    responsive: {
+        0: {
+            items: 1,
+        },
+        400: {
+            items: 2,
+        },
+        740: {
+            items: 3,
+        },
+        940: {
+            items: 4,
+        },
+    },
+    nav: true,
+  };
 
   @ViewChild('search')
   searchElementRef: ElementRef;
+
+  @ViewChild('slideshow')
+  slideshow: any;
 
   constructor(public userService: UserService,
               private ngZone: NgZone,
@@ -65,6 +104,7 @@ export class EventDetailsComponent implements OnInit {
     } );
     this.userService.getEventInfo(this.eventId).subscribe(
       response1 => {
+        console.log(response1);
         this.eventDetailsChanges.id = response1.id;
         this.eventDetailsChanges.title = response1.title;
         this.eventDetailsChanges.description = response1.description;
@@ -75,10 +115,11 @@ export class EventDetailsComponent implements OnInit {
         this.eventDetailsChanges.lat = response1.lat;
         this.eventDetailsChanges.lng = response1.lng;
         this.eventDetailsChanges.seatsTotal = response1.seatsTotal;
+        this.eventDetailsChanges.seatsOccupied = response1.seatsOccupied;
         this.eventDetailsChanges.eventDate = response1.eventDate;
+        this.eventDetailsChanges.eventDate = this.eventDetailsChanges.eventDate.slice(0, -5);
         this.eventDetailsChanges.userEmail = response1.userDetails.mail;
         this.eventDetailsChanges.avgEventReview = response1.avgEventReview;
-        console.log(response1);
         this.userService.eventDetails.id = response1.id;
         this.userService.eventDetails.title = response1.title;
         this.userService.eventDetails.description = response1.description;
@@ -86,16 +127,24 @@ export class EventDetailsComponent implements OnInit {
         this.userService.eventDetails.eventType = response1.eventType;
         this.userService.eventDetails.category = response1.category;
         this.userService.eventDetails.seatsTotal = response1.seatsTotal;
+        this.userService.eventDetails.seatsOccupied = response1.seatsOccupied;
         this.userService.eventDetails.price = response1.price;
         this.userService.eventDetails.lat = response1.lat;
         this.userService.eventDetails.lng = response1.lng;
         this.userService.eventDetails.eventDate = response1.eventDate;
-        this.userService.eventDetails.userEmail = response1.userDetails.email;
+        this.userService.eventDetails.eventDate = this.userService.eventDetails.eventDate.slice(0, -5);
+        this.userService.eventDetails.userEmail = response1.userDetails.mail;
         this.userService.eventDetails.avgEventReview = response1.avgEventReview;
-        this.userService.eventUserPhone = response1.userDetails.phoneNumber;
+        if (this.userService.eventDetails.avgEventReview === undefined) {
+          this.userService.eventDetails.avgEventReview = 0;
+        }
+        this.userService.eventDetails.eventLink = response1.eventLink;
+        this.userService.eventUserPhone = response1.userDetails.phone;
         this.lat = this.userService.eventDetails.lat;
         this.lng = this.userService.eventDetails.lng;
         console.log(this.userService.eventDetails.id);
+        console.log(response1.eventLink);
+        console.log(this.userService.eventDetails.eventLink);
         // Favourite Button Check
         if (this.userService.favoriteEvents.length > 0) {
           this.userService.favoriteEvents.forEach(
@@ -108,7 +157,11 @@ export class EventDetailsComponent implements OnInit {
             }
           );
         }
-    // Location
+
+      console.log("User reviewed event is: " + this.userService.userReviewedEvent);
+
+        // Location
+      this.mapsAPILoader.load().then(() => {
         const geocoder = new google.maps.Geocoder();
         const latlng = new google.maps.LatLng(this.lat, this.lng);
         const request = {
@@ -123,6 +176,8 @@ export class EventDetailsComponent implements OnInit {
             }
           }
         });
+      })
+
         this.userService.getEventImages(this.eventId).subscribe(
           (response) => {
             this.images = response;
@@ -130,12 +185,16 @@ export class EventDetailsComponent implements OnInit {
             this.eventDetailsChanges.image = this.images[0];
             for (let i = 0; i < this.images.length; i++) {
               this.images[i] = this.imageType + this.images[i];
+              var slideImage = new SlideImage();
+              slideImage.image = this.images[i];
+              this.imageObject.push(slideImage);
             }
             console.log(this.images);
           }
         );
       }
     );
+
     this.userService.getReviews(this.eventId).subscribe(
         response => {
           this.userService.reviews = response;
@@ -143,18 +202,30 @@ export class EventDetailsComponent implements OnInit {
           let i = 0;
           this.userService.reviews.forEach(
             review => {
+              console.log(review);
               this.reviewsDates[i++] = new Date(review.date);
-              // if (review.userType === 'AGENT_IMOBILIAR') {
-              //   review.userType = 'Agent Imobiliar';
-              // } else {
-              //   review.userType = 'Utilizator';
-              // }
             }
           );
+          if (this.userService.reviews.length > 0 &&
+            this.userService.currentUser !== undefined &&
+            this.userService.currentUser !== null) {
+                
+            for (const review1 of this.userService.reviews) {
+              if (review1.mail === this.userService.currentUser.email) {
+                this.userService.userReviewedEvent = true;
+                console.log("this.userService.userReviewedEvent is: " + this.userService.userReviewedEvent)
+                return;
+              }
+            }
+          }
         }
     );
+
     this.newLocation = new FormGroup({
       'searchControl' : new FormControl(null)
+    });
+    this.newLink = new FormGroup({
+      'newLinkcontrol' : new FormControl(null)
     });
     this.mapsAPILoader.load().then(() => {
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
@@ -176,6 +247,7 @@ export class EventDetailsComponent implements OnInit {
           this.eventDetailsChanges.lng = this.lng;
           this.zoom = 16;
           this.changeLocation = true;
+          this.changeEventLink = true;
         });
       });
     });
@@ -194,14 +266,16 @@ export class EventDetailsComponent implements OnInit {
     this.step--;
   }
 
-  saveChanges(step: number) {
-    this.userService.eventDetails = this.eventDetailsChanges;
-    this.userService.replaceEventInfo(this.eventDetailsChanges).subscribe(
-      response => {
-        console.log(response);
-      }
-    );
-  }
+  // TO:DO Implement Event Details save change
+
+  // saveChanges(step: number) {
+  //   this.userService.eventDetails = this.eventDetailsChanges;
+  //   this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
+  //     response => {
+  //       console.log(response);
+  //     }
+  //   );
+  // }
 
   cancelChanges(step: number) {
     if (step === 1) {
@@ -241,12 +315,20 @@ export class EventDetailsComponent implements OnInit {
     this.hidden = false;
   }
 
-  cancelLocationChanges() {
+  changeTheLink() {
+    this.changeEventLink = true;
+    this.hiddenNewLink = false;
+  }
+
+  cancelLocationAndLinkChanges() {
     this.lat = this.eventDetailsChanges.lat;
     this.lng = this.eventDetailsChanges.lng;
     this.changeLocation = false;
+    this.changeEventLink = false
+    this.hiddenNewLink = true;
     this.hidden = true;
     this.newLocation.get('searchControl').setValue(null);
+    this.newLink.get('newLinkControl').setValue(null);
   }
 
   saveLocationChanges() {
@@ -255,7 +337,8 @@ export class EventDetailsComponent implements OnInit {
     this.hidden = true;
     this.newLocation.get('searchControl').setValue(null);
     this.userService.eventDetails = this.eventDetailsChanges;
-    this.userService.replaceEventInfo(this.eventDetailsChanges).subscribe(
+
+    this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
       response => {
         console.log(response);
       }
@@ -299,11 +382,13 @@ export class EventDetailsComponent implements OnInit {
       frmData.append('fileUpload', this.myFiles[i]);
     }
     console.log(this.images);
-    this.userService.replaceEventImages(frmData).subscribe(
-      response => {
-        console.log(response);
-      }
-    );
+
+    // TO:DO Implement Replace Event Images 
+    // this.userService.replaceEventImages(frmData).subscribe(
+    //   response => {
+    //     console.log(response);
+    //   }
+    // );
   }
 
   handleReaderLoaded(readerEvt) {
@@ -311,6 +396,7 @@ export class EventDetailsComponent implements OnInit {
     this.images.push('data:image/PNG;base64,' + btoa(binaryString));
   }
 
+  // TO:DO Implement Save Favorite
   saveFavorite() {
     if (this.userService.currentUser.accessToken) {
       this.userService.isFavourite = true;
@@ -320,7 +406,7 @@ export class EventDetailsComponent implements OnInit {
       this.userService.saveFavorite(favorite).subscribe(
         response => {
           console.log(response);
-          // this.snackBar.open('Anunțul a fost adăugat la favorite!', 'OK', {duration: 5000});
+          this.snackBar.open('The Event has been added to Favorites!', 'OK', {duration: 5000});
           this.userService.getFavoriteEvents().subscribe(
             result => {
               this.userService.favoriteEvents = result;
@@ -330,7 +416,7 @@ export class EventDetailsComponent implements OnInit {
         }
       );
     } else {
-      // this.snackBar.open('Intră în cont pentru a adăuga anunțul la favorite!', 'OK', {duration: 5000});
+      this.snackBar.open('Login to save the event in Favorites!', 'OK', {duration: 5000});
     }
   }
 
@@ -341,15 +427,15 @@ export class EventDetailsComponent implements OnInit {
 
   addReview() {
     if (!this.userService.currentUser.accessToken) {
-      this.snackBar.open('Intră în cont pentru a adăuga o recenzie!', 'Ok', {duration: 5000});
+      this.snackBar.open('Please login in your account to add a review!', 'Ok', {duration: 5000});
       return;
     }
     if (this.userService.userReviewedEvent) {
-      this.snackBar.open('Ați adăugat deja o recenzie!', 'Ok', {duration: 5000});
+      this.snackBar.open('You have already added a review!', 'Ok', {duration: 5000});
       return;
     }
     if (!this.comment || !this.rating) {
-      this.snackBar.open('Trebuie să adăugați text și rating recenziei!', 'Ok', {duration: 5000});
+      this.snackBar.open('Please add both a star and a rating for a review!', 'Ok', {duration: 5000});
       return;
     }
     const reviewNewArrayElement = new ReviewDtoRequest();
@@ -358,6 +444,7 @@ export class EventDetailsComponent implements OnInit {
     review.mail = this.userService.currentUser.email;
     review.comment = this.comment;
     review.rating = this.rating;
+
     this.userService.saveReview(review).subscribe(
       result => {
         console.log(result);
@@ -372,6 +459,7 @@ export class EventDetailsComponent implements OnInit {
         this.reviewsDates.splice(0, 0, new Date(reviewNewArrayElement.date));
       }
     );
+
     this.userService.userReviewedEvent = true;
     this.userService.eventDetails.avgEventReview = (this.userService.eventDetails.avgEventReview + review.rating)
                                               / (this.userService.reviews.length + 1);
@@ -381,7 +469,7 @@ export class EventDetailsComponent implements OnInit {
   }
 
   editUserReview(review: ReviewDtoRequest) {
-    // this.editReview = true;
+    this.editReview = true;
     review.editReview = true;
     this.reviewChanges = review;
   }
@@ -389,13 +477,15 @@ export class EventDetailsComponent implements OnInit {
   deleteUserReview(review: ReviewDtoRequest) {
     const index = this.userService.reviews.indexOf(review);
     this.userService.reviews.splice(index, 1);
-    this.userService.deleteReview(review.idReview).subscribe(
-      result => {
-        console.log(result);
-        this.snackBar.open('Recenzia a fost ștearsă!', 'Ok', {duration: 5000});
-        this.userService.userReviewedEvent = false;
-      }
-    );
+
+    // TO:DO Implement delete Review
+    // this.userService.deleteReview(review.idReview).subscribe(
+    //   result => {
+    //     console.log(result);
+    //     this.snackBar.open('Recenzia a fost ștearsă!', 'Ok', {duration: 5000});
+    //     this.userService.userReviewedEvent = false;
+    //   }
+    // );
     let sum = 0;
     this.userService.reviews.forEach(
       review2 => {
@@ -417,12 +507,14 @@ export class EventDetailsComponent implements OnInit {
     reviewResponse.comment = this.reviewChanges.comment;
     reviewResponse.like = this.reviewChanges.like;
     console.log(reviewResponse.idReview);
-    this.userService.editReview(reviewResponse).subscribe(
-      response => {
-        console.log(response);
-        this.snackBar.open('Modificările au fost salvate!', 'Ok', {duration: 5000});
-      }
-    );
+
+    // TO:DO Implement edit Review
+    // this.userService.editReview(reviewResponse).subscribe(
+    //   response => {
+    //     console.log(response);
+    //     this.snackBar.open('Modificările au fost salvate!', 'Ok', {duration: 5000});
+    //   }
+    // );
     // this.editReview = false;
     review.editReview = false;
     let sum = 0;
@@ -448,6 +540,19 @@ export class EventDetailsComponent implements OnInit {
     this.userService.eventDetailsCalendar = this.userService.eventDetails;
     this.userService.userCalendar = false;
     this.router.navigateByUrl('/calendar');
+  }
+
+  reviewDate() {
+    return moment().isAfter(this.userService.eventDetails.eventDate);
+  }
+
+  private static urlValidator({value}: AbstractControl): null | ValidationErrors {
+    try {
+       new URL(value);
+       return null;
+    } catch {
+       return {pattern: true};
+    }
   }
 }
 
