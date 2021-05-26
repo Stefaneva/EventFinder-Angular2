@@ -5,6 +5,7 @@ import {EventDto} from '../event/eventDto';
 import {MapsAPILoader} from '@agm/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import * as FileSaver from 'file-saver';
+// import { saveAs } from 'file-saver';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FavoriteDto} from '../models/favoriteDto';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -15,6 +16,7 @@ import { SlideImage } from '../models/SlideImage';
 import { SliderCustomImageComponent } from 'ng-image-slider/lib/slider-custom-image/slider-custom-image.component';
 import { OwlOptions } from 'ngx-owl-carousel-2';
 import * as moment from 'moment';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
   selector: 'app-event-details',
@@ -37,8 +39,13 @@ export class EventDetailsComponent implements OnInit {
   eventId: number;
   step = 0;
   eventDetailsChanges: EventDto = new EventDto();
+  slicedDate: string;
   changeLocation = false;
+  saveLocation = false;
   changeEventLink = false;
+  saveLink = false;
+  cancelLocationChange = false;
+  cancelLinkChange = false;
   newLocation: FormGroup;
   newLink: FormGroup;
   hidden = true;
@@ -53,6 +60,9 @@ export class EventDetailsComponent implements OnInit {
   editReview = false;
   reviewChanges: ReviewDtoRequest;
   userReviewedAd: boolean;
+  //map
+  map: google.maps.Map;
+  mapClickListener: google.maps.MapsEventListener;
   // Carousel Options:
   customOptions: OwlOptions = {
     loop: true,
@@ -82,6 +92,9 @@ export class EventDetailsComponent implements OnInit {
 
   @ViewChild('search')
   searchElementRef: ElementRef;
+
+  @ViewChild('linkEvent')
+  linkEventElementRef: ElementRef;
 
   @ViewChild('slideshow')
   slideshow: any;
@@ -117,7 +130,7 @@ export class EventDetailsComponent implements OnInit {
         this.eventDetailsChanges.seatsTotal = response1.seatsTotal;
         this.eventDetailsChanges.seatsOccupied = response1.seatsOccupied;
         this.eventDetailsChanges.eventDate = response1.eventDate;
-        this.eventDetailsChanges.eventDate = this.eventDetailsChanges.eventDate.slice(0, -5);
+        this.slicedDate = this.eventDetailsChanges.eventDate.slice(0, -5);
         this.eventDetailsChanges.userEmail = response1.userDetails.mail;
         this.eventDetailsChanges.avgEventReview = response1.avgEventReview;
         this.userService.eventDetails.id = response1.id;
@@ -139,6 +152,17 @@ export class EventDetailsComponent implements OnInit {
           this.userService.eventDetails.avgEventReview = 0;
         }
         this.userService.eventDetails.eventLink = response1.eventLink;
+        if (this.userService.eventDetails.eventLink) {
+          this.changeEventLink = false;
+          this.changeLocation = true;
+        }
+        else {
+          this.changeEventLink = true;
+          this.changeLocation = false;
+        }
+        
+
+        console.log(this.userService.eventDetails.eventLink);
         this.userService.eventUserPhone = response1.userDetails.phone;
         this.lat = this.userService.eventDetails.lat;
         this.lng = this.userService.eventDetails.lng;
@@ -225,7 +249,7 @@ export class EventDetailsComponent implements OnInit {
       'searchControl' : new FormControl(null)
     });
     this.newLink = new FormGroup({
-      'newLinkcontrol' : new FormControl(null)
+      'newLinkControl' : new FormControl(null)
     });
     this.mapsAPILoader.load().then(() => {
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
@@ -246,8 +270,8 @@ export class EventDetailsComponent implements OnInit {
           this.eventDetailsChanges.lat = this.lat;
           this.eventDetailsChanges.lng = this.lng;
           this.zoom = 16;
-          this.changeLocation = true;
-          this.changeEventLink = true;
+          // this.changeLocation = true;
+          // this.changeEventLink = true;
         });
       });
     });
@@ -266,16 +290,14 @@ export class EventDetailsComponent implements OnInit {
     this.step--;
   }
 
-  // TO:DO Implement Event Details save change
-
-  // saveChanges(step: number) {
-  //   this.userService.eventDetails = this.eventDetailsChanges;
-  //   this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
-  //     response => {
-  //       console.log(response);
-  //     }
-  //   );
-  // }
+  saveChanges(step: number) {
+    this.userService.eventDetails = this.eventDetailsChanges;
+    this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
+      response => {
+        console.log(response);
+      }
+    );
+  }
 
   cancelChanges(step: number) {
     if (step === 1) {
@@ -288,11 +310,8 @@ export class EventDetailsComponent implements OnInit {
 
   onChoseLocation(event) {
     if (this.changeLocation === true) {
-      this.lat = event.coords.lat;
-      this.lng = event.coords.lng;
-      // this.changeLocation = true;
-      this.eventDetailsChanges.lat = this.lat;
-      this.eventDetailsChanges.lng = this.lng;
+      // this.eventDetailsChanges.lat = this.lat;
+      // this.eventDetailsChanges.lng = this.lng;
       // Location:
       const geocoder = new google.maps.Geocoder();
       const latlng = new google.maps.LatLng(this.lat, this.lng);
@@ -310,32 +329,78 @@ export class EventDetailsComponent implements OnInit {
     }
   }
 
+  public mapReadyHandler(map: google.maps.Map): void {
+    this.map = map;
+    this.mapClickListener = this.map.addListener('click', (e: google.maps.MouseEvent) => {
+      this.ngZone.run(() => {
+        // Here we can get correct event
+        console.log(e.latLng.lat(), e.latLng.lng());
+        console.log(this.changeLocation + " " + this.changeEventLink);
+        this.lat = e.latLng.lat();
+        this.lng = e.latLng.lng();
+        this.eventDetailsChanges.lat = this.lat;
+        this.eventDetailsChanges.lng = this.lng;
+      });
+    });
+  }
+
   changeTheLocation() {
+    this.cancelLocationChange = true;
+    this.saveLocation = true;
     this.changeLocation = true;
     this.hidden = false;
   }
 
   changeTheLink() {
+    this.cancelLinkChange = true;
     this.changeEventLink = true;
+    this.saveLink = true;
     this.hiddenNewLink = false;
   }
 
-  cancelLocationAndLinkChanges() {
+  cancelLocationChanges() {
     this.lat = this.eventDetailsChanges.lat;
     this.lng = this.eventDetailsChanges.lng;
+    this.cancelLocationChange = false;
+    this.saveLocation = false;
     this.changeLocation = false;
-    this.changeEventLink = false
-    this.hiddenNewLink = true;
-    this.hidden = true;
+    this.hidden = false;
     this.newLocation.get('searchControl').setValue(null);
+  }
+
+  cancelLinkChanges() {
+    this.cancelLinkChange = false;
+    this.saveLink = false;
+    this.changeEventLink = false;
+    this.hiddenNewLink = false;
     this.newLink.get('newLinkControl').setValue(null);
   }
 
   saveLocationChanges() {
     console.log(this.address);
     this.changeLocation = false;
+    this.cancelLocationChange = false;
+    this.saveLocation = false;
     this.hidden = true;
     this.newLocation.get('searchControl').setValue(null);
+    this.userService.eventDetails = this.eventDetailsChanges;
+    this.eventDetailsChanges.location = this.address;
+
+    this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
+      response => {
+        console.log(response);
+      }
+    );
+  }
+
+  saveNewLinkChanges() {
+    this.changeEventLink = false;
+    this.cancelLinkChange = false;
+    this.saveLink = false;
+    this.hiddenNewLink = true;
+    console.log("Sending to BE the new link " +this.newLink.get('newLinkControl').value);
+    this.eventDetailsChanges.eventLink = this.newLink.get('newLinkControl').value;
+    this.newLink.get('newLinkControl').setValue(null);
     this.userService.eventDetails = this.eventDetailsChanges;
 
     this.userService.updateEventInfo(this.eventDetailsChanges).subscribe(
@@ -364,7 +429,7 @@ export class EventDetailsComponent implements OnInit {
 
   replaceImages() {
     this.images.length = 0;
-    const input   = document.getElementById('fileInput');
+    const input = document.getElementById('fileInput');
     input.click();
   }
 
@@ -383,12 +448,11 @@ export class EventDetailsComponent implements OnInit {
     }
     console.log(this.images);
 
-    // TO:DO Implement Replace Event Images 
-    // this.userService.replaceEventImages(frmData).subscribe(
-    //   response => {
-    //     console.log(response);
-    //   }
-    // );
+    this.userService.replaceEventImages(frmData).subscribe(
+      response => {
+        console.log(response);
+      }
+    );
   }
 
   handleReaderLoaded(readerEvt) {
@@ -396,7 +460,6 @@ export class EventDetailsComponent implements OnInit {
     this.images.push('data:image/PNG;base64,' + btoa(binaryString));
   }
 
-  // TO:DO Implement Save Favorite
   saveFavorite() {
     if (this.userService.currentUser.accessToken) {
       this.userService.isFavourite = true;
@@ -478,14 +541,14 @@ export class EventDetailsComponent implements OnInit {
     const index = this.userService.reviews.indexOf(review);
     this.userService.reviews.splice(index, 1);
 
-    // TO:DO Implement delete Review
-    // this.userService.deleteReview(review.idReview).subscribe(
-    //   result => {
-    //     console.log(result);
-    //     this.snackBar.open('Recenzia a fost ștearsă!', 'Ok', {duration: 5000});
-    //     this.userService.userReviewedEvent = false;
-    //   }
-    // );
+    this.userService.deleteReview(review.idReview).subscribe(
+      result => {
+        console.log(result);
+        this.snackBar.open('Recenzia a fost ștearsă!', 'Ok', {duration: 5000});
+        this.userService.userReviewedEvent = false;
+      }
+    );
+
     let sum = 0;
     this.userService.reviews.forEach(
       review2 => {
@@ -508,15 +571,14 @@ export class EventDetailsComponent implements OnInit {
     reviewResponse.like = this.reviewChanges.like;
     console.log(reviewResponse.idReview);
 
-    // TO:DO Implement edit Review
-    // this.userService.editReview(reviewResponse).subscribe(
-    //   response => {
-    //     console.log(response);
-    //     this.snackBar.open('Modificările au fost salvate!', 'Ok', {duration: 5000});
-    //   }
-    // );
+    this.userService.editReview(reviewResponse).subscribe(
+      response => {
+        console.log(response);
+        this.snackBar.open('Review edited with success!', 'Ok', {duration: 5000});
+      }
+    );
     // this.editReview = false;
-    review.editReview = false;
+    // review.editReview = false;
     let sum = 0;
     this.userService.reviews.forEach(
       review2 => {
@@ -524,6 +586,8 @@ export class EventDetailsComponent implements OnInit {
       }
     );
     this.userService.eventDetails.avgEventReview = sum / this.userService.reviews.length;
+    review.editReview = false;
+    this.editReview = false;
   }
 
   editReviewCancel(review: ReviewDtoRequest) {
@@ -532,6 +596,7 @@ export class EventDetailsComponent implements OnInit {
     this.editReview = false;
   }
 
+  // TO:DO Change to a bookmark logic
   calendarRedirect() {
     if (!this.userService.currentUser.accessToken) {
       this.snackBar.open('Intră în cont pentru a face o programare!', 'Ok', {duration: 5000});

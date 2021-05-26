@@ -29,11 +29,14 @@ export class UserService {
   private _NEW_EVENT_URL_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/newEvent';
   private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/getEventInfo';
   private _GET_EVENT_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEventImages';
+  private _REPLACE_EVENT_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/replaceAdImages';
   private _SAVE_FAVORITE_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveFavorite';
   private _GET_FAVORITE_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getFavoriteEvents';
   private _UPDATE_EVENT_INFO = this._BASE_URL_TOKEN_MANAGER + '/updateEventInfo';
   private _SAVE_EVENT_REVIEW =  this._BASE_URL_TOKEN_MANAGER + '/saveEventReview';
   private _GET_EVENT_REVIEWS = this._BASE_URL_TOKEN_MANAGER + '/getEventReviews';
+  private _DELETE_REVIEW = this._BASE_URL_TOKEN_MANAGER + '/deleteEventReview';
+  private _EDIT_REVIEW = this._BASE_URL_TOKEN_MANAGER + '/updateEventReview';
 
   data: Object;
   page: number;
@@ -109,6 +112,10 @@ export class UserService {
     return this.http.post<string[]>(this._GET_EVENT_IMAGES, adId);
   }
 
+  replaceEventImages(data: FormData): Observable<void> {
+    return this.http.post<void>(this._REPLACE_EVENT_IMAGES, data);
+  }
+
   saveFavorite(favoriteDto: FavoriteDto): Observable<void> {
     return this.http.post<void>(this._SAVE_FAVORITE_EVENT, favoriteDto);
   }
@@ -127,5 +134,13 @@ export class UserService {
 
   saveReview(review: ReviewDtoResponse): Observable<number> {
     return this.http.post<number>(this._SAVE_EVENT_REVIEW, review);
+  }
+
+  deleteReview(reviewId: number): Observable<void> {
+    return this.http.post<void>(this._DELETE_REVIEW, reviewId);
+  }
+
+  editReview(review: ReviewDtoResponse): Observable<void> {
+    return this.http.post<void>(this._EDIT_REVIEW, review);
   }
 }
