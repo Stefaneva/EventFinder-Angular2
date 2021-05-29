@@ -25,7 +25,6 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/font-awesome/css/font-awesome.css",
               "./node_modules/ngx-owl-carousel-2/lib/styles/prebuilt-themes/owl.carousel.min.css",
