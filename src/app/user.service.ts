@@ -21,7 +21,8 @@ import { UserDataDto } from './models/userDataDto';
 export class UserService {
   closeDialog = new EventEmitter<boolean>();
 
-  private _BASE_URL_TOKEN_GENERATOR = 'https://localhost:8080';
+  // private _BASE_URL_TOKEN_GENERATOR = 'https://localhost:8080';
+  private _BASE_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
   private _BASE_URL_TOKEN_MANAGER = 'https://localhost:8085';
   // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
   private _REFRESH_TOKEN = this._BASE_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
