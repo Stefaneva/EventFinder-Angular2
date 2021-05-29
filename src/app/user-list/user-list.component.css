@@ -1,0 +1,11 @@
+.title{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4vh;
+}
+
+.description__container {
+  margin-left: 10vw;
+  margin-right:  10vw;
+  margin-bottom: 4vh;
+}

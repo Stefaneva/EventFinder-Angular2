@@ -15,6 +15,7 @@ import { EventDetailsDto } from './models/eventDetails';
 import * as moment from 'moment';
 import { FavoriteDto } from './models/favoriteDto';
 import { ReviewDtoResponse } from './models/reviewDtoResponse';
+import { UserDataDto } from './models/userDataDto';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,8 @@ export class UserService {
   // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
   private _REFRESH_TOKEN = this._BASE_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
   private _UPDATE_USER_DATA = this._BASE_URL_TOKEN_GENERATOR + '/api/updateUserData';
+  private _GET_USERS_URL = this._BASE_URL_TOKEN_GENERATOR + '/getAllUsers';
+  private _USER_UPDATE_ACCESS_URL = this._BASE_URL_TOKEN_GENERATOR + 'updateUserAccess';
   private _GET_EVENTS_WITH_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEvents';
   private _NEW_EVENT_URL_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/newEvent';
   private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/getEventInfo';
@@ -93,6 +96,14 @@ export class UserService {
 
   updateUserData(data: UserDtoUpdate): Observable<void> {
     return this.http.post<void>(this._UPDATE_USER_DATA, data);
+  }
+
+  getUsers(): Observable<UserDataDto[]> {
+    return this.http.get<UserDataDto[]>(this._GET_USERS_URL);
+  }
+
+  updateUserAccess(user: UserDataDto): Observable<void> {
+    return this.http.post<void>(this._USER_UPDATE_ACCESS_URL, user);
   }
 
   postNewEventImages(data: FormData): Observable<void> {

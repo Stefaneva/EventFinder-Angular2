@@ -46,6 +46,7 @@ export class SigninComponent implements OnInit {
         this.userService.currentUser.refreshToken = data.refreshToken;
         this.userService.currentUser.phone = data.phone;
         this.userService.currentUser.enabled = data.enabled;
+        this.userService.currentUser.type = data.type;
         console.log(this.userService.currentUser.accessToken);
         console.log(this.userService.currentUser.refreshToken);
         console.log('timer value: ' + this.userService.currentUser.timer);

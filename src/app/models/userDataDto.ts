@@ -1,8 +1,8 @@
 export class UserDataDto {
   username: string;
   email: string;
-  type: string;
-  phone: number;
+  userRole: string;
+  phoneNumber: number;
   lastPasswordResetDate: string;
   lastLoginDate: string;
   enabled: boolean;

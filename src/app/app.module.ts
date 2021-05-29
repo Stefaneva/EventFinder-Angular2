@@ -50,6 +50,7 @@ import { CarouselModule } from 'ngx-owl-carousel-2';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FavoritesComponent } from './favorites/favorites.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -57,7 +58,8 @@ const appRoutes: Routes = [
   { path: 'signup' , component: SignupComponent},
   { path: 'signin' , component: SigninComponent},
   { path: 'EventDetails/:id', component: EventDetailsComponent},
-  { path: 'favorites', component: FavoritesComponent }
+  { path: 'favorites', component: FavoritesComponent },
+  { path: 'userList', component: UserListComponent}
 ];
 
 @NgModule({
@@ -71,6 +73,7 @@ const appRoutes: Routes = [
     EditUserComponent,
     EventDetailsComponent,
     FavoritesComponent,
+    UserListComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
