@@ -18,4 +18,5 @@ export class EventDetailsDto {
   category: string;
   eventDate: string;
   eventLink: string;
+  duration: number;
 }

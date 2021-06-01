@@ -17,6 +17,7 @@ import { SliderCustomImageComponent } from 'ng-image-slider/lib/slider-custom-im
 import { OwlOptions } from 'ngx-owl-carousel-2';
 import * as moment from 'moment';
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
+import { CalendarEventDto } from '../models/calendarEvent';
 
 @Component({
   selector: 'app-event-details',
@@ -110,6 +111,7 @@ export class EventDetailsComponent implements OnInit {
   ngOnInit() {
     this.userService.userReviewedEvent = false;
     this.userService.isFavourite = false;
+    this.userService.isBooked = false;
     this.userService.eventDetails = new EventDto();
     this.route.params.subscribe( params => {
       this.eventId = parseInt(params['id'], 10);
@@ -133,6 +135,7 @@ export class EventDetailsComponent implements OnInit {
         this.slicedDate = this.eventDetailsChanges.eventDate.slice(0, -5);
         this.eventDetailsChanges.userEmail = response1.userDetails.mail;
         this.eventDetailsChanges.avgEventReview = response1.avgEventReview;
+        this.eventDetailsChanges.duration = response1.duration;
         this.userService.eventDetails.id = response1.id;
         this.userService.eventDetails.title = response1.title;
         this.userService.eventDetails.description = response1.description;
@@ -148,6 +151,7 @@ export class EventDetailsComponent implements OnInit {
         this.userService.eventDetails.eventDate = this.userService.eventDetails.eventDate.slice(0, -5);
         this.userService.eventDetails.userEmail = response1.userDetails.mail;
         this.userService.eventDetails.avgEventReview = response1.avgEventReview;
+        this.userService.eventDetails.duration = response1.duration;
         if (this.userService.eventDetails.avgEventReview === undefined) {
           this.userService.eventDetails.avgEventReview = 0;
         }
@@ -181,26 +185,38 @@ export class EventDetailsComponent implements OnInit {
             }
           );
         }
-
-      console.log("User reviewed event is: " + this.userService.userReviewedEvent);
-
-        // Location
-      this.mapsAPILoader.load().then(() => {
-        const geocoder = new google.maps.Geocoder();
-        const latlng = new google.maps.LatLng(this.lat, this.lng);
-        const request = {
-          location: latlng
-        };
-        geocoder.geocode(request, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            if (results[0] != null) {
-              this.oldAddress = this.address;
-              this.address = results[0].formatted_address;
-              console.log(this.address);
+        // Book Button Check
+        if (this.userService.bookedEvents.length > 0) {
+          this.userService.bookedEvents.forEach(
+            bookedEvent => {
+              console.log("this.userService.isBooked is: " + this.userService.isBooked)
+              console.log(bookedEvent.userEmail);
+              if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                this.userService.isBooked = true;
+              }
             }
-          }
-        });
-      })
+          )
+        }
+
+        console.log("User reviewed event is: " + this.userService.userReviewedEvent);
+
+          // Location
+        this.mapsAPILoader.load().then(() => {
+          const geocoder = new google.maps.Geocoder();
+          const latlng = new google.maps.LatLng(this.lat, this.lng);
+          const request = {
+            location: latlng
+          };
+          geocoder.geocode(request, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK) {
+              if (results[0] != null) {
+                this.oldAddress = this.address;
+                this.address = results[0].formatted_address;
+                console.log(this.address);
+              }
+            }
+          });
+        })
 
         this.userService.getEventImages(this.eventId).subscribe(
           (response) => {
@@ -244,6 +260,32 @@ export class EventDetailsComponent implements OnInit {
           }
         }
     );
+
+    // // All appointments
+    // this.userService.getBookedEvents(this.eventId).subscribe(
+    //   responseUserBookedEvents => {
+    //     console.log(responseUserBookedEvents);
+    //     this.userService.bookedEvents = responseUserBookedEvents;
+    //     console.log(this.userService.bookedEvents);
+
+    //     if (this.userService.bookedEvents.length > 0 &&
+    //         this.userService.currentUser !== undefined &&
+    //         this.userService.currentUser !== null) {
+            
+    //           if (this.userService.bookedEvents.length > 0) {
+    //             this.userService.bookedEvents.forEach(
+    //               bookedEvent => {
+    //                 console.log("this.userService.isBooked is: " + this.userService.isBooked)
+    //                 console.log(bookedEvent.userEmail);
+    //                 if (bookedEvent.userEmail === this.userService.currentUser.email) {
+    //                   this.userService.isBooked = true;
+    //                 }
+    //               }
+    //             )
+    //           }
+    //         }
+    //       }
+    // );
 
     this.newLocation = new FormGroup({
       'searchControl' : new FormControl(null)
@@ -597,14 +639,62 @@ export class EventDetailsComponent implements OnInit {
   }
 
   // TO:DO Change to a bookmark logic
-  calendarRedirect() {
+  bookSeat() {
     if (!this.userService.currentUser.accessToken) {
-      this.snackBar.open('Intră în cont pentru a face o programare!', 'Ok', {duration: 5000});
+      this.snackBar.open('Login into your account to book a seat!', 'Ok', {duration: 5000});
       return;
     }
-    this.userService.eventDetailsCalendar = this.userService.eventDetails;
-    this.userService.userCalendar = false;
-    this.router.navigateByUrl('/calendar');
+        // 2) Compare the events with the current one, if good ok else show message
+        // 3) If ok save appointment and TotalSeats -= 1 for this event
+        // 4) Redirect
+        var startDate = this.userService.eventDetails.eventDate;
+        var endDate = moment(this.userService.eventDetails.eventDate).add(this.userService.eventDetails.duration, 'hours')
+                                                                      .format("YYYY-MM-DD HH:mm");
+    
+        var canBeBooked = true;
+        console.log(canBeBooked);
+        console.log(this.userService.bookedEvents);
+        this.userService.bookedEvents.forEach(event => {
+            console.log(canBeBooked);
+            console.log("Comparisons: ");
+            console.log(moment(startDate).isAfter(event.startDate));
+            console.log(moment(startDate).isBefore(event.endDate));
+            console.log(moment(endDate).isAfter(event.startDate));
+            console.log(moment(endDate).isBefore(event.endDate));
+            console.log("End of comparisons: ")
+
+            if ((moment(startDate).isAfter(event.startDate) && moment(startDate).isBefore(event.endDate)) ||
+                (moment(endDate).isAfter(event.startDate) && moment(endDate).isBefore(event.endDate))) {
+                  canBeBooked = false;
+            }
+          }
+        )
+        console.log(canBeBooked);
+
+        if (!canBeBooked) {
+          this.snackBar.open('The Event can not be booked due to conflicting schedules! Please check your calendar!', 'OK', {duration: 10000});
+        }
+
+        else {
+          var calendarAppointmentDto = new CalendarEventDto();
+          calendarAppointmentDto.message = this.userService.eventDetails.title;
+          calendarAppointmentDto.userEmail = this.userService.currentUser.email;
+          calendarAppointmentDto.eventId = this.userService.eventDetails.id;
+          calendarAppointmentDto.startDate = startDate;
+          calendarAppointmentDto.endDate = endDate;
+          
+          console.log(calendarAppointmentDto);
+          
+          this.userService.bookEvent(calendarAppointmentDto).subscribe(
+            responseBookEvent => {
+              console.log(responseBookEvent);
+            }
+          )
+  
+          this.userService.eventDetailsCalendar = this.userService.eventDetails;
+          this.userService.userCalendar = false;
+          this.router.navigateByUrl('/calendar');
+        }
   }
 
   reviewDate() {

@@ -16,19 +16,20 @@ import * as moment from 'moment';
 import { FavoriteDto } from './models/favoriteDto';
 import { ReviewDtoResponse } from './models/reviewDtoResponse';
 import { UserDataDto } from './models/userDataDto';
+import { CalendarEventDto } from './models/calendarEvent';
 
 @Injectable()
 export class UserService {
   closeDialog = new EventEmitter<boolean>();
 
-  // private _BASE_URL_TOKEN_GENERATOR = 'https://localhost:8080';
-  private _BASE_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
+  private _BASE_URL_TOKEN_GENERATOR = 'https://localhost:8080';
+  // private _BASE_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
   private _BASE_URL_TOKEN_MANAGER = 'https://localhost:8085';
   // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
   private _REFRESH_TOKEN = this._BASE_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
   private _UPDATE_USER_DATA = this._BASE_URL_TOKEN_GENERATOR + '/api/updateUserData';
   private _GET_USERS_URL = this._BASE_URL_TOKEN_GENERATOR + '/getAllUsers';
-  private _USER_UPDATE_ACCESS_URL = this._BASE_URL_TOKEN_GENERATOR + 'updateUserAccess';
+  private _USER_UPDATE_ACCESS_URL = this._BASE_URL_TOKEN_GENERATOR + '/updateUserAccess';
   private _GET_EVENTS_WITH_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEvents';
   private _NEW_EVENT_URL_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/newEvent';
   private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/getEventInfo';
@@ -37,6 +38,8 @@ export class UserService {
   private _SAVE_FAVORITE_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveFavorite';
   private _GET_FAVORITE_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getFavoriteEvents';
   private _UPDATE_EVENT_INFO = this._BASE_URL_TOKEN_MANAGER + '/updateEventInfo';
+  private _SAVE_BOOKED_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveBookedEvent';
+  private _GET_BOOKED_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getBookedEvents';
   private _SAVE_EVENT_REVIEW =  this._BASE_URL_TOKEN_MANAGER + '/saveEventReview';
   private _GET_EVENT_REVIEWS = this._BASE_URL_TOKEN_MANAGER + '/getEventReviews';
   private _DELETE_REVIEW = this._BASE_URL_TOKEN_MANAGER + '/deleteEventReview';
@@ -53,6 +56,7 @@ export class UserService {
   eventDeletedAdmin: EventDto;
   public myEvents: EventDto[] = [];
   public favoriteEvents: EventDto[] = [];
+  public bookedEvents: CalendarEventDto[] = [];
   // vars for sidenav
   term: any;
   eventType: string;
@@ -79,6 +83,7 @@ export class UserService {
   userEvent: boolean;
   eventUserPhone: number;
   isFavourite: boolean;
+  isBooked: boolean;
   // Reviews
   reviews: ReviewDtoRequest[] = [];
   userReviewedEvent: boolean;
@@ -134,6 +139,14 @@ export class UserService {
 
   getFavoriteEvents(): Observable<EventDto[]> {
     return this.http.post<EventDto[]>(this._GET_FAVORITE_EVENTS, {email: this.currentUser.email});
+  }
+
+  bookEvent(calendarEventDto: CalendarEventDto): Observable<void> {
+    return this.http.post<void>(this._SAVE_BOOKED_EVENT, calendarEventDto);
+  }
+
+  getBookedEvents(): Observable<CalendarEventDto[]> {
+    return this.http.post<CalendarEventDto[]>(this._GET_BOOKED_EVENTS , {email: this.currentUser.email});
   }
 
   updateEventInfo(data: EventDto): Observable<void> {

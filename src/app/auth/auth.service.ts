@@ -5,8 +5,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class AuthService {
 
   data: Object;
-  // private _BASE_URL = 'https://localhost:8080';
-  private _BASE_URL = 'https://event-finder-token-manager.herokuapp.com';
+  private _BASE_URL = 'https://localhost:8080';
+  // private _BASE_URL = 'https://event-finder-token-manager.herokuapp.com';
 
   constructor(private http: HttpClient) { }
 

@@ -1,23 +1,23 @@
-<h2 class="title">Utilizatori: </h2>
+<h2 class="title">EventFinder users: </h2>
 <div *ngFor="let user of users" class="description__container">
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Informații utilizator
+          User info: {{ user.username }}
         </mat-panel-title>
         <mat-panel-description>
-          Click pentru mai multe detalii...
+          Click for more details...
         </mat-panel-description>
       </mat-expansion-panel-header>
       <p>Username: {{user.username}}</p>
       <p>E-mail: {{user.email}}</p>
-      <p>Telefon: 0{{user.phone}}</p>
-      <p>Ultima logare: {{user.lastLoginDate}}</p>
-      <p>Ultima resetare de parolă: {{user.lastPasswordResetDate}}</p>
+      <p>Telephone: 0{{user.phoneNumber}}</p>
+      <p>Last login: {{user.lastLoginDate}}</p>
+      <p>Last password reset: {{user.lastPasswordResetDate}}</p>
       <mat-action-row>
-        <button  *ngIf="user.enabled" mat-raised-button mat-button color="warn" (click)="blockUser(user)">Blochează cont!</button>
-        <button  *ngIf="!user.enabled"mat-raised-button mat-button color="primary" (click)="unblockUser(user)">Deblochează cont!</button>
+        <button  *ngIf="user.enabled" mat-raised-button mat-button color="warn" (click)="blockUser(user)">Block user account!</button>
+        <button  *ngIf="!user.enabled"mat-raised-button mat-button color="primary" (click)="unblockUser(user)">Unblock user account!</button>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>

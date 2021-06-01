@@ -16,16 +16,19 @@
         {{userService.eventDetails.price}} <span class="fa fa-euro"></span></button>
       <button *ngIf="userService.eventDetails.price == 0" class="btn btn-warning price">Free event </button>
       <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
-        class="btn btn-success book__button" (click)="calendarRedirect()">Book seat &nbsp;<mat-icon>assignment</mat-icon>
+        [disabled]="userService.isBooked"
+        class="btn btn-success book__button" (click)="bookSeat()">Book seat &nbsp;<mat-icon>assignment</mat-icon>
         </button>
       <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
         [disabled]="userService.isFavourite" class="btn btn-danger favourite" (click)="saveFavorite()">Add to favorites &nbsp;<mat-icon>favorite_border</mat-icon></button>
-      <button class="btn btn-info favourite">E-mail: {{userService.eventDetails.userEmail}}&nbsp;<mat-icon>email
-        </mat-icon></button>
-      <button class="btn btn-info favourite">Phone: 0{{userService.eventUserPhone}} <mat-icon>phone</mat-icon>
-        </button>
-      <!-- <rating [(ngModel)]="userService.eventDetails.avgEventReview" [max]=5 [float]="true" [readonly]="true"
-              class="general__rating"></rating> -->
+      <button  class="btn btn-info favourite">{{userService.eventDetails.eventType}} 
+        <mat-icon *ngIf="userService.eventDetails.eventType === 'Online'">videocam</mat-icon>
+        <mat-icon *ngIf="userService.eventDetails.eventType !== 'Online'">place</mat-icon>
+      </button>
+      <!-- <button class="btn btn-info favourite">E-mail: {{userService.eventDetails.userEmail}}&nbsp;<mat-icon>email
+        </mat-icon></button> -->
+      <!-- <button class="btn btn-info favourite">Phone: 0{{userService.eventUserPhone}} <mat-icon>phone</mat-icon> -->
+        <!-- </button> -->
       <ngb-rating [max]="5" [(rate)]="userService.eventDetails.avgEventReview" [readonly]="true"
         class="general__rating">
         <ng-template let-fill="fill">
@@ -141,6 +144,9 @@
               <p class="apartemnt__detail">Available seats: {{ userService.eventDetails.seatsTotal - userService.eventDetails.seatsOccupied }}
               <p class="apartemnt__detail">Total seats: {{userService.eventDetails.seatsTotal}}
               <p class="apartemnt__detail">Date: {{slicedDate}}
+              <p>Contact e-mail: {{userService.eventDetails.userEmail}} <mat-icon [inline]="true">email</mat-icon>
+              <p class="apartemnt__detail">Duration: {{userService.eventDetails.duration}} hours
+              <p class="apartemnt__detail">Contact phone: 0{{userService.eventUserPhone}} <mat-icon [inline]="true">phone</mat-icon>
             </div>
           </div>
           <mat-action-row>

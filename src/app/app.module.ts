@@ -51,6 +51,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FavoritesComponent } from './favorites/favorites.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { GuardRoleService } from './guard-role.service';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarComponent } from './calendar/calendar.component';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -59,7 +65,11 @@ const appRoutes: Routes = [
   { path: 'signin' , component: SigninComponent},
   { path: 'EventDetails/:id', component: EventDetailsComponent},
   { path: 'favorites', component: FavoritesComponent },
-  { path: 'userList', component: UserListComponent}
+  { path: 'calendar', component: CalendarComponent },
+  { path: 'userList',
+    component: UserListComponent,
+    canActivate: [GuardRoleService]
+  }
 ];
 
 @NgModule({
@@ -72,12 +82,14 @@ const appRoutes: Routes = [
     EventComponent,
     EditUserComponent,
     EventDetailsComponent,
+    CalendarComponent,
     FavoritesComponent,
     UserListComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
   imports: [
+    NgxPayPalModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -107,6 +119,11 @@ const appRoutes: Routes = [
     MatNativeDateModule,
     MatMomentDateModule,
     CarouselModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     NgImageSliderModule,
     FontAwesomeModule,
     MatCarouselModule.forRoot(),
@@ -119,7 +136,7 @@ const appRoutes: Routes = [
     }),
     NgbModule
   ],
-  providers: [UserService, AuthService,
+  providers: [UserService, AuthService, GuardRoleService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {provide: MAT_DATE_LOCALE, useValue: 'en-DE'},

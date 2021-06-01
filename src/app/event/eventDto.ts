@@ -16,4 +16,5 @@ export class EventDto {
   category: string;
   avgEventReview: number;
   eventLink: string;
+  duration: number;
 }

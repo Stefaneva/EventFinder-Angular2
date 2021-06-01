@@ -101,12 +101,29 @@ export class SigninComponent implements OnInit {
                       if (review1.mail === this.userService.currentUser.email) {
                         this.userService.userReviewedEvent = true;
                         console.log("this.userService.userReviewedEvent is: " + this.userService.userReviewedEvent)
-                        return;
                       }
                     }
                   }
                 }
               );
+              this.userService.getBookedEvents().subscribe(
+                responseUserBookedEvents => {
+                  console.log(responseUserBookedEvents);
+                  this.userService.bookedEvents = responseUserBookedEvents;
+                  // Book Button Check
+                  if (this.userService.bookedEvents.length > 0 && this.userService.eventDetails) {
+                    this.userService.bookedEvents.forEach(
+                      bookedEvent => {
+                        console.log("this.userService.isBooked is: " + this.userService.isBooked)
+                        console.log(bookedEvent.userEmail);
+                        if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                          this.userService.isBooked = true;
+                        }
+                      }
+                    )
+                  }
+                }
+              )
     //           this.spinnerService.hide();
     //         } else {
     //           this.isLoginError2 = true;
