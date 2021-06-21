@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import { EventDto } from '../event/eventDto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-favorites',
@@ -17,7 +18,7 @@ export class FavoritesComponent implements OnInit {
   private readonly imageType: string = 'data:image/PNG;base64,';
 
   constructor(public userService: UserService,
-              // private spinnerService: Ng4LoadingSpinnerService,
+              private spinnerService: NgxSpinnerService,
               private router: Router,
               private dialog: MatDialog,
               public snackBar: MatSnackBar) { }

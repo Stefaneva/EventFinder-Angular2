@@ -22,28 +22,31 @@ import { CalendarEventDto } from './models/calendarEvent';
 export class UserService {
   closeDialog = new EventEmitter<boolean>();
 
-  private _BASE_URL_TOKEN_GENERATOR = 'https://localhost:8080';
-  // private _BASE_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
-  private _BASE_URL_TOKEN_MANAGER = 'https://localhost:8085';
+  private _MAIN_URL_TOKEN_GENERATOR = 'https://localhost:8080';
+  // private _MAIN_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
+  private _MAIN_URL_EVENT_MANGER = 'https://localhost:8085';
+  // private _MAIN_URL_TOKEN_MANGER = 'https://event-finder-manager.herokuapp.com';
   // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
-  private _REFRESH_TOKEN = this._BASE_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
-  private _UPDATE_USER_DATA = this._BASE_URL_TOKEN_GENERATOR + '/api/updateUserData';
-  private _GET_USERS_URL = this._BASE_URL_TOKEN_GENERATOR + '/getAllUsers';
-  private _USER_UPDATE_ACCESS_URL = this._BASE_URL_TOKEN_GENERATOR + '/updateUserAccess';
-  private _GET_EVENTS_WITH_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEvents';
-  private _NEW_EVENT_URL_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/newEvent';
-  private _GET_EVENT_DETAILS = this._BASE_URL_TOKEN_MANAGER + '/getEventInfo';
-  private _GET_EVENT_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/getEventImages';
-  private _REPLACE_EVENT_IMAGES = this._BASE_URL_TOKEN_MANAGER + '/replaceAdImages';
-  private _SAVE_FAVORITE_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveFavorite';
-  private _GET_FAVORITE_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getFavoriteEvents';
-  private _UPDATE_EVENT_INFO = this._BASE_URL_TOKEN_MANAGER + '/updateEventInfo';
-  private _SAVE_BOOKED_EVENT = this._BASE_URL_TOKEN_MANAGER + '/saveBookedEvent';
-  private _GET_BOOKED_EVENTS = this._BASE_URL_TOKEN_MANAGER + '/getBookedEvents';
-  private _SAVE_EVENT_REVIEW =  this._BASE_URL_TOKEN_MANAGER + '/saveEventReview';
-  private _GET_EVENT_REVIEWS = this._BASE_URL_TOKEN_MANAGER + '/getEventReviews';
-  private _DELETE_REVIEW = this._BASE_URL_TOKEN_MANAGER + '/deleteEventReview';
-  private _EDIT_REVIEW = this._BASE_URL_TOKEN_MANAGER + '/updateEventReview';
+  private _REFRESH_TOKEN = this._MAIN_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
+  private _UPDATE_USER_DATA = this._MAIN_URL_TOKEN_GENERATOR + '/api/updateUserData';
+  private _GET_USERS_URL = this._MAIN_URL_TOKEN_GENERATOR + '/getAllUsers';
+  private _USER_UPDATE_ACCESS_URL = this._MAIN_URL_TOKEN_GENERATOR + '/updateUserAccess';
+  private _GET_EVENTS_MAIN_PAGE = this._MAIN_URL_EVENT_MANGER + '/getEvents';
+  private _NEW_EVENT_URL_IMAGES = this._MAIN_URL_EVENT_MANGER + '/newEvent';
+  private _GET_EVENT_DETAILS = this._MAIN_URL_EVENT_MANGER + '/getEventInfo';
+  private _GET_EVENT_IMAGES = this._MAIN_URL_EVENT_MANGER + '/getEventImages';
+  private _REPLACE_EVENT_IMAGES = this._MAIN_URL_EVENT_MANGER + '/replaceEventImages';
+  private _SAVE_FAVORITE_EVENT = this._MAIN_URL_EVENT_MANGER + '/saveFavorite';
+  private _GET_FAVORITE_EVENTS = this._MAIN_URL_EVENT_MANGER + '/getFavoriteEvents';
+  private _GET_MY_USER_EVENTS = this._MAIN_URL_EVENT_MANGER + '/getMyUserEvents';
+  private _UPDATE_EVENT_INFO = this._MAIN_URL_EVENT_MANGER + '/updateEventInfo';
+  private _SAVE_BOOKED_EVENT = this._MAIN_URL_EVENT_MANGER + '/saveBookedEvent';
+  private _GET_BOOKED_EVENTS = this._MAIN_URL_EVENT_MANGER + '/getBookedEvents';
+  private _SAVE_EVENT_REVIEW =  this._MAIN_URL_EVENT_MANGER + '/saveEventReview';
+  private _GET_EVENT_REVIEWS = this._MAIN_URL_EVENT_MANGER + '/getEventReviews';
+  private _DELETE_REVIEW = this._MAIN_URL_EVENT_MANGER + '/deleteEventReview';
+  private _EDIT_REVIEW = this._MAIN_URL_EVENT_MANGER + '/updateEventReview';
+  private _DELETE_EVENT = this._MAIN_URL_EVENT_MANGER + '/deleteEvent';
 
   data: Object;
   page: number;
@@ -54,8 +57,9 @@ export class UserService {
   public eventDetailsCalendar: EventDto;
   eventDeletedOwner: EventDto;
   eventDeletedAdmin: EventDto;
-  public myEvents: EventDto[] = [];
+  // public myEvents: EventDto[] = [];
   public favoriteEvents: EventDto[] = [];
+  public myUserEvents: EventDto[] = [];
   public bookedEvents: CalendarEventDto[] = [];
   // vars for sidenav
   term: any;
@@ -118,15 +122,23 @@ export class UserService {
   }
 
   getEvents(): Observable<EventDto[]> {
-    return this.http.get<EventDto[]>(this._GET_EVENTS_WITH_IMAGES);
+    return this.http.get<EventDto[]>(this._GET_EVENTS_MAIN_PAGE);
   }
 
-  getEventInfo(adId: number): Observable<EventDetailsDto> {
-    return this.http.post<EventDetailsDto>(this._GET_EVENT_DETAILS, adId);
+  getEventInfo(eventId: number): Observable<EventDetailsDto> {
+    return this.http.post<EventDetailsDto>(this._GET_EVENT_DETAILS, eventId);
   }
 
-  getEventImages(adId: number): Observable<string[]> {
-    return this.http.post<string[]>(this._GET_EVENT_IMAGES, adId);
+  getEventImages(eventId: number): Observable<string[]> {
+    return this.http.post<string[]>(this._GET_EVENT_IMAGES, eventId);
+  }
+
+  deleteEvent(eventId: number): Observable<void> {
+    return this.http.post<void>(this._DELETE_EVENT, eventId);
+  }
+
+  getMyUserEvents(): Observable<EventDto[]>{
+    return this.http.post<EventDto[]>(this._GET_MY_USER_EVENTS, {email: this.currentUser.email});
   }
 
   replaceEventImages(data: FormData): Observable<void> {

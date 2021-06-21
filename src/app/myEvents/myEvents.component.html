@@ -1,0 +1,39 @@
+<ngx-spinner type="ball-clip-rotate-pulse" color = "rgba(75, 119, 190, 1)"></ngx-spinner>
+<div class="events__title">
+  <h1>My events:</h1>
+  <h1 *ngIf="userService.myUserEvents.length === 0" class="events__message">You do not have any events yet!</h1>
+  <!-- <h1 *ngIf="userService.myUserEvents.length === 0" >Browse some events and add them to your favorites!</h1> -->
+</div>
+<div class="custom__container">
+  <div *ngFor="let event of userService.myUserEvents |
+               paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
+    <mat-card class="card__class">
+      <mat-card-header>
+        <mat-card-title>{{ event.title}}</mat-card-title>
+        <mat-card-subtitle>{{ event.eventType }} - {{event.eventItemType}}</mat-card-subtitle>
+        <img src="../../assets/camera_avatar.jpg" *ngIf="event.eventType == 'Online'" mat-card-avatar>
+        <img src="../../assets/Onsite.jpg" *ngIf="event.eventType == 'On Site'" mat-card-avatar>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="event.price != 0">Price: {{ event.price }} <span class="fa fa-euro"></span></p>
+        <p *ngIf="event.price == 0">Free event</p>
+        <p>Available Seats: {{ event.seatsTotal - event.seatsOccupied }}
+        <p>Date: {{event.eventDate}}</p>
+      </mat-card-content>
+      <img mat-card-image height="270px"  [src]="event.image">
+      <div *ngIf="event.eventType == 'On Site'" class="location__paragraph">Location: {{event.location}}</div>
+      <mat-card-actions class="event__buttons">
+        <button mat-raised-button mat-button color="primary" (click)="viewEventDetails(event)">Event details</button>
+        <button mat-raised-button mat-button color="warn" (click)="deleteEvent(event)">Delete event!</button>
+      </mat-card-actions>
+    </mat-card><br>
+  </div>
+</div>
+<div class="myPaginationContainer" *ngIf="userService.favoriteEvents.length > 0">
+  <pagination-controls class="myPagination" (pageChange)="userService.page = $event"
+                                            previousLabel="Back"
+                                            nextLabel="Next" maxSize="5">
+  </pagination-controls>
+</div>
+
+

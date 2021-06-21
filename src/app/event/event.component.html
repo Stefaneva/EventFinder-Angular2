@@ -1,4 +1,4 @@
-<!-- <ng4-loading-spinner></ng4-loading-spinner> -->
+<ngx-spinner type="ball-clip-rotate-pulse" color = "rgba(75, 119, 190, 1)"></ngx-spinner>
 <mat-dialog-content>
 <div class="container">
   <h2>Create Event <i class="fa fa-arrow-circle-up"></i></h2>
@@ -36,6 +36,9 @@
         <mat-option value="Marketing">Marketing</mat-option>
         <mat-option value="Job Recruiting">Job Recruiting</mat-option>
       </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" placeholder="Duration (hours)..." matInput formControlName="duration" autocomplete="off">
     </mat-form-field>
     <mat-form-field>
       <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" formControlName="eventDate">

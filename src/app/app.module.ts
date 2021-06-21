@@ -57,6 +57,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarComponent } from './calendar/calendar.component';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { MyEventsComponent } from './myEvents/myEvents.component';
+import { GuardService } from './guard.service';
+import { ModalAgreementComponent } from './modal-agreement/modal-agreement.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -69,6 +72,10 @@ const appRoutes: Routes = [
   { path: 'userList',
     component: UserListComponent,
     canActivate: [GuardRoleService]
+  },
+  { path: 'myEvents',
+    component: MyEventsComponent,
+    canActivate: [GuardService]
   }
 ];
 
@@ -85,6 +92,8 @@ const appRoutes: Routes = [
     CalendarComponent,
     FavoritesComponent,
     UserListComponent,
+    MyEventsComponent,
+    ModalAgreementComponent,
     FilterPipe
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
@@ -136,7 +145,7 @@ const appRoutes: Routes = [
     }),
     NgbModule
   ],
-  providers: [UserService, AuthService, GuardRoleService,
+  providers: [UserService, AuthService, GuardRoleService, GuardService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {provide: MAT_DATE_LOCALE, useValue: 'en-DE'},

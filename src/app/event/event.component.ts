@@ -4,8 +4,7 @@ import {AuthService} from '../auth/auth.service';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {MapsAPILoader} from '@agm/core';
 import {EventDto} from './eventDto';
-// import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-event',
@@ -35,6 +34,7 @@ export class EventComponent implements OnInit {
   constructor(private userService: UserService,
               private authService: AuthService,
               private mapsAPILoader: MapsAPILoader,
+              private spinnerService: NgxSpinnerService,
               private ngZone: NgZone) { }
 
   ngOnInit() {
@@ -47,6 +47,7 @@ export class EventComponent implements OnInit {
       'description' : new FormControl(null, Validators.required),
       'category' : new FormControl(null, Validators.required),
       'eventDate' : new FormControl(null, Validators.required),
+      'duration' : new FormControl(null, Validators.required),
       'eventLink' : new FormControl(null, [Validators.required, EventComponent.urlValidator]),
       'searchControl' : new FormControl(null)
     });
@@ -139,6 +140,7 @@ export class EventComponent implements OnInit {
     this.eventDto.category = this.eventNewForm.value.category;
     this.eventDto.seatsTotal = this.eventNewForm.value.seats_total;
     this.eventDto.eventDate = this.eventNewForm.value.eventDate;
+    this.eventDto.duration = this.eventNewForm.value.duration;
     this.eventDto.lat = this.lat;
     this.eventDto.lng = this.lng;
     this.eventDto.userEmail = this.userService.currentUser.email;
@@ -160,6 +162,7 @@ export class EventComponent implements OnInit {
     frmData.append('userEmail', this.userService.currentUser.email);
     frmData.append('eventDate', this.eventNewForm.value.eventDate);
     frmData.append('eventLink', this.eventNewForm.value.eventLink);
+    frmData.append('duration', this.eventNewForm.value.duration);
     console.log(frmData.getAll('fileUpload'));
     console.log(frmData.get('location'));
     console.log("FormData is: ");
@@ -169,12 +172,13 @@ export class EventComponent implements OnInit {
     this.userService.postNewEventImages(frmData).subscribe(
       (response) => {
         console.log(response);
-        // this.spinnerService.show();
+        this.spinnerService.show();
         this.userService.getEvents().subscribe(
           (response1) => {console.log(response1);
           this.userService.events = response1;
-          // this.spinnerService.hide();
+          this.spinnerService.hide();
           this.userService.events.forEach( event => event.image = this.imageType + event.image);
+          this.userService.closeDialog.emit(true);
           }
         );
       },

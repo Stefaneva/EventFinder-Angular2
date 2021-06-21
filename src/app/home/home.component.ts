@@ -11,6 +11,7 @@ import {SnotifyService} from 'ng-snotify';
 import { from } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EventDto } from '../event/eventDto';
+import { ModalAgreementComponent } from '../modal-agreement/modal-agreement.component';
 
 @Component({
   selector: 'app-home',
@@ -26,13 +27,13 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthService,
               private mapsAPILoader: MapsAPILoader,
               public userService: UserService,
-              private spinner: NgxSpinnerService,
+              private spinnerService: NgxSpinnerService,
               private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
     this.mapsAPILoader.load();
-    // this.spinnerService.show();
+    this.spinnerService.show();
     this.userService.getEvents().subscribe(
       (response) => {
         console.log(response);
@@ -62,7 +63,7 @@ export class HomeComponent implements OnInit {
         //     }
         //   });
         // }
-        // this.spinnerService.hide();
+        this.spinnerService.hide();
         // this.userService.snotifyService.success('Body content', { position: 'rightTop'});
       }
     );
@@ -75,9 +76,17 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/EventDetails', event.id]);
   }
 
-  // deleteAd(ad: AdDto) {
-  //   this.userService.adDeletedAdmin = ad;
-  //   this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
-  //   const dialogRef = this.dialog.open(ModalAgreementComponent, {});
-  // }
+  deleteEvent(event: EventDto) {
+    this.userService.eventDeletedOwner = event;
+    this.userService.closeDialog.subscribe(
+      result => this.dialog.closeAll());
+    const dialogRef = this.dialog.open(ModalAgreementComponent, {});
+      const index = this.userService.events.indexOf(event);
+      this.userService.deleteEvent(event.id).subscribe(
+        result => {
+          console.log(result);
+          this.userService.events.splice(index, 1);
+        }
+      );
+    }
 }

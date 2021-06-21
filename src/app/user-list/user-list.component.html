@@ -1,6 +1,6 @@
 <h2 class="title">EventFinder users: </h2>
 <div *ngFor="let user of users" class="description__container">
-  <mat-accordion>
+  <mat-accordion *ngIf="user.userRole !== 'ADMIN'">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
