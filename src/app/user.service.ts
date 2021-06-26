@@ -6,7 +6,6 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl, FormGroup} from '@angular/forms';
 import {User} from './models/user';
 import {AuthService} from './auth/auth.service';
-import {SnotifyService} from 'ng-snotify';
 import { TokenDto } from './models/tokenDto';
 import { UserDtoUpdate } from './models/userDtoUpdate';
 import { EventDto } from './event/eventDto';
@@ -17,6 +16,8 @@ import { FavoriteDto } from './models/favoriteDto';
 import { ReviewDtoResponse } from './models/reviewDtoResponse';
 import { UserDataDto } from './models/userDataDto';
 import { CalendarEventDto } from './models/calendarEvent';
+import { ToastrService } from 'ngx-toastr';
+import { EventsReportDto } from './models/eventsReportDto';
 
 @Injectable()
 export class UserService {
@@ -47,6 +48,7 @@ export class UserService {
   private _DELETE_REVIEW = this._MAIN_URL_EVENT_MANGER + '/deleteEventReview';
   private _EDIT_REVIEW = this._MAIN_URL_EVENT_MANGER + '/updateEventReview';
   private _DELETE_EVENT = this._MAIN_URL_EVENT_MANGER + '/deleteEvent';
+  private _GET_REPORTS = this._MAIN_URL_EVENT_MANGER + '/eventsReport';
 
   data: Object;
   page: number;
@@ -93,10 +95,10 @@ export class UserService {
   userReviewedEvent: boolean;
 
   constructor(private http: HttpClient,
-    private authService: AuthService,
-    public snotifyService: SnotifyService) {
-
-    }
+              private authService: AuthService,
+              public toastr: ToastrService) {
+                
+              }
 
   refreshTokens(tokenDto: TokenDto): Observable<TokenDto> {
     return this.http.post<TokenDto>(this._REFRESH_TOKEN, tokenDto,
@@ -179,5 +181,9 @@ export class UserService {
 
   editReview(review: ReviewDtoResponse): Observable<void> {
     return this.http.post<void>(this._EDIT_REVIEW, review);
+  }
+
+  getEventsReport(): Observable<EventsReportDto> {
+    return this.http.get<EventsReportDto>(this._GET_REPORTS);
   }
 }

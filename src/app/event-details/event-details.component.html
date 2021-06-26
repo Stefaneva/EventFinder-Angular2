@@ -223,7 +223,7 @@
       <hr>
       <div *ngFor="let review of userService.reviews; let i = index" class="reviews">
         <div class="comment__first__row">
-          <p>{{review.username}} - {{review.userType}}</p>
+          <p>{{review.mail}}</p>
           <p>Date added: {{reviewsDates[i] | date:'dd/MM/yyyy'}}</p>
         </div>
         <div *ngIf="!editReview">

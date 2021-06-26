@@ -16,8 +16,10 @@
       <p>Last login: {{user.lastLoginDate}}</p>
       <p>Last password reset: {{user.lastPasswordResetDate}}</p>
       <mat-action-row>
-        <button  *ngIf="user.enabled" mat-raised-button mat-button color="warn" (click)="blockUser(user)">Block user account!</button>
-        <button  *ngIf="!user.enabled"mat-raised-button mat-button color="primary" (click)="unblockUser(user)">Unblock user account!</button>
+        <button *ngIf="user.enabled" mat-raised-button mat-button color="warn" (click)="blockUser(user)">Block user
+          account!</button>
+        <button *ngIf="!user.enabled" mat-raised-button mat-button color="primary" (click)="unblockUser(user)">Unblock
+          user account!</button>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>

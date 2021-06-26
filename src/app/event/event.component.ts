@@ -55,6 +55,7 @@ export class EventComponent implements OnInit {
     this.zoom = 4;
     this.lat = 39.8282;
     this.lng = -98.5795;
+    // this.locationChosen = true;
 
     this.setCurrentPosition();
 
@@ -179,10 +180,20 @@ export class EventComponent implements OnInit {
           this.spinnerService.hide();
           this.userService.events.forEach( event => event.image = this.imageType + event.image);
           this.userService.closeDialog.emit(true);
+          this.userService.toastr.info('Event has been successfuly created !', 'Event Finder',{
+            timeOut :  10000,
+            progressBar: true
+          });
           }
         );
       },
-          (error) => console.log(error)
+          (error) => {
+            console.log(error);
+            this.userService.toastr.error('Error during event creation!', 'Event Finder',{
+              timeOut :  10000,
+              progressBar: true
+            });
+          }
     );
   }
 
@@ -242,18 +253,33 @@ export class EventComponent implements OnInit {
   }
 
   validForm(): boolean {
-    if (this.eventNewForm.get('feeType').value === 'Online') {
-      return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
-        !this.eventNewForm.get('eventType').valid ||
-        !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid);
+
+    if (this.eventNewForm.get('feeType').value === 'Free') {
+      if (this.checkEventType()) {
+        console.log(this.locationChosen);
+        console.log(this.checkGeneralFields() || !this.locationChosen);
+        return this.checkGeneralFields() || !this.locationChosen;
+      }
+      return this.checkGeneralFields() || (!this.eventNewForm.get('eventLink').valid);
     }
+
     if (this.eventNewForm.get('feeType').value === 'Paid') {
-      return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
-        !this.eventNewForm.get('eventType').valid ||
-        !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid ||
-        !this.eventNewForm.get('seats_total').valid || !this.eventNewForm.get('price').valid);
+      
+      if (this.checkEventType()) {
+        console.log(this.locationChosen);
+        console.log(this.checkGeneralFields() || !this.locationChosen);
+        return this.checkGeneralFields() || (!this.eventNewForm.get('price').valid) || !this.locationChosen;
+      }
+      return this.checkGeneralFields() || (!this.eventNewForm.get('eventLink').valid) || (!this.eventNewForm.get('price').valid);
     }
-    return true;
+  }
+
+  checkGeneralFields(): boolean {
+    return (!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
+            !this.eventNewForm.get('eventType').valid ||
+            !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid ||
+            !this.eventNewForm.get('seats_total').valid ||
+            !this.eventNewForm.get('duration').valid);
   }
 
   checkEventType(): boolean {

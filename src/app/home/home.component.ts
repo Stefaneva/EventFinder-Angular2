@@ -7,11 +7,11 @@ import {Router} from '@angular/router';
 import {MapsAPILoader} from '@agm/core';
 // import {ModalAgreementComponent} from '../modal-agreement/modal-agreement.component';
 import {MatDialog} from '@angular/material/dialog';
-import {SnotifyService} from 'ng-snotify';
 import { from } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EventDto } from '../event/eventDto';
 import { ModalAgreementComponent } from '../modal-agreement/modal-agreement.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -64,7 +64,6 @@ export class HomeComponent implements OnInit {
         //   });
         // }
         this.spinnerService.hide();
-        // this.userService.snotifyService.success('Body content', { position: 'rightTop'});
       }
     );
   }

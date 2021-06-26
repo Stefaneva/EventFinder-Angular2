@@ -16,13 +16,13 @@
       <mat-radio-button value="Free">Free</mat-radio-button>
       <mat-radio-button value="Paid">Paid</mat-radio-button>
     </mat-radio-group>
-    <div *ngIf="eventNewForm.get('feeType').value === 'Paid'">
+    <div *ngIf="eventNewForm.get('feeType').value === 'Paid'" class="div__price">
       <mat-form-field>
-        <input type="number" placeholder="Price(euro)..." matInput formControlName="price" autocomplete="off">
+        <input type="number"  min="0" step="1" oninput="validity.valid||(value='');" placeholder="Price (euro)..." matInput formControlName="price" autocomplete="off">
       </mat-form-field>
     </div>
     <mat-form-field>
-      <input type="number" placeholder="Maximum seats...." matInput formControlName="seats_total" autocomplete="off">
+      <input type="number"  min="0" step="1" oninput="validity.valid||(value='');" placeholder="Maximum seats...." matInput formControlName="seats_total" autocomplete="off">
     </mat-form-field>
     <mat-form-field>
       <textarea type="text" placeholder="Description & Details..." matInput  formControlName="description" autocomplete="off"></textarea>
@@ -38,7 +38,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-      <input type="number" placeholder="Duration (hours)..." matInput formControlName="duration" autocomplete="off">
+      <input type="number" min="0" step="1" oninput="validity.valid||(value='');" placeholder="Duration (hours)..." matInput formControlName="duration" autocomplete="off">
     </mat-form-field>
     <mat-form-field>
       <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" formControlName="eventDate">
@@ -65,7 +65,8 @@
     <br>
     <input type="file" id="file" multiple (change)="getFileDetails($event)" accept="image/*" class="images__input">
     <br>
-    <button [disabled]="!validForm() || myFiles.length <= 0"
+    <!-- <button [disabled]="!validForm() || myFiles.length <= 0" -->
+    <button [disabled]="validForm() || myFiles.length <= 0"
             class="btn btn-success form-control custom__button" type="submit">Add event</button>
   </form>
 </div>

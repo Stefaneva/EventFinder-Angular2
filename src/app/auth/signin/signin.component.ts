@@ -6,7 +6,6 @@ import {User} from '../../models/user';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 // import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
-import {SnotifyService} from 'ng-snotify';
 import { Observable, timer, Subscription, Subject, interval } from 'rxjs';
 import { switchMap, tap, share, retry, takeUntil, take, map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -25,8 +24,7 @@ export class SigninComponent implements OnInit {
   constructor(private authService: AuthService,
               private userService: UserService,
               private router: Router,
-              private spinner: NgxSpinnerService,
-              private snotifyService: SnotifyService) { }
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
   }
@@ -50,6 +48,10 @@ export class SigninComponent implements OnInit {
         console.log(this.userService.currentUser.accessToken);
         console.log(this.userService.currentUser.refreshToken);
         console.log('timer value: ' + this.userService.currentUser.timer);
+        this.userService.toastr.success('Welcome ' + this.userService.currentUser.email, 'Event Finder',{
+          timeOut :  10000,
+          progressBar: true
+        })
         timer(7200000).subscribe(val => {
           this.logout();
           this.userService.currentUser.timer = false;
@@ -71,7 +73,7 @@ export class SigninComponent implements OnInit {
                 }, 2000);          
     //           console.log(this.userService.currentUser.notification);
     //           if (!this.userService.currentUser.notification) {
-    //             this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
+                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
     //           } else if (this.userService.currentUser.notification === 1) {
     //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
     //           } else if (this.userService.currentUser.notification === 2) {
@@ -162,9 +164,9 @@ export class SigninComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
-    if (this.router.url === '/calendar' || this.router.url === '/statistics'
+    if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myEvents' || this.router.url === '/favorites'
-        || this.router.url === '/userList' || this.router.url === '/statistics') {
+        || this.router.url === '/userList') {
       this.router.navigateByUrl('/home');
     }
     this.userService.isFavourite = false;

@@ -60,6 +60,9 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { MyEventsComponent } from './myEvents/myEvents.component';
 import { GuardService } from './guard.service';
 import { ModalAgreementComponent } from './modal-agreement/modal-agreement.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule } from 'ng2-charts';
+import { ChartsComponent } from './charts/charts.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
@@ -76,6 +79,10 @@ const appRoutes: Routes = [
   { path: 'myEvents',
     component: MyEventsComponent,
     canActivate: [GuardService]
+  },
+  { path: 'eventFinderData',
+    component: ChartsComponent,
+    canActivate: [GuardRoleService]
   }
 ];
 
@@ -94,13 +101,16 @@ const appRoutes: Routes = [
     UserListComponent,
     MyEventsComponent,
     ModalAgreementComponent,
-    FilterPipe
+    FilterPipe,
+    ChartsComponent
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
   imports: [
     NgxPayPalModule,
     BrowserModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    ChartsModule,
     FormsModule,
     NgxSpinnerModule,
     ReactiveFormsModule,

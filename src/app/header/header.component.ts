@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
-    if (this.router.url === '/calendar' || this.router.url === '/statistics'
+    if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myAds' || this.router.url === '/favorites'
         || this.router.url === '/userList' || this.router.url === 'statistics'
         || this.router.url === '/myEvents') {

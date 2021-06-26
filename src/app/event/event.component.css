@@ -42,3 +42,8 @@ mat-form-field {
   margin-top: 4vh;
   margin-bottom: 4vh;
 }
+
+.div__price {
+  display: flex;
+  justify-content: center;
+}
