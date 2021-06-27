@@ -6,6 +6,8 @@ export class EventsReportDto {
   marketingEvents: number;
   recruitingEvents: number;
   allEvents: number;
+  online: number;
+  onSite: number;
   paidEvents: number;
   freeEvents: number;
 }

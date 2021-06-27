@@ -11,7 +11,7 @@ import { UserService } from '../user.service';
 export class ChartsComponent implements OnInit {
 
   public doughnutChartLabels: string[] = ['Online', 'On site', 'Free', 'Paid'];
-  public doughnutChartData: number[] = [50, 60, 30, 10];
+  public doughnutChartData: number[] = [0, 0, 0, 0];
   public doughnutChartType = 'doughnut';
   public doughnutChartOptions: any = {
     responsive: true,
@@ -25,13 +25,20 @@ export class ChartsComponent implements OnInit {
   ];
 
   public polarAreaChartLabels: Label[] = ['Total','Workshop', 'Soft Skills', 'Technical', 'Social', 'Marketing', 'Recruiting'];
-  public polarAreaChartData: SingleDataSet = [255, 50, 60, 70, 10, 20, 45];
+  public polarAreaChartData: SingleDataSet = [0, 0, 0, 0, 0, 0, 0];
   public polarAreaChartType: ChartType = 'polarArea';
   public polarAreaLegend = true;
 
   constructor(public userService: UserService) { }
 
   ngOnInit(): void {
+    this.userService.getEventsReport().subscribe(
+      response => {
+        console.log(response);
+        this.doughnutChartData = [response.online, response.onSite, response.freeEvents, response.paidEvents];
+        this.polarAreaChartData = [response.allEvents, response.workshopEvents, response.softSkillsEvents, response.technicalEvents, response.socialEvents, response.marketingEvents, response.recruitingEvents];
+      }
+    )
   }
 
   //charts events
