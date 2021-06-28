@@ -24,7 +24,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/statistics">
+        <a routerLink="/eventFinderData">
           <button class="btn btn-warning sign__up" type="button" *ngIf="userService.currentUser.accessToken && userService.currentUser.type === 'ADMIN'"
                   >Event details</button>
         </a>
@@ -35,7 +35,7 @@
           <li class="nav-item dropdown" *ngIf="userService.currentUser.accessToken && userService.currentUser.type != 'ADMIN'">
             <button class="btn btn-warning dropdown-toggle sign__up" data-toggle="dropdown">My account</button>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a routerLink="/myAds" class="dropdown-item">
+              <a routerLink="/myEvents" class="dropdown-item">
                 <button class="btn btn-success option sign__up" type="button">My events</button>
               </a>
               <div class="dropdown-item">

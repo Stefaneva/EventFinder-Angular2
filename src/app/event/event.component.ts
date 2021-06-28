@@ -1,11 +1,10 @@
 import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../user.service';
 import {AuthService} from '../auth/auth.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {MapsAPILoader} from '@agm/core';
 import {EventDto} from './eventDto';
-// import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-event',
@@ -35,24 +34,28 @@ export class EventComponent implements OnInit {
   constructor(private userService: UserService,
               private authService: AuthService,
               private mapsAPILoader: MapsAPILoader,
+              private spinnerService: NgxSpinnerService,
               private ngZone: NgZone) { }
 
   ngOnInit() {
     this.eventNewForm = new FormGroup({
       'title' : new FormControl(null, Validators.required),
       'eventType' : new FormControl('Free', Validators.required),
-      'eventItemType' : new FormControl(null, Validators.required),
+      'feeType' : new FormControl(null, Validators.required),
       'price' : new FormControl(null, Validators.required),
       'seats_total' : new FormControl(null, Validators.required),
       'description' : new FormControl(null, Validators.required),
       'category' : new FormControl(null, Validators.required),
       'eventDate' : new FormControl(null, Validators.required),
+      'duration' : new FormControl(null, Validators.required),
+      'eventLink' : new FormControl(null, [Validators.required, EventComponent.urlValidator]),
       'searchControl' : new FormControl(null)
     });
 
     this.zoom = 4;
     this.lat = 39.8282;
     this.lng = -98.5795;
+    // this.locationChosen = true;
 
     this.setCurrentPosition();
 
@@ -103,6 +106,15 @@ export class EventComponent implements OnInit {
     // );
   }
 
+  private static urlValidator({value}: AbstractControl): null | ValidationErrors {
+    try {
+       new URL(value);
+       return null;
+    } catch {
+       return {pattern: true};
+    }
+  }
+
   private setCurrentPosition() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -115,6 +127,7 @@ export class EventComponent implements OnInit {
 
   onSubmit() {
     console.log(this.eventNewForm);
+    console.log(this.eventNewForm.value.eventLink);
     // this.userService.closeDialog.emit(true);
     const frmData = new FormData();
     for (let i = 0; i < this.myFiles.length; i++) {
@@ -122,24 +135,25 @@ export class EventComponent implements OnInit {
     }
     this.eventDto.title = this.eventNewForm.value.title;
     this.eventDto.description = this.eventNewForm.value.description;
-    this.eventDto.eventItemType = this.eventNewForm.value.eventItemType;
+    this.eventDto.feeType = this.eventNewForm.value.feeType;
     this.eventDto.eventType = this.eventNewForm.value.eventType;
     this.eventDto.price = this.eventNewForm.value.price;
     this.eventDto.category = this.eventNewForm.value.category;
     this.eventDto.seatsTotal = this.eventNewForm.value.seats_total;
     this.eventDto.eventDate = this.eventNewForm.value.eventDate;
+    this.eventDto.duration = this.eventNewForm.value.duration;
     this.eventDto.lat = this.lat;
     this.eventDto.lng = this.lng;
     this.eventDto.userEmail = this.userService.currentUser.email;
+    this.eventDto.eventLink = this.eventNewForm.value.eventLink;
     // this.userService.events.splice(0, 0 , this.eventdDto);
     frmData.append('title', this.eventNewForm.value.title);
     frmData.append('description', this.eventNewForm.value.description);
-    frmData.append('eventItemType', this.eventNewForm.value.eventItemType);
+    frmData.append('feeType', this.eventNewForm.value.feeType);
     frmData.append('eventType', this.eventNewForm.value.eventType);
     frmData.append('category', this.eventNewForm.value.category);
-    if (this.eventNewForm.value.eventItemType === 'Free') {
+    if (this.eventNewForm.value.feeType === 'Free') {
       this.eventNewForm.get('price').setValue(0);
-      this.eventNewForm.get('seats_total').setValue(0);
     }
     frmData.append('price', this.eventNewForm.value.price);
     frmData.append('seats_total', this.eventNewForm.value.seats_total);
@@ -148,6 +162,8 @@ export class EventComponent implements OnInit {
     frmData.append('location', this.eventDto.location);
     frmData.append('userEmail', this.userService.currentUser.email);
     frmData.append('eventDate', this.eventNewForm.value.eventDate);
+    frmData.append('eventLink', this.eventNewForm.value.eventLink);
+    frmData.append('duration', this.eventNewForm.value.duration);
     console.log(frmData.getAll('fileUpload'));
     console.log(frmData.get('location'));
     console.log("FormData is: ");
@@ -155,18 +171,29 @@ export class EventComponent implements OnInit {
     //   console.log(value);
     // }
     this.userService.postNewEventImages(frmData).subscribe(
-      // (response) => {
-      //   console.log(response);
-      //   // this.spinnerService.show();
-      //   this.userService.getEventsWithImages().subscribe(
-      //     (response1) => {console.log(response1);
-      //     this.userService.events = response1;
-      //     // this.spinnerService.hide();
-      //     this.userService.events.forEach( event => event.image = this.imageType + event.image);
-      //     }
-      //   );
-      // },
-      //     (error) => console.log(error)
+      (response) => {
+        console.log(response);
+        this.spinnerService.show();
+        this.userService.getEvents().subscribe(
+          (response1) => {console.log(response1);
+          this.userService.events = response1;
+          this.spinnerService.hide();
+          this.userService.events.forEach( event => event.image = this.imageType + event.image);
+          this.userService.closeDialog.emit(true);
+          this.userService.toastr.info('Event has been successfuly created !', 'Event Finder',{
+            timeOut :  10000,
+            progressBar: true
+          });
+          }
+        );
+      },
+          (error) => {
+            console.log(error);
+            this.userService.toastr.error('Error during event creation!', 'Event Finder',{
+              timeOut :  10000,
+              progressBar: true
+            });
+          }
     );
   }
 
@@ -226,20 +253,39 @@ export class EventComponent implements OnInit {
   }
 
   validForm(): boolean {
-    // if (this.eventNewForm.get('eventItemType').value === 'Apartament') {
-    //   return !(!this.eventNewForm.get('price').valid || !this.eventNewForm.get('title').valid
-    //     || !this.eventNewForm.get('description').valid ||
-    //     !this.eventNewForm.get('eventType').valid || !this.eventNewForm.get('rooms').valid || !this.eventNewForm.get('surface').valid &&
-    //     !this.eventNewForm.get('partitioning').valid || !this.eventNewForm.get('comfort').valid ||
-    //     !this.eventNewForm.get('floorLevel').valid || !this.eventNewForm.get('yearBuilt').valid);
-    // }
-    // if (this.eventNewForm.get('eventItemType').value === 'Casa') {
-    //   return !(!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
-    //     !this.eventNewForm.get('eventType').valid ||
-    //     !this.eventNewForm.get('rooms').valid || !this.eventNewForm.get('surface').valid ||
-    //     !this.eventNewForm.get('yearBuilt').valid || !this.eventNewForm.get('areaSurface').valid ||
-    //     !this.eventNewForm.get('furnished').valid || !this.eventNewForm.get('price').valid);
-    // }
-    return true;
+
+    if (this.eventNewForm.get('feeType').value === 'Free') {
+      if (this.checkEventType()) {
+        console.log(this.locationChosen);
+        console.log(this.checkGeneralFields() || !this.locationChosen);
+        return this.checkGeneralFields() || !this.locationChosen;
+      }
+      return this.checkGeneralFields() || (!this.eventNewForm.get('eventLink').valid);
+    }
+
+    if (this.eventNewForm.get('feeType').value === 'Paid') {
+      
+      if (this.checkEventType()) {
+        console.log(this.locationChosen);
+        console.log(this.checkGeneralFields() || !this.locationChosen);
+        return this.checkGeneralFields() || (!this.eventNewForm.get('price').valid) || !this.locationChosen;
+      }
+      return this.checkGeneralFields() || (!this.eventNewForm.get('eventLink').valid) || (!this.eventNewForm.get('price').valid);
+    }
+  }
+
+  checkGeneralFields(): boolean {
+    return (!this.eventNewForm.get('title').valid || !this.eventNewForm.get('description').valid ||
+            !this.eventNewForm.get('eventType').valid ||
+            !this.eventNewForm.get('category').valid || !this.eventNewForm.get('eventDate').valid ||
+            !this.eventNewForm.get('seats_total').valid ||
+            !this.eventNewForm.get('duration').valid);
+  }
+
+  checkEventType(): boolean {
+    if (this.eventNewForm.get('eventType').value === 'On Site') {
+      return true;
+    }
+    return false;
   }
 }

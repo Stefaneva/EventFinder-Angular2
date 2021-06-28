@@ -1,0 +1,288 @@
+/*.add__details__container {*/
+  /*display: flex;*/
+  /*justify-content: center;*/
+/*}*/
+
+.ad__title {
+  display: flex;
+  justify-content: center;
+}
+
+.hr__line {
+  width: 100%;
+}
+
+.my__carousel {
+  /* display: flex;
+  justify-content: flex-start; */
+  /* margin-left: 50px; */
+  /* margin-left: 5vw; */
+  width: 40vw;
+  height: 57vh;
+  /* border:1px solid black; */
+  /* margin-top: 10vh; */
+}
+
+
+.carousel__item {
+  /*width: 700px;*/
+  /*height: 500px;*/
+  width: 40vw;
+  height: 57vh;
+  margin-top: 3vh;
+}
+
+agm-map {
+  /*width: 1000px;*/
+  /*height: 600px;*/
+  width: 70vw;
+  height: 70vh;
+  /*margin-bottom: 40px;*/
+  margin-bottom: 4vh;
+}
+
+.map__class {
+  display: flex;
+  justify-content: center;
+}
+
+.map__label {
+  display: flex;
+  justify-content: center;
+  size: 5vw;
+}
+
+.link__label {
+  display: flex;
+  justify-content: center;
+  margin-left: 43vw;
+  width: 12vw;
+}
+
+.img__label__container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin-top: 5vh;
+  /* margin-left: -6vw; */
+  margin-right: 40vw;
+}
+
+.text__label {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 300px;
+}
+
+.img__save__button {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 24vw;
+}
+
+.img__replace_button {
+  margin-left: 3vw;
+}
+
+.description__container {
+  /*margin-left: 200px;*/
+  /*margin-right: 200px;*/
+  margin-left: 10vw;
+  margin-right:  10vw;
+}
+
+.price__carousel {
+  display: flex;
+  justify-content: space-evenly;
+  margin-right: 7vw;
+}
+
+@media only screen and (max-width: 600px) {
+  .price__carousel {
+    display: flex;
+    flex-direction: column;
+    margin-right: 0;
+  }
+
+  .carousel__item {
+    width: 95%;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .buttons{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.price {
+  margin-top: 11vh;
+  height: 7vh;
+}
+
+.favourite {
+  margin-top: 3vh;
+  padding-top: 2vh;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+}
+
+.book__button {
+  margin-top: 3vh;
+  padding-top: 2vh;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+}
+
+.mat__panel__description {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.expansion__panel__content {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row wrap;
+  align-items: flex-start !important;
+}
+
+.expansion__panel__content__logged {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row wrap;
+  align-items: flex-start !important;
+}
+
+.form__field__input {
+  width: 10%;
+}
+
+.descriere {
+  width: 100%;
+}
+
+.search__location {
+  width: 60vw;
+}
+
+.search__location__formGroup {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2vh;
+}
+
+.map__buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6vh;
+}
+
+.map__button {
+  margin-right: 5vw;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.material__select {
+  margin-top: 2vh;
+}
+
+.expansion__panel__content__apartment {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.apartemnt__detail {
+  width: 30%;
+}
+
+.apartemnt__detail__form {
+  margin-right: 200px;
+}
+
+.apartemnt__detail__last__element {
+  width: 60%;
+}
+
+.review__container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 4vh;
+}
+
+.box {
+  width:100%;
+  max-width:50%;
+}
+
+.comment__first__row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review__rating__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel__button {
+  margin-left: 3vw;
+}
+
+.add__review__button {
+  /*margin-left: 7vw;*/
+  display: flex;
+  justify-content: center;
+}
+
+.general__rating {
+  margin-top: 1vh;
+  display: flex;
+  justify-content: center;
+  font-size: 1.7vw;
+}
+
+.user__rating {
+  margin-top: 1vh;
+  display: flex;
+  justify-content: center;
+  font-size: 1vw;
+}
+
+/* Rating values */
+/* .filled{
+  color: rgb(255, 208, 0);
+}
+
+.notfilled{
+  color:#6e6a6a;
+} */
+
+.defaultStar{
+  position: relative;
+  display: inline-block;
+  color:gray;
+  font-size: 50px;
+}
+
+.paintedStar{
+  position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: rgb(255, 208, 0);;
+}

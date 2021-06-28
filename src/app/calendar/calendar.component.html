@@ -1,0 +1,179 @@
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <!--<h5 class="modal-title">Event action occurred</h5>-->
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!--<div>-->
+      <!--Action:-->
+      <!--<pre>{{ modalData?.action }}</pre>-->
+    <!--</div>-->
+    <div>
+      <h3>Event: </h3>
+      <!--<pre>{{ modalData?.event }} + {{modalData.num}}</pre>-->
+      <pre>Event: {{modalData.eventTitle}} - {{modalData.status}}</pre>
+      <pre>From: {{modalData.eventStart | date:'yyyy-MM-dd HH:mm'}}</pre>
+      <pre>Until: {{modalData.eventEnd | date:'yyyy-MM-dd HH:mm'}}</pre>
+      <button mat-raised-button color="primary" (click)="eventDetails(modalData.index)">Event details</button>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">OK</button>
+  </div>
+</ng-template>
+
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        mwlCalendarPreviousView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="activeDayIsOpen = false">
+        Previous
+      </div>
+      <div
+        class="btn btn-outline-secondary"
+        mwlCalendarToday
+        [(viewDate)]="viewDate">
+        Today
+      </div>
+      <div
+        class="btn btn-primary"
+        mwlCalendarNextView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="activeDayIsOpen = false">
+        Next
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        (click)="view = 'month'"
+        [class.active]="view === 'month'">
+        Month
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="view = 'week'"
+        [class.active]="view === 'week'">
+        Week
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="view = 'day'"
+        [class.active]="view === 'day'">
+        Day
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="'month'"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event, events.indexOf($event.event))"
+    (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+    *ngSwitchCase="'week'"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view
+    *ngSwitchCase="'day'"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-day-view>
+</div>
+
+<br><br><br>
+<!-- <div *ngIf="userService.currentUser.accessToken && ((userService.eventDetailsCalendar && userService.eventDetailsCalendar !== null) || owner || userEvents)"> -->
+<div>
+<!-- <h3>
+  <div *ngIf="!owner && !userEvents">
+    Adaugă programare:
+  </div>
+  <div *ngIf="owner || userEvents">
+    Programări:
+  </div>
+  <button
+    *ngIf="userService.userEvent && userService.eventDetailsCalendar && userService.eventDetailsCalendar !== null
+          && userService.currentUser.email !== userService.eventDetailsCalendar.userEmail && !eventAdded"
+    class="btn btn-primary pull-right"
+    (click)="addEvent()">
+    Adaugă programare
+  </button>
+  <div class="clearfix"></div>
+</h3> -->
+
+<table class="table table-bordered">
+
+  <thead>
+  <tr>
+    <th>Event name: </th>
+    <!--<th>Title</th>-->
+    <!--<th>Primary color</th>-->
+    <!--<th>Secondary color</th>-->
+    <th>From: </th>
+    <th>Until: </th>
+    <th>Status</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let event of events; let index = index">
+    <td>
+      <p>{{event.title}}</p>
+    </td>
+    <td>
+      <p>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ event.start | date: 'dd MMM yyyy hh:mm a' }}</mat-label>
+          <input matInput [matDatepicker]="dp1" disabled>
+          <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+          <mat-datepicker #dp1></mat-datepicker>
+        </mat-form-field>
+      </p>
+    </td>
+    <td>
+      <p>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ event.end | date: 'dd MMM yyyy hh:mm a' }}</mat-label>
+          <input matInput [matDatepicker]="dp2" disabled>
+          <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+          <mat-datepicker #dp2></mat-datepicker>
+        </mat-form-field>
+      </p>
+    </td>
+    <td>
+      <p>
+        <button mat-button mat-raised-button color="accent">
+          {{ calendarEventsDto[index].status }}
+        </button>
+      </p>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</div>

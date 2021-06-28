@@ -1,22 +1,22 @@
 import {UserDto} from './userDto';
 
-export class eventDetailsDto {
+export class EventDetailsDto {
   id: number;
   title: string;
   eventType: string;
   description: string;
   price: number;
-  surface: number;
-  rooms: number;
-  eventItemType: string;
+  feeType: string;
+  seatsTotal: number;
+  seatsOccupied: number;
   lat: number;
   lng: number;
+  userEmail: string;
   userDetails: UserDto;
-  partitioning: string;
-  comfort: number;
-  furnished: string;
-  floorLevel: string;
-  areaSurface: number;
-  yearBuilt: number;
   avgEventReview: number;
+  location: string;
+  category: string;
+  eventDate: string;
+  eventLink: string;
+  duration: number;
 }

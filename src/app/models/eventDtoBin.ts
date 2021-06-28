@@ -6,7 +6,7 @@ export class EventDtoBin {
   price: number;
   surface: number;
   rooms: number;
-  eventItemType: string;
+  feeType: string;
   lat: number;
   lng: number;
   userEmail: string;

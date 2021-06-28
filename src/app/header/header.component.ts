@@ -5,7 +5,7 @@ import {SigninComponent} from '../auth/signin/signin.component';
 import {SignupComponent} from '../auth/signup/signup.component';
 import {EventComponent} from '../event/event.component';
 import {Router} from '@angular/router';
-// import {EditUserComponent} from '../edit-user/edit-user.component';
+import { EditUserComponent } from '../edit-user/edit-user.component';
 
 @Component({
   selector: 'app-header',
@@ -39,9 +39,10 @@ export class HeaderComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
-    if (this.router.url === '/calendar' || this.router.url === '/statistics'
+    if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myAds' || this.router.url === '/favorites'
-        || this.router.url === '/userList' || this.router.url === 'statistics') {
+        || this.router.url === '/userList' || this.router.url === 'statistics'
+        || this.router.url === '/myEvents') {
       this.router.navigateByUrl('/home');
     }
     this.userService.isFavourite = false;
@@ -56,10 +57,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  // openEdit() {
-  //   this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
-  //   const dialogRef = this.dialog.open(EditUserComponent, {});
-  // }
+  openEdit() {
+    this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
+    const dialogRef = this.dialog.open(EditUserComponent, {});
+  }
 
   redirectHome() {
     this.router.navigateByUrl('/home');

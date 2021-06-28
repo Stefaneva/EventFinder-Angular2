@@ -1,4 +1,4 @@
-<!-- <ng4-loading-spinner></ng4-loading-spinner> -->
+<ngx-spinner type="ball-clip-rotate-pulse" color = "rgba(75, 119, 190, 1)"></ngx-spinner>
 <mat-dialog-content>
 <div class="container">
   <h2>Create Event <i class="fa fa-arrow-circle-up"></i></h2>
@@ -9,21 +9,21 @@
     <mat-form-field>
       <mat-select placeholder="Event Type..." matInput formControlName="eventType">
         <mat-option value="Online">Online</mat-option>
-        <mat-option value="OnSite">On Site</mat-option>
+        <mat-option value="On Site">On Site</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-radio-group matInput formControlName="eventItemType" class="eventType">
+    <mat-radio-group matInput formControlName="feeType" class="eventType">
       <mat-radio-button value="Free">Free</mat-radio-button>
       <mat-radio-button value="Paid">Paid</mat-radio-button>
     </mat-radio-group>
-    <div *ngIf="eventNewForm.get('eventItemType').value === 'Paid'">
+    <div *ngIf="eventNewForm.get('feeType').value === 'Paid'" class="div__price">
       <mat-form-field>
-        <input type="number" placeholder="Price(euro)..." matInput formControlName="price" autocomplete="off">
-      </mat-form-field>
-      <mat-form-field>
-        <input type="number" placeholder="Maximum seats...." matInput formControlName="seats_total" autocomplete="off">
+        <input type="number"  min="0" step="1" oninput="validity.valid||(value='');" placeholder="Price (euro)..." matInput formControlName="price" autocomplete="off">
       </mat-form-field>
     </div>
+    <mat-form-field>
+      <input type="number"  min="0" step="1" oninput="validity.valid||(value='');" placeholder="Maximum seats...." matInput formControlName="seats_total" autocomplete="off">
+    </mat-form-field>
     <mat-form-field>
       <textarea type="text" placeholder="Description & Details..." matInput  formControlName="description" autocomplete="off"></textarea>
     </mat-form-field>
@@ -38,25 +38,36 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
+      <input type="number" min="0" step="1" oninput="validity.valid||(value='');" placeholder="Duration (hours)..." matInput formControlName="duration" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field>
       <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" formControlName="eventDate">
       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
       <ngx-mat-datetime-picker #picker1></ngx-mat-datetime-picker>
       <mat-datepicker touchUi #picker></mat-datepicker>
     </mat-form-field>
-    <div class="form-group">
-      <input placeholder="Set location..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text" class="form-control" #search formControlName="searchControl">
+    <div [hidden]="!checkEventType()">
+      <div class="form-group">
+        <input placeholder="Set location..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text" class="form-control" #search formControlName="searchControl">
+      </div>
+      <div class="agm-map">
+        <agm-map [latitude]="lat" [longitude]="lng" [scrollwheel]="true" [fullscreenControl]="true" (mapClick)="onChoseLocation($event)" (mapReady)="mapReadyHandler($event)" [zoom]="zoom">
+          <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="locationChosen"></agm-marker>
+        </agm-map>
+      </div>
     </div>
-    <div class="agm-map">
-      <agm-map [latitude]="lat" [longitude]="lng" [scrollwheel]="true" [fullscreenControl]="true" (mapClick)="onChoseLocation($event)" (mapReady)="mapReadyHandler($event)" [zoom]="zoom">
-        <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="locationChosen"></agm-marker>
-      </agm-map>
+    <div *ngIf="eventNewForm.get('eventType').value === 'Online'">
+      <mat-form-field>
+        <input type="text" placeholder="Add event link..." matInput formControlName="eventLink">
+      </mat-form-field>
     </div>
     <label> Add images... (PNG/JPG/...):</label>
     <br>
     <input type="file" id="file" multiple (change)="getFileDetails($event)" accept="image/*" class="images__input">
     <br>
-    <button [disabled]="!validForm() || !locationChosen || myFiles.length <= 0"
-            class="btn btn-success form-control custom__button" type="submit">Adaugă anunțul</button>
+    <!-- <button [disabled]="!validForm() || myFiles.length <= 0" -->
+    <button [disabled]="validForm() || myFiles.length <= 0"
+            class="btn btn-success form-control custom__button" type="submit">Add event</button>
   </form>
 </div>
 </mat-dialog-content>

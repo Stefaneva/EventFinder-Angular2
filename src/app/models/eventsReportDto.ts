@@ -1,10 +1,13 @@
 export class EventsReportDto {
-  pendingEvents: number;
-  acceptedEvents: number;
+  workshopEvents: number;
+  softSkillsEvents: number;
+  technicalEvents: number;
+  socialEvents: number;
+  marketingEvents: number;
+  recruitingEvents: number;
   allEvents: number;
-  homeAds: number;
-  apartmentAds: number;
-  salesAds: number;
-  rentAds: number;
-  allAds: number;
+  online: number;
+  onSite: number;
+  paidEvents: number;
+  freeEvents: number;
 }

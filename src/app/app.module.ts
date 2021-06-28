@@ -35,15 +35,55 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { UserService } from './user.service';
 import { AgmCoreModule } from '@agm/core';
 import { EventComponent } from './event/event.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { EditUserComponent } from './edit-user/edit-user.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import {MatMomentDateModule} from '@angular/material-moment-adapter'
+import { EventDetailsComponent } from './event-details/event-details.component';
+import {RatingModule} from 'ngx-rating';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { SlideshowModule } from 'ng-simple-slideshow';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { CarouselModule } from 'ngx-owl-carousel-2';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FavoritesComponent } from './favorites/favorites.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { GuardRoleService } from './guard-role.service';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarComponent } from './calendar/calendar.component';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { MyEventsComponent } from './myEvents/myEvents.component';
+import { GuardService } from './guard.service';
+import { ModalAgreementComponent } from './modal-agreement/modal-agreement.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule } from 'ng2-charts';
+import { ChartsComponent } from './charts/charts.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home' , pathMatch: 'full' },
   { path: 'home', component: HomeComponent},
   { path: 'signup' , component: SignupComponent},
-  { path: 'signin' , component: SigninComponent}
+  { path: 'signin' , component: SigninComponent},
+  { path: 'EventDetails/:id', component: EventDetailsComponent},
+  { path: 'favorites', component: FavoritesComponent },
+  { path: 'calendar', component: CalendarComponent },
+  { path: 'userList',
+    component: UserListComponent,
+    canActivate: [GuardRoleService]
+  },
+  { path: 'myEvents',
+    component: MyEventsComponent,
+    canActivate: [GuardService]
+  },
+  { path: 'eventFinderData',
+    component: ChartsComponent,
+    canActivate: [GuardRoleService]
+  }
 ];
 
 @NgModule({
@@ -54,13 +94,25 @@ const appRoutes: Routes = [
     HeaderComponent,
     HomeComponent,
     EventComponent,
-    FilterPipe
+    EditUserComponent,
+    EventDetailsComponent,
+    CalendarComponent,
+    FavoritesComponent,
+    UserListComponent,
+    MyEventsComponent,
+    ModalAgreementComponent,
+    FilterPipe,
+    ChartsComponent
   ],
   exports: [NgxPaginationModule, MatSidenavModule],
   imports: [
+    NgxPayPalModule,
     BrowserModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    ChartsModule,
     FormsModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     AppRoutingModule,
     NgxMatTimepickerModule,
@@ -83,16 +135,30 @@ const appRoutes: Routes = [
     MatExpansionModule,
     HttpClientModule,
     NgxPaginationModule,
+    MatNativeDateModule,
+    MatMomentDateModule,
+    CarouselModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
+    NgImageSliderModule,
+    FontAwesomeModule,
+    MatCarouselModule.forRoot(),
+    SlideshowModule,
     RouterModule.forRoot(appRoutes),
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production },
     AgmCoreModule.forRoot(  {
       apiKey: 'AIzaSyCP6Jh0CirrZAf-IDtdktCuhKPtIgh94_0',
       libraries: ['places', 'geometry']
-    })
+    }),
+    NgbModule
   ],
-  providers: [UserService, AuthService,
+  providers: [UserService, AuthService, GuardRoleService, GuardService,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {provide: MAT_DATE_LOCALE, useValue: 'en-DE'},
     SnotifyService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

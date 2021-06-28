@@ -1,0 +1,298 @@
+<!-- <ng4-loading-spinner></ng4-loading-spinner> -->
+<div class="add__details__container">
+  <h2 class="ad__title">{{userService.eventDetails.title}}</h2>
+  <hr class="hr__line">
+  <div class="price__carousel">
+    <div>
+      <ngb-carousel [showNavigationArrows]="true" [showNavigationIndicators]="true" interval="4400" [keyboard]="true"
+        [pauseOnHover]="true" [wrap]="true" class="my__carousel">
+        <ng-template ngbSlide *ngFor="let image of images">
+          <img [src]="image" class="carousel__item">
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    <div class="buttons">
+      <button *ngIf="userService.eventDetails.price > 0" class="btn btn-warning price">Price:
+        {{userService.eventDetails.price}} <span class="fa fa-euro"></span></button>
+      <button *ngIf="userService.eventDetails.price == 0" class="btn btn-warning price">Free event </button>
+      <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
+        [disabled]="userService.isBooked"
+        class="btn btn-success book__button" (click)="bookSeat()">Book seat &nbsp;<mat-icon>assignment</mat-icon>
+        </button>
+      <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
+        [disabled]="userService.isFavourite" class="btn btn-danger favourite" (click)="saveFavorite()">Add to favorites &nbsp;<mat-icon>favorite_border</mat-icon></button>
+      <button  class="btn btn-info favourite">{{userService.eventDetails.eventType}} 
+        <mat-icon *ngIf="userService.eventDetails.eventType === 'Online'">videocam</mat-icon>
+        <mat-icon *ngIf="userService.eventDetails.eventType !== 'Online'">place</mat-icon>
+      </button>
+      <!-- <button class="btn btn-info favourite">E-mail: {{userService.eventDetails.userEmail}}&nbsp;<mat-icon>email
+        </mat-icon></button> -->
+      <!-- <button class="btn btn-info favourite">Phone: 0{{userService.eventUserPhone}} <mat-icon>phone</mat-icon> -->
+        <!-- </button> -->
+      <ngb-rating [max]="5" [(rate)]="userService.eventDetails.avgEventReview" [readonly]="true"
+        class="general__rating">
+        <ng-template let-fill="fill">
+          <span class="defaultStar" [class.filled]="fill === 100">
+            <span class="paintedStar" [style.width.%]="fill">&#9733;</span>&#9733;
+          </span>
+        </ng-template>
+      </ngb-rating>
+    </div>
+  </div>
+  <div class="img__label__container"
+    *ngIf="userService.currentUser.accessToken && userService.currentUser.email === userService.eventDetails.userEmail">
+    <!-- <button mat-button mat-raised-button class="img__save__button" color="accent" (click)="saveImages()">Save new images
+      <mat-icon>archive</mat-icon></button> -->
+    <input (change)="getFileDetails($event)" id="fileInput" name="file" type="file" class="ng-hide" multiple>
+    <button mat-button mat-raised-button color="accent" (click)="replaceImages()" class="img__replace_button">Replace
+      images <mat-icon>cloud_upload</mat-icon></button>
+  </div>
+  <br>
+  <div class="description__container">
+    <mat-accordion class="mat__accordion">
+      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="panelOpenState = false" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Event description...
+          </mat-panel-title>
+          <mat-panel-description class="mat__panel__description">
+            <mat-icon>info</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div *ngIf="userService.currentUser.email === userService.eventDetails.userEmail">
+          <mat-form-field class="descriere">
+            <textarea type="text" placeholder="Event description..." matInput matTextareaAutosize matAutosizeMinRows=5
+              matAutosizeMaxRows=10 [(ngModel)]="eventDetailsChanges.description" autocomplete="off"></textarea>
+          </mat-form-field>
+        </div>
+        <div
+          *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail || !userService.currentUser.email">
+          <p>Description: {{userService.eventDetails.description}}
+        </div>
+        <mat-action-row>
+          <button mat-button color="warn" (click)="prevStep()">Close</button>
+          <button mat-button color="primary" (click)="nextStep()">Next</button>
+          <button mat-button mat-raised-button color="accent"
+            *ngIf="userService.currentUser.email === userService.eventDetails.userEmail"
+            (click)="saveChanges(step)">Save changes
+          </button>
+          <button mat-button mat-raised-button color="accent"
+            *ngIf="userService.currentUser.email === userService.eventDetails.userEmail"
+            (click)="cancelChanges(step)">Cancel changes
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" (closed)="panelOpenState = false" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Event details...
+          </mat-panel-title>
+          <mat-panel-description class="mat__panel__description">
+            <mat-icon>assignment</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <!---->
+        <div>
+          <div *ngIf="userService.currentUser.email === userService.eventDetails.userEmail">
+            <div class="expansion__panel__content__logged">
+              <mat-form-field class="form__field__input apartemnt__detail__form">
+                <mat-select placeholder="Fee type..." matInput class="material__select"
+                  [(ngModel)]="eventDetailsChanges.feeType">
+                  <mat-option value="Paid">Paid</mat-option>
+                  <mat-option value="Free">Free</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form__field__input apartemnt__detail__form" >
+                <label>
+                  <input type="number"  min="0" oninput="validity.valid||(value='');" matInput placeholder="Price..." [(ngModel)]="eventDetailsChanges.price"
+                    autocomplete="off">
+                </label>
+              </mat-form-field>
+              <mat-form-field class="form__field__input apartemnt__detail__form">
+                <mat-select placeholder="Category..." matInput class="material__select"
+                  [(ngModel)]="eventDetailsChanges.category">
+                  <mat-option value="Workshop">Workshop</mat-option>
+                  <mat-option value="Soft Skills">Soft Skills</mat-option>
+                  <mat-option value="Technical">Tech</mat-option>
+                  <mat-option value="Social">Social</mat-option>
+                  <mat-option value="Marketing">Marketing</mat-option>
+                  <mat-option value="Job Recruiting">Job Recruiting</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form__field__input apartemnt__detail__form" >
+                <label>
+                  <input type="number" min="0" oninput="validity.valid||(value='');" matInput placeholder="Total seats..." [(ngModel)]="eventDetailsChanges.seatsTotal"
+                    autocomplete="off">
+                </label>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" [(ngModel)]="eventDetailsChanges.eventDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <ngx-mat-datetime-picker #picker1></ngx-mat-datetime-picker>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+              </mat-form-field>
+              <p class="form__field__input apartemnt__detail__form"></p>
+            </div>
+          </div>
+          <div
+            *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail || !userService.currentUser.email">
+            <div class="expansion__panel__content__apartment">
+              <p class="apartemnt__detail">Type: {{userService.eventDetails.feeType}} event
+              <p *ngIf="userService.eventDetails.eventType === 'Online'" class="apartemnt__detail">Price: Free 
+              <p *ngIf="userService.eventDetails.eventType !== 'Online'" class="apartemnt__detail">Price: {{userService.eventDetails.price}} <span class="fa fa-euro"></span>
+              <p class="apartemnt__detail">Category: {{userService.eventDetails.category}}
+              <p class="apartemnt__detail">Available seats: {{ userService.eventDetails.seatsTotal - userService.eventDetails.seatsOccupied }}
+              <p class="apartemnt__detail">Total seats: {{userService.eventDetails.seatsTotal}}
+              <p class="apartemnt__detail">Date: {{slicedDate}}
+              <p class="apartemnt__detail">Contact e-mail: {{userService.eventDetails.userEmail}} <mat-icon [inline]="true">email</mat-icon>
+              <p class="apartemnt__detail">Duration: {{userService.eventDetails.duration}} hours
+              <p class="apartemnt__detail">Contact phone: 0{{userService.eventUserPhone}} <mat-icon [inline]="true">phone</mat-icon>
+            </div>
+          </div>
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">Back</button>
+            <button mat-button color="primary" (click)="nextStep()">Final</button>
+            <button mat-button mat-raised-button color="accent"
+              *ngIf="userService.currentUser.email === userService.eventDetails.userEmail"
+              (click)="saveChanges(step)">Save changes
+            </button>
+            <button mat-button mat-raised-button color="accent"
+              *ngIf="userService.currentUser.email === userService.eventDetails.userEmail"
+              (click)="cancelChanges(step)">Cancel changes
+            </button>
+          </mat-action-row>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <br>
+  <div *ngIf="userService.eventDetails.lat">
+    <h3 class="map__label">Location: {{this.address}}</h3>
+    <div class="map__class">
+      <agm-map [latitude]="lat" [longitude]="lng" [scrollwheel]="true" [fullscreenControl]="true"
+               (mapClick)="onChoseLocation($event)" (mapReady)="mapReadyHandler($event)" [zoom]="zoom">
+        <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="lat !=0 && lng != 0"></agm-marker>
+      </agm-map>
+    </div>
+  </div>
+  <div *ngIf="userService.eventDetails.eventLink != null &&
+              userService.currentUser.email !== userService.eventDetails.userEmail" 
+    class="link__label">
+    <h3>
+      <a mat-raised-button color="primary" href="{{this.userService.eventDetails.eventLink}}" target="_blank">Event
+        link</a>
+    </h3>
+  </div>
+  <div>
+    <form [formGroup]="newLocation" class="search__location__formGroup" [hidden]="hidden">
+      <div class="form-group search__location">
+        <input placeholder="New location..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text"
+          class="form-control" #search formControlName="searchControl">
+      </div>
+    </form>
+  </div>
+  <div>
+    <form [formGroup]="newLink" class="search__location__formGroup" [hidden]="hiddenNewLink">
+      <div class="form-group search__location">
+        <input placeholder="New link..." autocorrect="on" autocapitalize="on" spellcheck="on" type="text"
+          class="form-control" #linkEvent formControlName="newLinkControl">
+      </div>
+    </form>
+  </div>
+  <div class="map__buttons">
+    <button *ngIf="changeLocation === false &&
+                   userService.currentUser.email === userService.eventDetails.userEmail"
+      mat-button mat-raised-button color="accent" (click)="changeTheLocation()">Choose a location!</button>
+      <button *ngIf="changeEventLink === false &&
+                     userService.currentUser.email === userService.eventDetails.userEmail"
+      mat-button mat-raised-button color="accent" (click)="changeTheLink()">Choose a new link!</button>
+    <button *ngIf="cancelLocationChange === true" class="map__button" mat-button mat-raised-button color="accent"
+      (click)="cancelLocationChanges()">Cancel changes!</button>
+    <button *ngIf="cancelLinkChange === true" class="map__button" mat-button mat-raised-button color="accent"
+      (click)="cancelLinkChanges()">Cancel changes!</button>
+    <button *ngIf="saveLocation === true" mat-button mat-raised-button color="accent"
+      (click)="saveLocationChanges()">Save location!</button>
+    <button *ngIf="saveLink === true" mat-button mat-raised-button color="accent"
+      (click)="saveNewLinkChanges()">Save new link!</button>
+    <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail && changeLocation === false"
+      mat-button mat-raised-button color="accent" (click)="googleMapsDirection()">Directions</button>
+  </div>
+  <div class="review__container">
+    <div class="box">
+      <h3>Reviews: </h3>
+      <hr>
+      <div *ngFor="let review of userService.reviews; let i = index" class="reviews">
+        <div class="comment__first__row">
+          <p>{{review.mail}}</p>
+          <p>Date added: {{reviewsDates[i] | date:'dd/MM/yyyy'}}</p>
+        </div>
+        <div *ngIf="!editReview">
+          <p>{{review.comment}}</p>
+          <div class="review__rating__container">
+            <!-- <rating [(ngModel)]="review.rating" [max]=5 [readonly]="true"></rating> -->
+            <ngb-rating [max]="5" [(rate)]="review.rating" [readonly]="true"
+                class="user__rating">
+                <ng-template let-fill="fill">
+                  <span class="defaultStar" [class.filled]="fill === 100">
+                    <span class="paintedStar" [style.width.%]="fill">&#9733;</span>&#9733;
+                  </span>
+              </ng-template>
+            </ngb-rating>
+            <div *ngIf="userService.currentUser.email === review.mail">
+              <button mat-icon-button color="primary" (click)="editUserReview(review)">
+                <mat-icon>create</mat-icon>
+              </button>
+              <button mat-icon-button color="warn">
+                <mat-icon (click)="deleteUserReview(review)">delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="editReview">
+          <mat-form-field class="descriere">
+            <textarea type="text" placeholder="Edit review..." matInput matTextareaAutosize matAutosizeMinRows=5
+              matAutosizeMaxRows=10 [(ngModel)]="reviewChanges.comment" autocomplete="off"></textarea>
+          </mat-form-field>
+          <div class="review__rating__container">
+            <!-- <rating [(ngModel)]="reviewChanges.rating" [max]=5></rating> -->
+            <ngb-rating [max]="5" [(rate)]="reviewChanges.rating" [readonly]="false" class="general__rating">
+              <ng-template let-fill="fill">
+                <span class="defaultStar" [class.filled]="fill === 100">
+                  <span class="paintedStar" [style.width.%]="fill">&#9733;</span>&#9733;
+                </span>
+              </ng-template>
+            </ngb-rating>
+            <div>
+              <button mat-raised-button mat-button="" color="primary" (click)="editUserReviewSave(review)">Save</button>
+              <button class="cancel__button" mat-raised-button mat-button="" color="warn"
+                (click)="editReviewCancel(review)">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      <div *ngIf="userService.reviews.length === 0">
+        <p>The event does not have any reviews</p>
+        <hr>
+      </div>
+      <div
+        *ngIf="(userService.currentUser.email !== userService.eventDetails.userEmail) && !userService.userReviewedEvent">
+        <label for="comment_box">Add a review:
+          <ngb-rating [max]="5" [(rate)]="rating" [readonly]="false" class="general__rating">
+            <ng-template let-fill="fill">
+              <span class="defaultStar" [class.filled]="fill === 100">
+                <span class="paintedStar" [style.width.%]="fill">&#9733;</span>&#9733;
+              </span>
+            </ng-template>
+          </ngb-rating>
+        </label>
+        <textarea id="comment_box" [(ngModel)]="comment" rows=5 cols=20 placeholder="Add a review..."
+          class="form-control comment"></textarea>
+        <br>
+        <div class="add__review__button">
+          <button class="btn btn-info" (click)="addReview()" [disabled]="!reviewDate()">Add a review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

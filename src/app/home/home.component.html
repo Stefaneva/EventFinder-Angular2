@@ -1,6 +1,5 @@
-<ng4-loading-spinner></ng4-loading-spinner>
-<ng-snotify></ng-snotify>
-<h1 class="ads__title">Events </h1>
+<ngx-spinner type="ball-clip-rotate-pulse" color = "rgba(75, 119, 190, 1)"></ngx-spinner>
+<h1 class="events__title">Events </h1>
 <div class="body__container">
   <div class="search__filter__container">
     <form>
@@ -16,40 +15,46 @@
     </div>
   </div>
   <hr class="options">
-    <!-- <div class="custom__container">
-      <div *ngFor="let ad of userService.ads | filter : userService.term : 'title' :
-      userService.adItemType : 'adItemType' : userService.priceMin : userService.priceMax : 'price' :
-      userService.rentCheckbox: userService.saleCheckbox : 'adType' : userService.surfaceMin : userService.surfaceMax : 'surface' :
-      userService.areaSurfaceMin : userService.areaSurfaceMax : 'areaSurface' : userService.roomsMin : userService.roomsMax : 'rooms' :
-      userService.partitioning: 'partitioning' : userService.yearBuiltMin : userService.yearBuiltMax : 'yearBuilt' : userService.comfort : 'comfort' :
-      userService.floorLevelMin : userService.floorLevelMax : 'floorLevel' : userService.furnished : 'furnished' :
-      userService.searchLat : userService.searchLng
-      | paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
+    <div class="custom__container">
+      <div *ngFor="let event of userService.events | filter : userService.term : 'title' :
+       userService.freeCheckbox : userService.paidCheckbox : 'feeType' :
+       userService.eventType : 'eventType' : 
+       userService.priceMin : userService.priceMax : 'price' :
+       userService.availableSeats : 'seatsTotal' : 'seatsOccupied' :
+       userService.category : 'category' :
+       userService.range : 'eventDate' : userService.range.value.start : userService.range.value.end :
+       userService.searchLat : userService.searchLng
+       | paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
         <mat-card class="card__class">
           <mat-card-header>
-            <mat-card-title>{{ ad.title}}</mat-card-title>
-            <mat-card-subtitle>{{ ad.adType }} - {{ad.adItemType}}</mat-card-subtitle>
-            <img src="../../assets/casa.jpg" *ngIf="ad.adItemType == 'Casa'" mat-card-avatar>
-            <img src="../../assets/bloc.jpg" *ngIf="ad.adItemType == 'Apartament'" mat-card-avatar>
+            <mat-card-title>{{ event.title}}</mat-card-title>
+            <mat-card-subtitle>{{ event.eventType }} - {{event.feeType}}</mat-card-subtitle>
+            <img src="../../assets/camera_avatar.jpg" *ngIf="event.eventType == 'Online'" mat-card-avatar>
+            <img src="../../assets/Onsite.jpg" *ngIf="event.eventType == 'On Site'" mat-card-avatar>
           </mat-card-header>
           <mat-card-content>
-            <p>Preț: {{ ad.price }} <span class="fa fa-euro"></span></p>
-            <p>An construcție: {{ad.yearBuilt}}</p>
+            <p *ngIf="event.price != 0">Price: {{ event.price }} <span class="fa fa-euro"></span></p>
+            <p *ngIf="event.price == 0">Free event</p>
+            <p>Available Seats: {{ event.seatsTotal - event.seatsOccupied }}
+            <p>Date: {{event.eventDate}}</p>
           </mat-card-content>
-          <img mat-card-image height="270px"  [src]="ad.image">
-          <div class="location__paragraph">Locație: {{ad.location}}</div>
+          <img mat-card-image height="270px"  [src]="event.image">
+          <div *ngIf="event.eventType == 'On Site'" class="location__paragraph">Location: {{event.location}}</div>
+          <div *ngIf="event.eventType == 'Online'" class="link__div">
+            <a mat-raised-button mat-button color="accent" href="{{event.eventLink}}" target="_blank">Event link</a>
+          </div>
           <mat-card-actions class="viewAddButton">
-            <button mat-raised-button mat-button color="primary" (click)="viewAdDetails(ad)">Detalii anunț</button>
+            <button mat-raised-button mat-button color="primary" (click)="viewEventDetails(event)">Event details</button>
             <button *ngIf="userService.currentUser.type === 'ADMIN'"
-                    mat-raised-button mat-button color="warn" (click)="deleteAd(ad)">Șterge anunțul!</button>
+                    mat-raised-button mat-button color="warn" (click)="deleteEvent(event)">Delete event!</button>
           </mat-card-actions>
         </mat-card><br>
       </div>
-    </div> -->
+    </div>
     <div class="myPaginationContainer">
       <pagination-controls class="myPagination" (pageChange)="userService.page = $event"
-                           previousLabel="Înapoi"
-                           nextLabel="Înainte" maxSize="5">
+                           previousLabel="Back"
+                           nextLabel="Next" maxSize="5">
       </pagination-controls>
     </div>
 </div>

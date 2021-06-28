@@ -5,7 +5,8 @@ export class EventDto {
   description: string;
   price: number;
   seatsTotal: number;
-  eventItemType: string;
+  seatsOccupied: number;
+  feeType: string;
   lat: number;
   lng: number;
   userEmail: string;
@@ -13,4 +14,7 @@ export class EventDto {
   eventDate: string;
   location: string;
   category: string;
+  avgEventReview: number;
+  eventLink: string;
+  duration: number;
 }

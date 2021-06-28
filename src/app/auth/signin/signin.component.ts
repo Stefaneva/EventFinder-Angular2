@@ -6,9 +6,9 @@ import {User} from '../../models/user';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 // import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
-import {SnotifyService} from 'ng-snotify';
 import { Observable, timer, Subscription, Subject, interval } from 'rxjs';
 import { switchMap, tap, share, retry, takeUntil, take, map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-signin',
@@ -24,8 +24,7 @@ export class SigninComponent implements OnInit {
   constructor(private authService: AuthService,
               private userService: UserService,
               private router: Router,
-              // private spinnerService: Ng4LoadingSpinnerService,
-              private snotifyService: SnotifyService) { }
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
   }
@@ -34,7 +33,7 @@ export class SigninComponent implements OnInit {
     // this.userService.userEvent = true;
     const email = form.value.email;
     const password = form.value.password;
-    // this.spinnerService.show();
+    this.spinner.show();
     
     // timer(1000,10000).pipe(switchMap(x => this.authService.login(email, password)), take(2)).subscribe(
       this.authService.login(email, password).subscribe(
@@ -43,9 +42,16 @@ export class SigninComponent implements OnInit {
         this.userService.currentUser.email = email;
         this.userService.currentUser.accessToken = data.accessToken;
         this.userService.currentUser.refreshToken = data.refreshToken;
+        this.userService.currentUser.phone = data.phone;
+        this.userService.currentUser.enabled = data.enabled;
+        this.userService.currentUser.type = data.type;
         console.log(this.userService.currentUser.accessToken);
         console.log(this.userService.currentUser.refreshToken);
         console.log('timer value: ' + this.userService.currentUser.timer);
+        this.userService.toastr.success('Welcome ' + this.userService.currentUser.email, 'Event Finder',{
+          timeOut :  10000,
+          progressBar: true
+        })
         timer(7200000).subscribe(val => {
           this.logout();
           this.userService.currentUser.timer = false;
@@ -60,12 +66,14 @@ export class SigninComponent implements OnInit {
     //         this.userService.currentUser.enabled = result.enabled;
     //         this.userService.currentUser.notification = result.notification;
     //         if (this.userService.currentUser.enabled) {
-              form.resetForm();
-    //           console.log(this.userService.currentUser.email + ' ' + this.userService.currentUser.name);
-              this.userService.closeDialog.emit(true);
+                setTimeout(() => {
+                  this.spinner.hide();
+                  form.resetForm();
+                  this.userService.closeDialog.emit(true);
+                }, 2000);          
     //           console.log(this.userService.currentUser.notification);
     //           if (!this.userService.currentUser.notification) {
-    //             this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
+                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
     //           } else if (this.userService.currentUser.notification === 1) {
     //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
     //           } else if (this.userService.currentUser.notification === 2) {
@@ -73,33 +81,51 @@ export class SigninComponent implements OnInit {
     //           } else {
     //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
     //           }
-    //           this.userService.getFavoriteAds().subscribe(
-    //             response => {
-    //               this.userService.favoriteAds = response;
-    //               this.userService.favoriteAds.forEach( ad => ad.image = this.imageType + ad.image);
-    //               console.log(response);
-    //               // Favourite Button Check
-    //               if (this.userService.favoriteAds.length > 0 && this.userService.adDetails) {
-    //                 this.userService.favoriteAds.forEach(
-    //                   ad => {
-    //                     console.log(ad.id);
-    //                     console.log(this.userService.adDetails.id);
-    //                     if (ad.id === this.userService.adDetails.id) {
-    //                       this.userService.isFavourite = true;
-    //                     }
-    //                   }
-    //                 );
-    //               }
-    //               if (this.userService.reviews.length > 0) {
-    //                 for (const review1 of this.userService.reviews) {
-    //                   if (review1.mail === this.userService.currentUser.email) {
-    //                     this.userService.userReviewedEvent = true;
-    //                     return;
-    //                   }
-    //                 }
-    //               }
-    //             }
-    //           );
+              this.userService.getFavoriteEvents().subscribe(
+                response => {
+                  this.userService.favoriteEvents = response;
+                  this.userService.favoriteEvents.forEach( ad => ad.image = this.imageType + ad.image);
+                  console.log(response);
+                  // Favourite Button Check
+                  if (this.userService.favoriteEvents.length > 0 && this.userService.eventDetails) {
+                    this.userService.favoriteEvents.forEach(
+                      ad => {
+                        console.log(ad.id);
+                        console.log(this.userService.eventDetails.id);
+                        if (ad.id === this.userService.eventDetails.id) {
+                          this.userService.isFavourite = true;
+                        }
+                      }
+                    );
+                  }
+                  if (this.userService.reviews.length > 0) {
+                    for (const review1 of this.userService.reviews) {
+                      if (review1.mail === this.userService.currentUser.email) {
+                        this.userService.userReviewedEvent = true;
+                        console.log("this.userService.userReviewedEvent is: " + this.userService.userReviewedEvent)
+                      }
+                    }
+                  }
+                }
+              );
+              this.userService.getBookedEvents().subscribe(
+                responseUserBookedEvents => {
+                  console.log(responseUserBookedEvents);
+                  this.userService.bookedEvents = responseUserBookedEvents;
+                  // Book Button Check
+                  if (this.userService.bookedEvents.length > 0 && this.userService.eventDetails) {
+                    this.userService.bookedEvents.forEach(
+                      bookedEvent => {
+                        console.log("this.userService.isBooked is: " + this.userService.isBooked)
+                        console.log(bookedEvent.userEmail);
+                        if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                          this.userService.isBooked = true;
+                        }
+                      }
+                    )
+                  }
+                }
+              )
     //           this.spinnerService.hide();
     //         } else {
     //           this.isLoginError2 = true;
@@ -118,6 +144,13 @@ export class SigninComponent implements OnInit {
     //     } else {
     //       this.isLoginError2 = true;
     //     }
+      },
+      (error) => {
+        if (error.status == 401) {
+          this.isLoginError = true;
+        }
+        this.spinner.hide();
+        form.resetForm();
       }
     );
   }
@@ -131,9 +164,9 @@ export class SigninComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
-    if (this.router.url === '/calendar' || this.router.url === '/statistics'
-        || this.router.url === '/myAds' || this.router.url === '/favorites'
-        || this.router.url === '/userList' || this.router.url === 'statistics') {
+    if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
+        || this.router.url === '/myEvents' || this.router.url === '/favorites'
+        || this.router.url === '/userList') {
       this.router.navigateByUrl('/home');
     }
     this.userService.isFavourite = false;

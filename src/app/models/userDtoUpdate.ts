@@ -1,5 +1,6 @@
 export class UserDtoUpdate {
-  mail: string;
-  phone: string;
+  email: string;
+  phoneNumber: string;
   password: string;
+  enabled: boolean;
 }

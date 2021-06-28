@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../user.service';
-import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -18,7 +17,6 @@ export class EditUserComponent implements OnInit {
 
   constructor(private authService: AuthService,
               public userService: UserService,
-              private spinnerService: Ng4LoadingSpinnerService,
               private router: Router) { }
 
   ngOnInit() {
@@ -42,13 +40,14 @@ export class EditUserComponent implements OnInit {
 
   onSubmit() {
     const userDtoUpdate = new UserDtoUpdate();
-    userDtoUpdate.mail = this.userService.currentUser.email;
+    userDtoUpdate.email = this.userService.currentUser.email;
     userDtoUpdate.password = this.editForm.value.password;
-    userDtoUpdate.phone = this.editForm.value.phone;
+    userDtoUpdate.phoneNumber = this.editForm.value.phone;
+    console.log(userDtoUpdate);
     this.userService.updateUserData(userDtoUpdate).subscribe(
       response => console.log(response)
     );
-    this.userService.adUserPhone = parseInt(userDtoUpdate.phone, 10);
+    this.userService.eventUserPhone = parseInt(userDtoUpdate.phoneNumber, 10);
     this.userService.closeDialog.emit(true);
   }
 
