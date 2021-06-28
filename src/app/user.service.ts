@@ -102,7 +102,7 @@ export class UserService {
 
   refreshTokens(tokenDto: TokenDto): Observable<TokenDto> {
     return this.http.post<TokenDto>(this._REFRESH_TOKEN, tokenDto,
-                                   {headers: new HttpHeaders({'Content-Type': 'application/json',
+                                   {headers: new HttpHeaders({
                                                               'Authorization': 'Bearer ' + this.currentUser.refreshToken})});
   }
 
