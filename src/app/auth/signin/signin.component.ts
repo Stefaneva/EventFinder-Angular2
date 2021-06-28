@@ -70,26 +70,8 @@ export class SigninComponent implements OnInit {
                   this.spinner.hide();
                   form.resetForm();
                   this.userService.closeDialog.emit(true);
-                }, 2000);          
-    //           console.log(this.userService.currentUser.notification);
-    //           if (!this.userService.currentUser.notification) {
-                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
-    //           } else if (this.userService.currentUser.notification === 1) {
-    //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
-    //           } else if (this.userService.currentUser.notification === 2) {
-    //             this.userService.snotifyService.error('O programare a fost anulata', { position: 'rightTop'});
-    //           } else {
-    //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
-    //           }
-        },
-          (error) => {
-            if (error.status == 401) {
-              this.isLoginError = true;
-            }
-            this.spinner.hide();
-            form.resetForm();
-          }
-        );
+
+                          
               this.userService.getFavoriteEvents().subscribe(
                 response => {
                   this.userService.favoriteEvents = response;
@@ -135,6 +117,28 @@ export class SigninComponent implements OnInit {
                   }
                 }
               )
+                }, 2000);
+    //           console.log(this.userService.currentUser.notification);
+    //           if (!this.userService.currentUser.notification) {
+                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
+    //           } else if (this.userService.currentUser.notification === 1) {
+    //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
+    //           } else if (this.userService.currentUser.notification === 2) {
+    //             this.userService.snotifyService.error('O programare a fost anulata', { position: 'rightTop'});
+    //           } else {
+    //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
+    //           }
+        },
+          (error) => {
+            if (error.status == 401) {
+              this.isLoginError = true;
+            }
+            this.spinner.hide();
+            form.resetForm();
+          }
+        );
+
+
     //           this.spinnerService.hide();
     //         } else {
     //           this.isLoginError2 = true;
