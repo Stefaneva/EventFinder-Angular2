@@ -81,6 +81,15 @@ export class SigninComponent implements OnInit {
     //           } else {
     //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
     //           }
+        },
+          (error) => {
+            if (error.status == 401) {
+              this.isLoginError = true;
+            }
+            this.spinner.hide();
+            form.resetForm();
+          }
+        );
               this.userService.getFavoriteEvents().subscribe(
                 response => {
                   this.userService.favoriteEvents = response;
@@ -144,15 +153,6 @@ export class SigninComponent implements OnInit {
     //     } else {
     //       this.isLoginError2 = true;
     //     }
-      },
-      (error) => {
-        if (error.status == 401) {
-          this.isLoginError = true;
-        }
-        this.spinner.hide();
-        form.resetForm();
-      }
-    );
   }
 
 
