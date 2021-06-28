@@ -26,7 +26,6 @@ export class UserService {
   // private _MAIN_URL_TOKEN_GENERATOR = 'https://localhost:8080';
   // private _MAIN_URL_EVENT_MANGER = 'https://localhost:8085';
   private _MAIN_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
-  
   private _MAIN_URL_EVENT_MANGER = 'https://event-finder-manager.herokuapp.com';
   // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
   private _REFRESH_TOKEN = this._MAIN_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
