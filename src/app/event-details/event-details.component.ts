@@ -18,6 +18,7 @@ import { OwlOptions } from 'ngx-owl-carousel-2';
 import * as moment from 'moment';
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 import { CalendarEventDto } from '../models/calendarEvent';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-event-details',
@@ -106,7 +107,8 @@ export class EventDetailsComponent implements OnInit {
               private route: ActivatedRoute,
               public domSanitizer: DomSanitizer,
               public snackBar: MatSnackBar,
-              private router: Router) { }
+              private router: Router,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.userService.userReviewedEvent = false;
@@ -650,7 +652,7 @@ export class EventDetailsComponent implements OnInit {
         // 2) Compare the events with the current one, if good ok else show message
         // 3) If ok save appointment and TotalSeats -= 1 for this event
         // 4) Redirect
-        // this.spinner.show();
+        
         var startDate = this.userService.eventDetails.eventDate;
         var endDate = moment(this.userService.eventDetails.eventDate).add(this.userService.eventDetails.duration, 'hours')
                                                                       .format("YYYY-MM-DD HH:mm");
@@ -688,16 +690,16 @@ export class EventDetailsComponent implements OnInit {
           calendarAppointmentDto.endDate = endDate;
           
           console.log(calendarAppointmentDto);
-          
+          this.spinner.show();
           this.userService.bookEvent(calendarAppointmentDto).subscribe(
             responseBookEvent => {
               console.log(responseBookEvent);
+              this.spinner.hide();
+              this.userService.eventDetailsCalendar = this.userService.eventDetails;
+              this.userService.userCalendar = false;
+              this.router.navigateByUrl('/calendar');
             }
           )
-  
-          this.userService.eventDetailsCalendar = this.userService.eventDetails;
-          this.userService.userCalendar = false;
-          this.router.navigateByUrl('/calendar');
         }
   }
 
