@@ -79,6 +79,7 @@ export class SigninComponent implements OnInit {
                         console.log(ad.id);
                         console.log(this.userService.eventDetails.id);
                         if (ad.id === this.userService.eventDetails.id) {
+                          console.log("Setting favorite button true");
                           this.userService.isFavourite = true;
                         }
                       }
@@ -105,6 +106,7 @@ export class SigninComponent implements OnInit {
                         console.log("this.userService.isBooked is: " + this.userService.isBooked)
                         console.log(bookedEvent.userEmail);
                         if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                          console.log("Setting booked button true");
                           this.userService.isBooked = true;
                         }
                       }
@@ -191,12 +193,17 @@ export class SigninComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
+    this.userService.reviews = [];
+    this.userService.favoriteEvents = [];
+    this.userService.isFavourite = false;
+    this.userService.isBooked = false;
+    console.log("The booked event is: " + this.userService.isBooked);
+    console.log("The favorite event is: " + this.userService.isFavourite);
+    this.userService.userReviewedEvent = false;
     if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myEvents' || this.router.url === '/favorites'
         || this.router.url === '/userList') {
       this.router.navigateByUrl('/home');
     }
-    this.userService.isFavourite = false;
-    this.userService.userReviewedEvent = false;
   }
 }

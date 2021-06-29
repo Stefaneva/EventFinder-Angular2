@@ -80,12 +80,12 @@ export class HomeComponent implements OnInit {
     this.userService.closeDialog.subscribe(
       result => this.dialog.closeAll());
     const dialogRef = this.dialog.open(ModalAgreementComponent, {});
-      const index = this.userService.events.indexOf(event);
-      this.userService.deleteEvent(event.id).subscribe(
-        result => {
-          console.log(result);
-          this.userService.events.splice(index, 1);
-        }
-      );
+      // const index = this.userService.events.indexOf(event);
+      // this.userService.deleteEvent(event.id).subscribe(
+      //   result => {
+      //     console.log(result);
+      //     this.userService.events.splice(index, 1);
+      //   }
+      // );
     }
 }

@@ -261,6 +261,9 @@ export class EventDetailsComponent implements OnInit {
         }
     );
 
+    console.log("The booked event is: " + this.userService.isBooked);
+    console.log("The favorite event is: " + this.userService.isFavourite);
+
     // // All appointments
     // this.userService.getBookedEvents(this.eventId).subscribe(
     //   responseUserBookedEvents => {
@@ -647,6 +650,7 @@ export class EventDetailsComponent implements OnInit {
         // 2) Compare the events with the current one, if good ok else show message
         // 3) If ok save appointment and TotalSeats -= 1 for this event
         // 4) Redirect
+        // this.spinner.show();
         var startDate = this.userService.eventDetails.eventDate;
         var endDate = moment(this.userService.eventDetails.eventDate).add(this.userService.eventDetails.duration, 'hours')
                                                                       .format("YYYY-MM-DD HH:mm");

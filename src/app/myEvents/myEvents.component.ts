@@ -44,12 +44,12 @@ export class MyEventsComponent implements OnInit {
     this.userService.closeDialog.subscribe(
       result => this.dialog.closeAll());
     const dialogRef = this.dialog.open(ModalAgreementComponent, {});
-      const index = this.userService.myUserEvents.indexOf(event);
-      this.userService.myUserEvents.splice(index, 1);
-      this.userService.deleteEvent(event.id).subscribe(
-        result => {
-          console.log(result);
-        }
-      );
+    //   const index = this.userService.myUserEvents.indexOf(event);
+    //   this.userService.myUserEvents.splice(index, 1);
+    //   this.userService.deleteEvent(event.id).subscribe(
+    //     result => {
+    //       console.log(result);
+    //     }
+      // );
     }
 }
