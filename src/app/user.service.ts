@@ -54,6 +54,8 @@ export class UserService {
   page: number;
   itemsOnPage = 5;
   currentUser = new User;
+  accessTokenExpire = true;
+  pollingRefresh: any;
   public events: EventDto[] = [];
   public eventDetails: EventDto;
   public eventDetailsCalendar: EventDto;

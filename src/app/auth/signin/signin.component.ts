@@ -20,6 +20,8 @@ export class SigninComponent implements OnInit {
   private readonly imageType: string = 'data:image/PNG;base64,';
   isLoginError = false;
   isLoginError2 = false;
+  secondsCounter = interval(800000);
+  refresher: any;
 
   constructor(private authService: AuthService,
               private userService: UserService,
@@ -52,20 +54,13 @@ export class SigninComponent implements OnInit {
           timeOut :  10000,
           progressBar: true
         })
-        timer(7200000).subscribe(val => {
+        timer(3600000).subscribe(val => {
           this.logout();
           this.userService.currentUser.timer = false;
           console.log('timer value: ' + this.userService.currentUser.timer);
         });
-    //     this.userService.postUserData().subscribe(
-    //       result => {
-    //         this.userService.currentUser.name = result.name;
-    //         this.userService.currentUser.phone = result.phone;
-    //         this.userService.currentUser.lastLoginDate = result.lastLoginDate;
-    //         this.userService.currentUser.type = result.userType;
-    //         this.userService.currentUser.enabled = result.enabled;
-    //         this.userService.currentUser.notification = result.notification;
-    //         if (this.userService.currentUser.enabled) {
+
+
                 setTimeout(() => {
                   this.spinner.hide();
                   form.resetForm();
@@ -118,6 +113,20 @@ export class SigninComponent implements OnInit {
                 }
               )
                 }, 2000);
+
+        
+        this.refresher = this.secondsCounter.subscribe(i => {
+            this.userService.accessTokenExpire = false;
+            this.refresh();
+            console.log("New AT");
+          });
+
+        // this.userService.pollingRefresh = setInterval(() => {
+        //   this.userService.accessTokenExpire = false;
+        //   this.refresh();
+        //   console.log("New AT");
+        // }, 900000);
+
     //           console.log(this.userService.currentUser.notification);
     //           if (!this.userService.currentUser.notification) {
                 // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
@@ -159,8 +168,22 @@ export class SigninComponent implements OnInit {
     //     }
   }
 
+  refresh() {
+    // this.userService.accessTokenExpire = true;
+    this.userService.refreshTokens(null).subscribe(
+      (data: any) => {
+        this.userService.currentUser.accessToken = data.accessToken;
+        this.userService.currentUser.refreshToken = data.refreshToken;
+        console.log(this.userService.currentUser.accessToken);
+        console.log(this.userService.currentUser.refreshToken);
+        this.userService.accessTokenExpire = true;
+      }
+    )
+  }
 
   logout() {
+    // clearInterval(this.userService.pollingRefresh);
+    this.refresher.unsubscribe();
     this.userService.currentUser.name = null;
     this.userService.currentUser.email = null;
     this.userService.currentUser.accessToken = null;

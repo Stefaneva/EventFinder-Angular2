@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log("My AT is: "+ this.userService.currentUser.accessToken);
-    if (this.userService.currentUser.accessToken !== undefined && this.userService.currentUser.accessToken !== null) {
+    if (this.userService.accessTokenExpire === true) {
       var copiedReq = req.clone({headers: req.headers.append('Authorization', 'Bearer ' + this.userService.currentUser.accessToken)});
       return next.handle(copiedReq).pipe(
         catchError((error) => {
@@ -28,26 +28,28 @@ export class AuthInterceptor implements HttpInterceptor {
                         this.router.navigateByUrl("/login");
                         break;
                     case 403:     //forbidden
-                        // this.router.navigateByUrl("/unauthorized");
-                        this.userService.currentUser.accessToken = null;
-                        this.userService.refreshTokens(null).subscribe(
-                          (data: any) => {
-                            this.userService.currentUser.accessToken = data.accessToken;
-                            this.userService.currentUser.refreshToken = data.refreshToken;
-                            console.log(this.userService.currentUser.accessToken);
-                            console.log(this.userService.currentUser.refreshToken);
-                            copiedReq = req.clone({headers: req.headers.append('Authorization', 'Bearer ' + this.userService.currentUser.accessToken)});
-                            console.log("This is the request headers: " + copiedReq.headers);
-                            console.log("This is the request additional info: " + copiedReq.url);
-                            return next.handle(copiedReq).subscribe(
-                              response => {
-                                console.log(response);
-                              }
-                            );
-                            
-                          }
-                        )
+                        this.router.navigateByUrl("/login");
                         break;
+                        // this.router.navigateByUrl("/unauthorized");
+                        // this.userService.currentUser.accessToken = null;
+                        // this.userService.refreshTokens(null).subscribe(
+                        //   (data: any) => {
+                        //     this.userService.currentUser.accessToken = data.accessToken;
+                        //     this.userService.currentUser.refreshToken = data.refreshToken;
+                        //     console.log(this.userService.currentUser.accessToken);
+                        //     console.log(this.userService.currentUser.refreshToken);
+                        //     copiedReq = req.clone({headers: req.headers.append('Authorization', 'Bearer ' + this.userService.currentUser.accessToken)});
+                        //     console.log("This is the request headers: " + copiedReq.headers);
+                        //     console.log("This is the request additional info: " + copiedReq.url);
+                        //     return next.handle(copiedReq).subscribe(
+                        //       response => {
+                        //         console.log(response);
+                        //       }
+                        //     );
+                            
+                        //   }
+                        // )
+                        // break;
                 }
             } 
         } else {
