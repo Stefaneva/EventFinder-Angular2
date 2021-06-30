@@ -693,6 +693,29 @@ export class EventDetailsComponent implements OnInit {
           this.spinner.show();
           this.userService.bookEvent(calendarAppointmentDto).subscribe(
             responseBookEvent => {
+
+
+              this.userService.getBookedEvents().subscribe(
+                responseUserBookedEvents => {
+                  console.log(responseUserBookedEvents);
+                  this.userService.bookedEvents = responseUserBookedEvents;
+                  // Book Button Check
+                  if (this.userService.bookedEvents.length > 0 && this.userService.eventDetails) {
+                    this.userService.bookedEvents.forEach(
+                      bookedEvent => {
+                        console.log("this.userService.isBooked is: " + this.userService.isBooked)
+                        console.log(bookedEvent.userEmail);
+                        if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                          console.log("Setting booked button true");
+                          this.userService.isBooked = true;
+                        }
+                      }
+                    )
+                  }
+                }
+              );
+
+              
               console.log(responseBookEvent);
               this.spinner.hide();
               this.userService.eventDetailsCalendar = this.userService.eventDetails;
