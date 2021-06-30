@@ -23,10 +23,10 @@ import { EventsReportDto } from './models/eventsReportDto';
 export class UserService {
   closeDialog = new EventEmitter<boolean>();
 
-  // private _MAIN_URL_TOKEN_GENERATOR = 'https://localhost:8080';
-  // private _MAIN_URL_EVENT_MANGER = 'https://localhost:8085';
-  private _MAIN_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
-  private _MAIN_URL_EVENT_MANGER = 'https://event-finder-manager.herokuapp.com';
+  private _MAIN_URL_TOKEN_GENERATOR = 'https://localhost:8080';
+  private _MAIN_URL_EVENT_MANGER = 'https://localhost:8085';
+  // private _MAIN_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
+  // private _MAIN_URL_EVENT_MANGER = 'https://event-finder-manager.herokuapp.com';
   private _GET_USER_EMAILS = this._MAIN_URL_TOKEN_GENERATOR + '/getUserEmails';
   private _REFRESH_TOKEN = this._MAIN_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
   private _UPDATE_USER_DATA = this._MAIN_URL_TOKEN_GENERATOR + '/api/updateUserData';

@@ -80,6 +80,19 @@ export class HomeComponent implements OnInit {
     this.userService.closeDialog.subscribe(
       result => this.dialog.closeAll());
     const dialogRef = this.dialog.open(ModalAgreementComponent, {});
+    this.spinnerService.show();
+    this.userService.getEvents().subscribe(
+      (response) => {
+        console.log(response);
+        this.userService.events = response;
+        this.userService.events.forEach(
+          event => {
+            event.image = this.imageType + event.image;
+            event.eventDate = event.eventDate.slice(0,-5);
+          });
+          this.spinnerService.hide();
+        }
+      );
       // const index = this.userService.events.indexOf(event);
       // this.userService.deleteEvent(event.id).subscribe(
       //   result => {
