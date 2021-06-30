@@ -70,8 +70,14 @@ const appRoutes: Routes = [
   { path: 'signup' , component: SignupComponent},
   { path: 'signin' , component: SigninComponent},
   { path: 'EventDetails/:id', component: EventDetailsComponent},
-  { path: 'favorites', component: FavoritesComponent },
-  { path: 'calendar', component: CalendarComponent },
+  { path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [GuardService]
+  },
+  { path: 'calendar',
+    component: CalendarComponent,
+    canActivate: [GuardService]
+  },
   { path: 'userList',
     component: UserListComponent,
     canActivate: [GuardRoleService]

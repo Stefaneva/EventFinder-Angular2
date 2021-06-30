@@ -173,7 +173,9 @@ export class CalendarComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalRef.close(true);
+    if (this.modalRef !== null && this.modalRef !== undefined) {
+      this.modalRef.close(true);
+    }
   }
 
   eventDetails(index: number) {

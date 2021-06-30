@@ -1,4 +1,4 @@
-<!-- <ng4-loading-spinner></ng4-loading-spinner> -->
+<ngx-spinner type="ball-clip-rotate-pulse" color = "rgba(75, 119, 190, 1)"></ngx-spinner>
 <div class="add__details__container">
   <h2 class="ad__title">{{userService.eventDetails.title}}</h2>
   <hr class="hr__line">
@@ -16,11 +16,11 @@
         {{userService.eventDetails.price}} <span class="fa fa-euro"></span></button>
       <button *ngIf="userService.eventDetails.price == 0" class="btn btn-warning price">Free event </button>
       <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
-        [disabled]="userService.isBooked"
+        [disabled]="userService.isBooked == true"
         class="btn btn-success book__button" (click)="bookSeat()">Book seat &nbsp;<mat-icon>assignment</mat-icon>
         </button>
       <button *ngIf="userService.currentUser.email !== userService.eventDetails.userEmail"
-        [disabled]="userService.isFavourite" class="btn btn-danger favourite" (click)="saveFavorite()">Add to favorites &nbsp;<mat-icon>favorite_border</mat-icon></button>
+        [disabled]="userService.isFavourite == true" class="btn btn-danger favourite" (click)="saveFavorite()">Add to favorites &nbsp;<mat-icon>favorite_border</mat-icon></button>
       <button  class="btn btn-info favourite">{{userService.eventDetails.eventType}} 
         <mat-icon *ngIf="userService.eventDetails.eventType === 'Online'">videocam</mat-icon>
         <mat-icon *ngIf="userService.eventDetails.eventType !== 'Online'">place</mat-icon>

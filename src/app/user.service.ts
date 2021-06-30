@@ -27,7 +27,7 @@ export class UserService {
   // private _MAIN_URL_EVENT_MANGER = 'https://localhost:8085';
   private _MAIN_URL_TOKEN_GENERATOR = 'https://event-finder-token-manager.herokuapp.com';
   private _MAIN_URL_EVENT_MANGER = 'https://event-finder-manager.herokuapp.com';
-  // private _GET_USER_EMAILS = this._BASE_URL + '/api/getUserEmails';
+  private _GET_USER_EMAILS = this._MAIN_URL_TOKEN_GENERATOR + '/getUserEmails';
   private _REFRESH_TOKEN = this._MAIN_URL_TOKEN_GENERATOR + '/api/refreshAuthentication';
   private _UPDATE_USER_DATA = this._MAIN_URL_TOKEN_GENERATOR + '/api/updateUserData';
   private _GET_USERS_URL = this._MAIN_URL_TOKEN_GENERATOR + '/getAllUsers';
@@ -38,6 +38,7 @@ export class UserService {
   private _GET_EVENT_IMAGES = this._MAIN_URL_EVENT_MANGER + '/getEventImages';
   private _REPLACE_EVENT_IMAGES = this._MAIN_URL_EVENT_MANGER + '/replaceEventImages';
   private _SAVE_FAVORITE_EVENT = this._MAIN_URL_EVENT_MANGER + '/saveFavorite';
+  private _DELETE_FAVORITE_EVENT = this._MAIN_URL_EVENT_MANGER + '/deleteFavorite';
   private _GET_FAVORITE_EVENTS = this._MAIN_URL_EVENT_MANGER + '/getFavoriteEvents';
   private _GET_MY_USER_EVENTS = this._MAIN_URL_EVENT_MANGER + '/getMyUserEvents';
   private _UPDATE_EVENT_INFO = this._MAIN_URL_EVENT_MANGER + '/updateEventInfo';
@@ -54,6 +55,8 @@ export class UserService {
   page: number;
   itemsOnPage = 5;
   currentUser = new User;
+  accessTokenExpire = true;
+  pollingRefresh: any;
   public events: EventDto[] = [];
   public eventDetails: EventDto;
   public eventDetailsCalendar: EventDto;
@@ -88,8 +91,8 @@ export class UserService {
   // eventsCalendar: EventDto[] = [];
   userEvent: boolean;
   eventUserPhone: number;
-  isFavourite: boolean;
-  isBooked: boolean;
+  isFavourite = true;
+  isBooked = true;
   // Reviews
   reviews: ReviewDtoRequest[] = [];
   userReviewedEvent: boolean;
@@ -102,8 +105,12 @@ export class UserService {
 
   refreshTokens(tokenDto: TokenDto): Observable<TokenDto> {
     return this.http.post<TokenDto>(this._REFRESH_TOKEN, tokenDto,
-                                   {headers: new HttpHeaders({'Content-Type': 'application/json',
+                                   {headers: new HttpHeaders({
                                                               'Authorization': 'Bearer ' + this.currentUser.refreshToken})});
+  }
+
+  getUserEmails(): Observable<string[]> {
+    return this.http.get<string[]>(this._GET_USER_EMAILS);
   }
 
   updateUserData(data: UserDtoUpdate): Observable<void> {
@@ -149,6 +156,10 @@ export class UserService {
 
   saveFavorite(favoriteDto: FavoriteDto): Observable<void> {
     return this.http.post<void>(this._SAVE_FAVORITE_EVENT, favoriteDto);
+  }
+
+  deleteFavoriteEvent(favoriteId: number): Observable<void> {
+    return this.http.post<void>(this._DELETE_FAVORITE_EVENT, favoriteId);
   }
 
   getFavoriteEvents(): Observable<EventDto[]> {

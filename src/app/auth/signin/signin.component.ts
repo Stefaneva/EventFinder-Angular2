@@ -20,6 +20,8 @@ export class SigninComponent implements OnInit {
   private readonly imageType: string = 'data:image/PNG;base64,';
   isLoginError = false;
   isLoginError2 = false;
+  secondsCounter = interval(800000);
+  refresher: any;
 
   constructor(private authService: AuthService,
               private userService: UserService,
@@ -52,44 +54,19 @@ export class SigninComponent implements OnInit {
           timeOut :  10000,
           progressBar: true
         })
-        timer(7200000).subscribe(val => {
+        timer(3600000).subscribe(val => {
           this.logout();
           this.userService.currentUser.timer = false;
           console.log('timer value: ' + this.userService.currentUser.timer);
         });
-    //     this.userService.postUserData().subscribe(
-    //       result => {
-    //         this.userService.currentUser.name = result.name;
-    //         this.userService.currentUser.phone = result.phone;
-    //         this.userService.currentUser.lastLoginDate = result.lastLoginDate;
-    //         this.userService.currentUser.type = result.userType;
-    //         this.userService.currentUser.enabled = result.enabled;
-    //         this.userService.currentUser.notification = result.notification;
-    //         if (this.userService.currentUser.enabled) {
+
+
                 setTimeout(() => {
                   this.spinner.hide();
                   form.resetForm();
                   this.userService.closeDialog.emit(true);
-                }, 2000);          
-    //           console.log(this.userService.currentUser.notification);
-    //           if (!this.userService.currentUser.notification) {
-                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
-    //           } else if (this.userService.currentUser.notification === 1) {
-    //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
-    //           } else if (this.userService.currentUser.notification === 2) {
-    //             this.userService.snotifyService.error('O programare a fost anulata', { position: 'rightTop'});
-    //           } else {
-    //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
-    //           }
-        },
-          (error) => {
-            if (error.status == 401) {
-              this.isLoginError = true;
-            }
-            this.spinner.hide();
-            form.resetForm();
-          }
-        );
+
+                          
               this.userService.getFavoriteEvents().subscribe(
                 response => {
                   this.userService.favoriteEvents = response;
@@ -102,6 +79,7 @@ export class SigninComponent implements OnInit {
                         console.log(ad.id);
                         console.log(this.userService.eventDetails.id);
                         if (ad.id === this.userService.eventDetails.id) {
+                          console.log("Setting favorite button true");
                           this.userService.isFavourite = true;
                         }
                       }
@@ -128,6 +106,7 @@ export class SigninComponent implements OnInit {
                         console.log("this.userService.isBooked is: " + this.userService.isBooked)
                         console.log(bookedEvent.userEmail);
                         if (bookedEvent.eventId === this.userService.eventDetails.id) {
+                          console.log("Setting booked button true");
                           this.userService.isBooked = true;
                         }
                       }
@@ -135,6 +114,42 @@ export class SigninComponent implements OnInit {
                   }
                 }
               )
+                }, 2000);
+
+        
+        this.refresher = this.secondsCounter.subscribe(i => {
+            this.userService.accessTokenExpire = false;
+            this.refresh();
+            console.log("New AT");
+          });
+
+        // this.userService.pollingRefresh = setInterval(() => {
+        //   this.userService.accessTokenExpire = false;
+        //   this.refresh();
+        //   console.log("New AT");
+        // }, 900000);
+
+    //           console.log(this.userService.currentUser.notification);
+    //           if (!this.userService.currentUser.notification) {
+                // this.userService.snotifyService.success('Bine ai venit, ' + this.userService.currentUser.name + '!', { position: 'rightTop'});
+    //           } else if (this.userService.currentUser.notification === 1) {
+    //             this.userService.snotifyService.info('O programare a fost acceptata', { position: 'rightTop'});
+    //           } else if (this.userService.currentUser.notification === 2) {
+    //             this.userService.snotifyService.error('O programare a fost anulata', { position: 'rightTop'});
+    //           } else {
+    //             this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
+    //           }
+        },
+          (error) => {
+            if (error.status == 401) {
+              this.isLoginError = true;
+            }
+            this.spinner.hide();
+            form.resetForm();
+          }
+        );
+
+
     //           this.spinnerService.hide();
     //         } else {
     //           this.isLoginError2 = true;
@@ -155,8 +170,22 @@ export class SigninComponent implements OnInit {
     //     }
   }
 
+  refresh() {
+    // this.userService.accessTokenExpire = true;
+    this.userService.refreshTokens(null).subscribe(
+      (data: any) => {
+        this.userService.currentUser.accessToken = data.accessToken;
+        this.userService.currentUser.refreshToken = data.refreshToken;
+        console.log(this.userService.currentUser.accessToken);
+        console.log(this.userService.currentUser.refreshToken);
+        this.userService.accessTokenExpire = true;
+      }
+    )
+  }
 
   logout() {
+    // clearInterval(this.userService.pollingRefresh);
+    this.refresher.unsubscribe();
     this.userService.currentUser.name = null;
     this.userService.currentUser.email = null;
     this.userService.currentUser.accessToken = null;
@@ -164,12 +193,17 @@ export class SigninComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
+    this.userService.reviews = [];
+    this.userService.favoriteEvents = [];
+    this.userService.isFavourite = false;
+    this.userService.isBooked = false;
+    console.log("The booked event is: " + this.userService.isBooked);
+    console.log("The favorite event is: " + this.userService.isFavourite);
+    this.userService.userReviewedEvent = false;
     if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myEvents' || this.router.url === '/favorites'
         || this.router.url === '/userList') {
       this.router.navigateByUrl('/home');
     }
-    this.userService.isFavourite = false;
-    this.userService.userReviewedEvent = false;
   }
 }

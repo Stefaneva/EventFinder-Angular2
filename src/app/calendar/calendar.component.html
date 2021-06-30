@@ -108,24 +108,7 @@
 </div>
 
 <br><br><br>
-<!-- <div *ngIf="userService.currentUser.accessToken && ((userService.eventDetailsCalendar && userService.eventDetailsCalendar !== null) || owner || userEvents)"> -->
 <div>
-<!-- <h3>
-  <div *ngIf="!owner && !userEvents">
-    Adaugă programare:
-  </div>
-  <div *ngIf="owner || userEvents">
-    Programări:
-  </div>
-  <button
-    *ngIf="userService.userEvent && userService.eventDetailsCalendar && userService.eventDetailsCalendar !== null
-          && userService.currentUser.email !== userService.eventDetailsCalendar.userEmail && !eventAdded"
-    class="btn btn-primary pull-right"
-    (click)="addEvent()">
-    Adaugă programare
-  </button>
-  <div class="clearfix"></div>
-</h3> -->
 
 <table class="table table-bordered">
 
@@ -138,6 +121,7 @@
     <th>From: </th>
     <th>Until: </th>
     <th>Status</th>
+    <th>Details</th>
   </tr>
   </thead>
 
@@ -171,6 +155,11 @@
         <button mat-button mat-raised-button color="accent">
           {{ calendarEventsDto[index].status }}
         </button>
+      </p>
+    </td>
+    <td>
+      <p>
+        <button mat-raised-button color="primary" (click)="eventDetails(index)">Event details</button>
       </p>
     </td>
   </tr>

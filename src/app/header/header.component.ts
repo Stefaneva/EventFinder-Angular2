@@ -39,14 +39,23 @@ export class HeaderComponent implements OnInit {
     this.userService.currentUser.enabled = null;
     this.userService.currentUser.phone = null;
     this.userService.currentUser.type = null;
+    this.userService.currentUser.name = null;
+    this.userService.currentUser.email = null;
+    this.userService.currentUser.accessToken = null;
+    this.userService.currentUser.lastLoginDate = null;
+    this.userService.currentUser.enabled = null;
+    this.userService.currentUser.phone = null;
+    this.userService.currentUser.type = null;
+    this.userService.reviews = [];
+    this.userService.favoriteEvents = [];
+    this.userService.isFavourite = false;
+    this.userService.isBooked = false;
     if (this.router.url === '/calendar' || this.router.url === '/eventFinderData'
         || this.router.url === '/myAds' || this.router.url === '/favorites'
         || this.router.url === '/userList' || this.router.url === 'statistics'
         || this.router.url === '/myEvents') {
       this.router.navigateByUrl('/home');
     }
-    this.userService.isFavourite = false;
-    this.userService.userReviewedEvent = false;
   }
 
   addNewEvent(): void {

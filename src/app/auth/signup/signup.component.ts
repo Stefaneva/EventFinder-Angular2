@@ -26,9 +26,9 @@ export class SignupComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    // this.userService.getUserEmails().subscribe(
-    //   response => this.userEmails = response
-    // );
+    this.userService.getUserEmails().subscribe(
+      response => this.userEmails = response
+    );
     this.signupForm = new FormGroup({
       'username' : new FormControl(null, Validators.required),
       'email' : new FormControl(null, [Validators.required, Validators.email, this.checkMail.bind(this)]),
